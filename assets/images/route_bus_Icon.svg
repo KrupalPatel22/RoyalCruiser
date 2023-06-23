@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="119" height="21" viewBox="0 0 119 21">
+  <g id="Route_Bus_Icon" data-name="Route Bus Icon" transform="translate(-136 -292)">
+    <g id="Group_17" data-name="Group 17" transform="translate(-17 -897)">
+      <circle id="Ellipse_4" data-name="Ellipse 4" cx="5" cy="5" r="5" transform="translate(153 1195)" fill="#1c5f83"/>
+      <g id="Ellipse_5" data-name="Ellipse 5" transform="translate(262 1195)" fill="#fff" stroke="#1c5f83" stroke-width="2">
+        <circle cx="5" cy="5" r="5" stroke="none"/>
+        <circle cx="5" cy="5" r="4" fill="none"/>
+      </g>
+      <line id="Line_2" data-name="Line 2" x2="94" transform="translate(165.5 1200.5)" fill="none" stroke="#1c5f83" stroke-width="1" stroke-dasharray="4"/>
+    </g>
+    <g id="Group_22" data-name="Group 22" transform="translate(-1.666 -1054.666)">
+      <circle id="Ellipse_6" data-name="Ellipse 6" cx="10.5" cy="10.5" r="10.5" transform="translate(186.666 1346.666)" fill="#1c5f83"/>
+      <path id="bus" d="M0,7.983V2.466A1.934,1.934,0,0,1,.324,1.314,1.9,1.9,0,0,1,1.308.641,6.59,6.59,0,0,1,2.68.343,16.346,16.346,0,0,1,4.416.265,16.346,16.346,0,0,1,6.151.343a6.59,6.59,0,0,1,1.372.3,1.9,1.9,0,0,1,.984.673,1.934,1.934,0,0,1,.324,1.152V7.983a1.656,1.656,0,0,1-.544,1.243v.984a.579.579,0,0,1-.544.544h-.57a.579.579,0,0,1-.544-.544V9.64H2.2v.57a.54.54,0,0,1-.155.375.508.508,0,0,1-.389.168H1.114a.548.548,0,0,1-.4-.168.519.519,0,0,1-.168-.375V9.226A1.656,1.656,0,0,1,0,7.983Zm1.93.57a.84.84,0,0,0,.841-.841.769.769,0,0,0-.246-.583.834.834,0,0,0-.6-.233.8.8,0,0,0-.816.816.834.834,0,0,0,.233.6.769.769,0,0,0,.583.246Zm4.972,0a.84.84,0,0,0,.841-.841A.769.769,0,0,0,7.5,7.128.834.834,0,0,0,6.9,6.9a.8.8,0,0,0-.816.816.834.834,0,0,0,.233.6A.769.769,0,0,0,6.9,8.552Zm.841-3.315V2.466H1.114V5.237Z" transform="translate(192.951 1351.694)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
