@@ -72,7 +72,7 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
           DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString());
       bookingTicketCtr.get30DaysDate();
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollToIndex();
+       // _scrollToIndex();
       });
     }).then((value) => _isLoading.value = true);
     super.initState();
@@ -214,6 +214,8 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                                   if (response.isNotEmpty && (tripType == "0" || tripType == "1")){
                                     searchSetPref();
                                   }
+
+
                                   return snapshot.data!.findAllElements('AllRouteBusLists').isNotEmpty
                                       ? ListView.builder(
                                           itemCount: response.length,

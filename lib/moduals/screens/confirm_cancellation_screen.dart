@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:royalcruiser/api/api_imlementer.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
 import 'package:royalcruiser/moduals/screens/dashboard_screen.dart';
@@ -774,41 +775,26 @@ class _ConfirmCancellationAppScreenState extends State<ConfirmCancellationAppScr
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
+
+                        // num onword = double.parse(xmlList[0].getElement('RefundAmount')!.text);
+                        // num returnJ = double.parse(xmlList[1].getElement('RefundAmount')!.text);
+
+
+                        Logger().d("Test Amount :-  onword -> ${xmlList[0].getElement('RefundAmount')!
+                            .text
+                            .toString()}\n "
+                            "${xmlList[1].getElement('RefundAmount')!
+                            .text
+                            .toString()}");
+
                         Navigator.of(context).pop();
                         confirmCAncellationApicall(
-                          OrderDetailsID: xmlList[0]
-                              .getElement('OrderDetailID')!
-                              .text
-                              .toString(),
-                          OrderNo: xmlList[0]
-                              .getElement('M_OrderID')!
-                              .text
-                              .toString(),
-                          PNRNo:
-                              xmlList[0].getElement('PNRNo')!.text.toString(),
-                          RefundAmount: _cancelReturnTripCheckBox.value
-                              ? double.parse(xmlList[0]
-                                          .getElement('RefundAmount')!
-                                          .text
-                                          .toString() +
-                                      xmlList[1]
-                                          .getElement('RefundAmount')!
-                                          .text
-                                          .toString())
-                                  .toString()
-                              : xmlList[0]
-                                  .getElement('RefundAmount')!
-                                  .text
-                                  .toString(),
-                          OrderDetailsID_Return: _cancelReturnTripCheckBox.value
-                              ? xmlList[1]
-                                  .getElement('OrderDetailID')!
-                                  .text
-                                  .toString()
-                              : '',
-                          PNRNo_Return: _cancelReturnTripCheckBox.value
-                              ? xmlList[1].getElement('PNRNo')!.text.toString()
-                              : '',
+                          OrderDetailsID: xmlList[0].getElement('OrderDetailID')!.text.toString(),
+                          OrderNo: xmlList[0].getElement('M_OrderID')!.text.toString(),
+                          PNRNo: xmlList[0].getElement('PNRNo')!.text.toString(),
+                          RefundAmount: (TotalRefundAmt).toString(),
+                          OrderDetailsID_Return: _cancelReturnTripCheckBox.value ? xmlList[1].getElement('OrderDetailID')!.text.toString() : '',
+                          PNRNo_Return: _cancelReturnTripCheckBox.value ? xmlList[1].getElement('PNRNo')!.text.toString() : '',
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -1820,17 +1806,21 @@ class _ConfirmCancellationAppScreenState extends State<ConfirmCancellationAppScr
     required String PNRNo_Return,
   }) {
     AppDialogs.showProgressDialog(context: context);
+    print('redfjkagsjygy :- $RefundAmount');
     ApiImplementer.ConfirmCancellationApiImplementer(
-            OrderDetailsID: OrderDetailsID,
+            OrderDetailsID: _cancelOnwordTripCheckBox.value ? OrderDetailsID : '',
             OrderNo: OrderNo,
-            PNRNo: PNRNo,
-            RefundAmount: RefundAmount,
-            OrderDetailsID_Return: OrderDetailsID_Return,
-            PNRNo_Return: PNRNo_Return)
-        .then((XmlDocument xmlDocument) {
+            PNRNo: _cancelOnwordTripCheckBox.value ? PNRNo : '',
+            RefundAmount: TotalRefundAmt.toString(),
+            OrderDetailsID_Return:  _cancelReturnTripCheckBox.value ? OrderDetailsID_Return : '',
+            PNRNo_Return:  _cancelReturnTripCheckBox.value ? PNRNo_Return : '')
+      .then((XmlDocument xmlDocument) {
+      Logger().d(xmlDocument);
       Navigator.of(context).pop();
       if (!xmlDocument.isNull) {
         debugPrint('$xmlDocument');
+
+
 
         bool xmlElement = xmlDocument.findAllElements('NewDataSet').isNotEmpty;
         if (xmlElement) {
@@ -1862,10 +1852,9 @@ class _ConfirmCancellationAppScreenState extends State<ConfirmCancellationAppScr
           }
         }
       }
-    }).catchError((onError) {
+      }).catchError((onError) {
       Navigator.of(context).pop();
-      Navigator.of(context)
-          .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+      // Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
     });
   }
 }

@@ -1128,6 +1128,7 @@ class ApiImplementer {
                               </tem:ConfirmCancellation>
                           </soapenv:Body>
                       </soapenv:Envelope>''';
+    logger.d(body);
     final http.Response response =
         await http.post(Uri.parse('${ApiUrls.str_URL}'),
             headers: {
@@ -1142,6 +1143,7 @@ class ApiImplementer {
     } else {
       throw Exception('${response.body}');
     }
+    // throw Exception('conf cancellation');
   }
 
   static Future<XmlDocument> Fetch_MyBookingsApiImplementer({

@@ -838,7 +838,8 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
           ),
 
           //Discount price
-          /*TotalDiscountBaseFare() > 0 && NavigatorConstants.USER_ID != '0' ? */Obx(
+          /*TotalDiscountBaseFare() > 0 && NavigatorConstants.USER_ID != '0' ? */
+          Obx(
                 () => Visibility(
               visible: _isBaseFareSuccess.value,
               child: Container(
@@ -853,7 +854,8 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
                 ),
               ),
             ),
-          )/* : const SizedBox.shrink()*/,
+          )
+          /* : const SizedBox.shrink()*/,
           Obx(
             () => Visibility(
               visible: _isDiscountB2cApiCAll.value && _isGstSuccess.value,
