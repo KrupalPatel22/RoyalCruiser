@@ -316,6 +316,7 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                         journeyDate = DateFormat('dd-MM-yyyy')
                             .format(selectDateDynamic)
                             .toString();
+
                         NavigatorConstants.ONWARD_DATE = journeyDate!;
                       });
                     },
@@ -441,7 +442,12 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                       journeyDate = DateFormat('dd-MM-yyyy')
                           .format(selectDateDynamic)
                           .toString();
-                      NavigatorConstants.RETURN_DATE = journeyDate!;
+                      if (tripType == "0" || tripType == "1"){
+                        NavigatorConstants.ONWARD_DATE = journeyDate!;
+                      }else{
+                        NavigatorConstants.RETURN_DATE = journeyDate!;
+                      }
+
                     });
 
                   },

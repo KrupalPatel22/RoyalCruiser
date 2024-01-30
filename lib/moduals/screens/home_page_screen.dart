@@ -169,34 +169,37 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    CustomImageSliderWithIndicator(
-                      imageSliders: sliderImagesList,
-                    ),
-                    Positioned(
-                      right: -20.0,
-                      top: -20.0,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const CircleAvatar(
-                          backgroundColor: Colors.red,
-                          child: Icon(Icons.close),
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Dialog(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      CustomImageSliderWithIndicator(
+                        imageSliders: sliderImagesList,
+                      ),
+                      Positioned(
+                        right: -20.0,
+                        top: -20.0,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.red,
+                            child: Icon(Icons.close),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
+              // contentPadding: const EdgeInsets.all(0.0),
             ),
-            contentPadding: const EdgeInsets.all(0.0),
           );
         });
   }
