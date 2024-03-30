@@ -16,8 +16,10 @@ import 'package:royalcruiser/moduals/screens/my_booking_screen.dart';
 import 'package:royalcruiser/moduals/screens/pnr_enquiry_screen.dart';
 import 'package:royalcruiser/moduals/screens/terms_and_condition_screen.dart';
 import 'package:royalcruiser/utils/app_dialog.dart';
+import 'package:royalcruiser/utils/ui/ui_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_redirect/store_redirect.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:xml/xml.dart';
 
 class MenuList {
@@ -204,6 +206,36 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                         ),
                       )
                     : const SizedBox.shrink(),
+
+                Card(
+                  elevation: 1.5,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 6,
+                    // horizontal: 15,
+                  ),
+                  child: ListTile(
+                    tileColor: CustomeColor.sub_bg,
+                    title: const Center(
+                      child: Text(
+                        'Whatsapp',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.0),
+                      ),
+                    ),
+                    trailing: const Icon(CupertinoIcons.forward, color: Colors.white),
+                    onTap: () async {
+                      String url = 'https://api.whatsapp.com/send?phone=9903400910';
+                      if (await canLaunch(url)) {
+                      await launch(url);
+                      } else {
+                        UiUtils.errorSnackBar(message: 'Could not launch $url').show();
+                      throw 'Could not launch $url';
+                      }
+                    },
+                  ),
+                ),
               ],
             ),
           ),

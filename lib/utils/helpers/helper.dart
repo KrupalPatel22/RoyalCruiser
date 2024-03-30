@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:royalcruiser/utils/helpers/get_version.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Helper {
   static const MethodChannel _channel = MethodChannel('unique_identifier');
@@ -77,4 +78,22 @@ class Helper {
     String appVersionCode = await GetVersion.projectVersion;
     return appVersionCode;
   }
+
+  static Future<void> openMap(String latitude, String longitude) async {
+    String googleUrl =
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+
+    print(googleUrl);
+
+    if (!await launchUrl(
+        Uri.parse(googleUrl
+          // "https://maps.app.goo.gl/eqeuwmK3EkeugxvCA?g_st=iw"
+          //    'https://www.google.com/maps/search/?api=1&query=22.5624881,88.3503305',
+        ),
+        mode: LaunchMode.externalNonBrowserApplication)) {
+      throw Exception(
+          'Could not launch ${googleUrl}=="https://maps.app.goo.gl/eqeuwmK3EkeugxvCA?g_st=iw');
+    }
+  }
+
 }

@@ -47,36 +47,32 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
             _sharedPreferences!.getString(Preferences.CUST_PHONE) ?? '';
         userPassword =
             _sharedPreferences!.getString(Preferences.CUST_PASSWORD) ?? '';
-      })
-          .then((value) {
+      }).then((value) {
         NavigatorConstants.USER_ID = usertId!;
         NavigatorConstants.USER_NAME = userName;
         NavigatorConstants.USER_EMAIL = usertEmail;
         NavigatorConstants.USER_PHONE = usertPhone;
         NavigatorConstants.USER_PASSWORD = userPassword;
-      })
-          .then((value) {
+      }).then((value) {
         applicationExtraSettingsApiCall();
         getBannerApiCall(context);
         getSourceB2Cv2ApiCall();
-      })
-          .then((value) => versionCheckApiCall());
+      }).then((value) => versionCheckApiCall());
     });
     super.initState();
   }
 
   void getBannerApiCall(BuildContext context) {
     ApiImplementer.applicationSplashScreenListApiImplementer(
-        currentDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-        height: "1080",
-        width: "2200")
+            currentDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+            height: "1080",
+            width: "2200")
         .then((XmlDocument document) {
-
       List<XmlElement> data =
-      document.findAllElements('SplashScreenList').toList();
+          document.findAllElements('SplashScreenList').toList();
 
       List<String> _popup = [];
-      NavigatorConstants.POP_UP_BANNER_BOOL='0';
+      NavigatorConstants.POP_UP_BANNER_BOOL = '0';
 
       for (int i = 0; i < data.length; i++) {
         if (data[i].getElement('Type')!.text.compareTo("1") == 0) {
@@ -85,8 +81,7 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
       }
 
       NavigatorConstants.POP_UP_BANNER = json.encode(_popup as List<String>);
-
-        }).catchError((onError) {
+    }).catchError((onError) {
       Navigator.of(context)
           .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
       print('  onError:::getSourceB2Cv2ApiCall===>$onError');
@@ -98,14 +93,13 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
       bool xmlElement = document.findAllElements('NewDataSet').isNotEmpty;
       if (xmlElement) {
         List<XmlElement> element =
-        document.findAllElements('ITSSources').toList();
+            document.findAllElements('ITSSources').toList();
         for (int i = 0; i < element.length; i++) {
           ITSSources itsSources = ITSSources(
             CM_CityID: element[i].getElement('CM_CityID')!.text,
             CM_CityName: element[i].getElement('CM_CityName')!.text,
           );
           _selectSourceCityList.add(itsSources);
-
         }
         _sharedPreferences!.setString(NavigatorConstants.SOURCE_CITY,
             json.encode(_selectSourceCityList as List<ITSSources>));
@@ -118,19 +112,17 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
   }
 
   void versionCheckApiCall() {
-
     ApiImplementer.applicationVersionCheckApiImplementer()
         .then((XmlDocument document) async {
-
       XmlElement xmlElement =
           document.findAllElements('ApplicationVersion').first;
-      String IsSurcharge = xmlElement.getElement('IsSurcharge')!.text.toString();
+      String IsSurcharge =
+          xmlElement.getElement('IsSurcharge')!.text.toString();
       NavigatorConstants.IS_SEARCH_CHARGE = IsSurcharge;
       print('================${NavigatorConstants.IS_SEARCH_CHARGE} ');
 
       if (xmlElement != null) {
-        if ((int.parse(NavigatorConstants.APPLICATION_VERSION_CODE) <
-                int.parse(xmlElement.getElement('VersionCode')!.text)) &&
+        if ((int.parse(NavigatorConstants.APPLICATION_VERSION_CODE) < int.parse(xmlElement.getElement('VersionCode')!.text)) &&
             xmlElement.getElement('AppDownloadType')!.text == "1") {
           Navigator.of(context).pushReplacementNamed(
               UpdateApplicationScreen.routeName,
@@ -139,7 +131,8 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
                     CommonConstants.OPTIONAL_UPDATE,
                 NavigatorConstants.IS_FORCE_UPDATE: false,
               });
-        } else if ((int.parse(NavigatorConstants.APPLICATION_VERSION_CODE) <
+        }
+        else if ((int.parse(NavigatorConstants.APPLICATION_VERSION_CODE) <
                 int.parse(xmlElement.getElement('VersionCode')!.text)) &&
             xmlElement.getElement('AppDownloadType')!.text == "2") {
           Navigator.of(context).pushReplacementNamed(
@@ -158,11 +151,10 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
 
           print('Check login :- ${NavigatorConstants.USER_NAME}');
 
-
           bool isUserFirstTime = await Sp().getIsUserFirstTime();
-          if(isUserFirstTime){
-            Get.offAll(()=>WelcomeScreen());
-          }else{
+          if (isUserFirstTime) {
+            Get.offAll(() => WelcomeScreen());
+          } else {
             Get.offAllNamed(DashboardAppScreen.routeName);
           }
         }
@@ -171,14 +163,17 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
       Navigator.of(context)
           .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
       print('  onError:::versionCheckApiCall===>$onError');
+
     });
   }
 
   void applicationExtraSettingsApiCall() {
     ApiImplementer.getApplicationExtraSettingsApiImplementer()
         .then((XmlDocument document) {
-      XmlElement xmlElement =document.findAllElements('IB2C_SeatLayoutColor').first;
-      String AVAILABLE_SEAT = xmlElement.getElement('Available')!.text.toString();
+      XmlElement xmlElement =
+          document.findAllElements('IB2C_SeatLayoutColor').first;
+      String AVAILABLE_SEAT =
+          xmlElement.getElement('Available')!.text.toString();
       String BOOKED_SEAT = xmlElement.getElement('Booked')!.text.toString();
       String LADIES_SEAT = xmlElement.getElement('Ladies')!.text.toString();
       String SELECTED_SEAT = xmlElement.getElement('Selected')!.text.toString();
@@ -187,10 +182,10 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
       NavigatorConstants.LADIES_SEAT_COLOR = LADIES_SEAT;
       NavigatorConstants.SELECTED_SEAT_COLOR = SELECTED_SEAT;
     }).catchError((onError) {
-
-      Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
-      print(':::: onError :: getApplicationExtraSettingsApiImplementer ====> $onError');
-
+      Navigator.of(context)
+          .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+      print(
+          ':::: onError :: getApplicationExtraSettingsApiImplementer ====> $onError');
     });
   }
 

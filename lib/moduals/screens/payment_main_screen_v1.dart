@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:lottie/lottie.dart';
 import 'package:royalcruiser/api/api_imlementer.dart';
 import 'package:royalcruiser/constants/color_constance.dart';
@@ -1441,10 +1442,11 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
         XmlElement xmlElementmain =
             document.findAllElements('Insert_Order').first;
 
+        Logger().d(xmlElementmain);
         if (xmlElementmain != null) {
           if (xmlElementmain.getElement('Status')!.text.compareTo("1") == 0) {
             String url = "${xmlElementmain.getElement('PGURL')!.text}&HS=${xmlElementmain.getElement('OrderNo')!.text}";
-
+            print(url);
             Navigator.of(context).pushReplacementNamed(
                 PaymentMainScreenV2.routeName,
                 arguments: {

@@ -67,8 +67,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
-        iconTheme: const IconThemeData(
-            color: Colors.white, size: 24),
+        iconTheme: const IconThemeData(color: Colors.white, size: 24),
         toolbarHeight: MediaQuery.of(context).size.height / 13,
         title: Obx(
           () => !_isLoadingfData.value
@@ -151,8 +150,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
                         Container(
                           height: 50,
                           color: Colors.grey.shade200,
-                          padding:
-                              const EdgeInsets.only(left: 20),
+                          padding: const EdgeInsets.only(left: 20),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
@@ -163,24 +161,22 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
                                   ],
                                 ),
                               ),
-
                               Expanded(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: _selected_seat_list.length > 0
-                                        ? StrselectedSeatAmt()
-                                        : const SizedBox.shrink(),
-                                  ),
-                                  const SizedBox(width: 10),
-                                     selectedSeatStrikeFare(),
-                                ],),
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: _selected_seat_list.length > 0
+                                          ? StrselectedSeatAmt()
+                                          : const SizedBox.shrink(),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    selectedSeatStrikeFare(),
+                                  ],
+                                ),
                               ),
-
                               const SizedBox(width: 20),
-
                               IntrinsicHeight(
                                 child: ElevatedButton(
                                   onPressed: () {
@@ -196,8 +192,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
                                   child: Text(
                                     'Done'.toUpperCase(),
                                     style: const TextStyle(
-                                        fontSize:
-                                            16,
+                                        fontSize: 16,
                                         fontFamily: CommonConstants
                                             .FONT_FAMILY_OPEN_SANS_REGULAR),
                                   ),
@@ -286,7 +281,9 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
         NavigatorConstants.DROPPING_POINT_RETURN_ARRAY =
             json.encode(_droppingPoint);
       }
-      Navigator.of(context).pushNamed(BoardingAndDroppingPointScreen.routeName);
+      //  Navigator.of(context).pushNamed(BoardingAndDroppingPointScreen.routeName);
+      Get.to(() => BoardingAndDroppingPointScreen(
+          ReferenceNumber: "${allRouteBusLists!.ReferenceNumber}"));
     }
   }
 
@@ -295,6 +292,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
       List<String> boarding = allRouteBusLists!.BoardingPoints.split('#');
 
       for (int i = 0; i < boarding.length; i++) {
+        print("My Boarding :- ${boarding}");
         String boardingId = boarding[i].split('|')[0] ?? '';
         String boardingName = boarding[i].split('|')[1] ?? '';
         String boardingTime = boarding[i].split('|')[2] ?? '';
@@ -307,12 +305,13 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
           PickUpTime: boardingTime,
           PickupPhone: boardingMobile,
         );
+
         _boardingPoint.add(boardingDroppingPointDetails);
       }
     }
   }
 
-  void getDroppingPointStore()  {
+  void getDroppingPointStore() {
     if (allRouteBusLists!.DroppingPoints.isNotEmpty) {
       List<String> dropping = allRouteBusLists!.DroppingPoints.split('#');
 
@@ -344,8 +343,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
       if (i == 0) {
         onwardSeatstring = _selected_seat_list[i].SeatNo;
       } else {
-        onwardSeatstring =
-            "$onwardSeatstring,${_selected_seat_list[i].SeatNo}";
+        onwardSeatstring = "$onwardSeatstring,${_selected_seat_list[i].SeatNo}";
       }
     }
 
@@ -358,21 +356,22 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
     );
   }
 
-
   Widget selectedSeatStrikeFare() {
     double onwardSeatString = 0.0;
     for (int i = 0; i < _selected_seat_list.length; i++) {
       onwardSeatString += double.parse(_selected_seat_list[i].OriginalSeatRate);
     }
-    return onwardSeatString != 0.0 /*&& NavigatorConstants.USER_ID != '0'*/ ? Text(
-      '$onwardSeatString',
-      style: const TextStyle(
-        fontSize: 14,
-        fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-        decoration: TextDecoration.lineThrough,
-        color: Colors.black,
-      ),
-    ) : const SizedBox.shrink();
+    return onwardSeatString != 0.0 /*&& NavigatorConstants.USER_ID != '0'*/
+        ? Text(
+            '$onwardSeatString',
+            style: const TextStyle(
+              fontSize: 14,
+              fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+              decoration: TextDecoration.lineThrough,
+              color: Colors.black,
+            ),
+          )
+        : const SizedBox.shrink();
   }
 
   Widget StrselectedSeatAmt() {
@@ -380,8 +379,8 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
     double onwardSeatStrike = 0.0;
     for (int i = 0; i < _selected_seat_list.length; i++) {
       /*if(NavigatorConstants.USER_ID != '0'){*/
-        onwardSeatString += double.parse(_selected_seat_list[i].BaseFare);
-     /* }else{
+      onwardSeatString += double.parse(_selected_seat_list[i].BaseFare);
+      /* }else{
         onwardSeatStrike += double.parse(_selected_seat_list[i].OriginalSeatRate);
         if(onwardSeatStrike > 0){
           onwardSeatString += double.parse(_selected_seat_list[i].OriginalSeatRate);
@@ -457,8 +456,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
             children: _isTabbar.value.compareTo(2) == 0
                 ? [
                     Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 3),
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
                       decoration: const BoxDecoration(
                         // color: CustomeColor.main_bg,
                         borderRadius: BorderRadius.only(
@@ -485,8 +483,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 3),
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
                       decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(15),
@@ -512,8 +509,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
                   ]
                 : [
                     Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 3),
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
                       decoration: const BoxDecoration(
                         // color: CustomeColor.main_bg,
                         borderRadius: BorderRadius.only(
@@ -563,9 +559,9 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
             ? selected_seat_color
             : seatColorDefine(index: _lowerBerth[i]);
         BoxDecoration decoration = const BoxDecoration(
-          // borderRadius: const BorderRadius.all(Radius.circular(15)),
-          // color: color,
-        );
+            // borderRadius: const BorderRadius.all(Radius.circular(15)),
+            // color: color,
+            );
         TextStyle textStyle = TextStyle(
             fontSize: seatNameSize,
             fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
@@ -642,12 +638,14 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
                             alignment: Alignment.center,
                             children: [
                               // SvgPicture.asset('assets/images/blue_seat.svg',
-                              SvgPicture.asset('assets/images/bg.svg',
-                              // SvgPicture.asset('assets/images/single-b.svg',
-                              // SvgPicture.asset('assets/images/double-b.svg',
-                              color: color,
-                              height: buttonHeight,
-                              width: buttonHeight,),
+                              SvgPicture.asset(
+                                'assets/images/bg.svg',
+                                // SvgPicture.asset('assets/images/single-b.svg',
+                                // SvgPicture.asset('assets/images/double-b.svg',
+                                color: color,
+                                height: buttonHeight,
+                                width: buttonHeight,
+                              ),
                               Text(
                                 _lowerBerth[i].SeatNo,
                                 textAlign: TextAlign.center,
@@ -767,7 +765,7 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
 
   void onTapFunctionLower({required int i}) {
     if (ClickEventDynamicBool(index: _lowerBerth[i])) {
-      if (_selected_seat_list.length < 10) {
+      if (_selected_seat_list.length < 8) {
         setState(() {
           if (_selected_seat_list.contains(_lowerBerth[i]) == false) {
             _selected_seat_list.add(_lowerBerth[i]);
@@ -782,17 +780,18 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
       } else {
         AppDialogs.showErrorDialog(
             context: context,
-            errorMsg: 'You can not select more then 10 seats',
+            errorMsg: 'You can not select more then 8 seats',
             onOkBtnClickListener: () {
               Navigator.of(context).pop();
-            }, title: 'Alert!!');
+            },
+            title: 'Alert!!');
       }
     }
   }
 
   void onTapFunctionUpper({required int i}) {
     if (ClickEventDynamicBool(index: _upperBerth[i])) {
-      if (_selected_seat_list.length < 10) {
+      if (_selected_seat_list.length < 8) {
         setState(() {
           if (_selected_seat_list.contains(_upperBerth[i]) == false) {
             _selected_seat_list.add(_upperBerth[i]);
@@ -807,10 +806,11 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
       } else {
         AppDialogs.showErrorDialog(
             context: context,
-            errorMsg: 'You can not select more then 10 seats',
+            errorMsg: 'You can not select more then 8 seats',
             onOkBtnClickListener: () {
               Navigator.of(context).pop();
-            }, title: 'Alert!!');
+            },
+            title: 'Alert!!');
       }
     }
   }
@@ -914,69 +914,85 @@ class _SeatArrangementAppScreenState extends State<SeatArrangementAppScreen> {
           for (int i = 0; i < element.length; i++) {
             if (element[i].getElement('UpLowBerth')!.text == "LB") {
               ITSSeatDetails itsSeatDetails = ITSSeatDetails(
-                SeatNo: element[i].getElement('SeatNo')!.text,
-                IsLadiesSeat: element[i].getElement('IsLadiesSeat')!.text,
-                Available: element[i].getElement('Available')!.text,
-                SeatType: element[i].getElement('SeatType')!.text,
-                Row: element[i].getElement('Row')!.text,
-                Column: element[i].getElement('Column')!.text,
-                UpLowBerth: element[i].getElement('UpLowBerth')!.text,
-                BlockType: element[i].getElement('BlockType')!.text,
-                RowSpan: element[i].getElement('RowSpan')!.text,
-                ColumnSpan: element[i].getElement('ColumnSpan')!.text,
-                SeatCategory: element[i].getElement('SeatCategory')!.text,
-                SeatRate: element[i].getElement('SeatRate')!.text,
-                IsLowPrice: element[i].getElement('IsLowPrice')!.text,
-                BaseFare: element[i].getElement('BaseFare')!.text,
-                ServiceTax: element[i].getElement('ServiceTax')!.text,
-                Surcharges: element[i].getElement('Surcharges')!.text,
-                OnlineCharge: element[i].getElement('OnlineCharge')!.text,
-
-                BaseFareServicTax: element[i].getElement('BaseFareServicTax')!.text,
-                CDH_DiscountIfDoubleSeatBooked: element[i].getElement('CDH_DiscountIfDoubleSeatBooked')!.text,
-                CouponCodeDetails: element[i].getElement('CouponCodeDetails')!.text,
-                DiscountAmount: element[i].getElement('DiscountAmount')!.text,
-                InsuranceCharges: element[i].getElement('InsuranceCharges')!.text,
-                IsHomeDrop: element[i].getElement('IsHomeDrop')!.text,
-                IsHomePickup: element[i].getElement('IsHomePickup')!.text,
-                IsSocialDistanceBlockSeat: element[i].getElement('IsSocialDistanceBlockSeat')!.text,
-                OriginalSeatRate: element[i].getElement('OriginalSeatRate')!.text,
-                SocialDistancePercentage: element[i].getElement('SocialDistancePercentage')!.text,
-                SocialDistanceTransactionType: element[i].getElement('SocialDistanceTransactionType')!.text
-              );
-              _lowerBerth.add(itsSeatDetails);
-            }
-            else if (element[i].getElement('UpLowBerth')!.text == "UB") {
-              ITSSeatDetails itsSeatDetails = ITSSeatDetails(
-                SeatNo: element[i].getElement('SeatNo')!.text,
-                IsLadiesSeat: element[i].getElement('IsLadiesSeat')!.text,
-                Available: element[i].getElement('Available')!.text,
-                SeatType: element[i].getElement('SeatType')!.text,
-                Row: element[i].getElement('Row')!.text,
-                Column: element[i].getElement('Column')!.text,
-                UpLowBerth: element[i].getElement('UpLowBerth')!.text,
-                BlockType: element[i].getElement('BlockType')!.text,
-                RowSpan: element[i].getElement('RowSpan')!.text,
-                ColumnSpan: element[i].getElement('ColumnSpan')!.text,
-                SeatCategory: element[i].getElement('SeatCategory')!.text,
-                SeatRate: element[i].getElement('SeatRate')!.text,
-                IsLowPrice: element[i].getElement('IsLowPrice')!.text,
-                BaseFare: element[i].getElement('BaseFare')!.text,
-                ServiceTax: element[i].getElement('ServiceTax')!.text,
-                Surcharges: element[i].getElement('Surcharges')!.text,
-                OnlineCharge: element[i].getElement('OnlineCharge')!.text,
-                  BaseFareServicTax: element[i].getElement('BaseFareServicTax')!.text,
-                  CDH_DiscountIfDoubleSeatBooked: element[i].getElement('CDH_DiscountIfDoubleSeatBooked')!.text,
-                  CouponCodeDetails: element[i].getElement('CouponCodeDetails')!.text,
+                  SeatNo: element[i].getElement('SeatNo')!.text,
+                  IsLadiesSeat: element[i].getElement('IsLadiesSeat')!.text,
+                  Available: element[i].getElement('Available')!.text,
+                  SeatType: element[i].getElement('SeatType')!.text,
+                  Row: element[i].getElement('Row')!.text,
+                  Column: element[i].getElement('Column')!.text,
+                  UpLowBerth: element[i].getElement('UpLowBerth')!.text,
+                  BlockType: element[i].getElement('BlockType')!.text,
+                  RowSpan: element[i].getElement('RowSpan')!.text,
+                  ColumnSpan: element[i].getElement('ColumnSpan')!.text,
+                  SeatCategory: element[i].getElement('SeatCategory')!.text,
+                  SeatRate: element[i].getElement('SeatRate')!.text,
+                  IsLowPrice: element[i].getElement('IsLowPrice')!.text,
+                  BaseFare: element[i].getElement('BaseFare')!.text,
+                  ServiceTax: element[i].getElement('ServiceTax')!.text,
+                  Surcharges: element[i].getElement('Surcharges')!.text,
+                  OnlineCharge: element[i].getElement('OnlineCharge')!.text,
+                  BaseFareServicTax:
+                      element[i].getElement('BaseFareServicTax')!.text,
+                  CDH_DiscountIfDoubleSeatBooked: element[i]
+                      .getElement('CDH_DiscountIfDoubleSeatBooked')!
+                      .text,
+                  CouponCodeDetails:
+                      element[i].getElement('CouponCodeDetails')!.text,
                   DiscountAmount: element[i].getElement('DiscountAmount')!.text,
-                  InsuranceCharges: element[i].getElement('InsuranceCharges')!.text,
+                  InsuranceCharges:
+                      element[i].getElement('InsuranceCharges')!.text,
                   IsHomeDrop: element[i].getElement('IsHomeDrop')!.text,
                   IsHomePickup: element[i].getElement('IsHomePickup')!.text,
-                  IsSocialDistanceBlockSeat: element[i].getElement('IsSocialDistanceBlockSeat')!.text,
-                  OriginalSeatRate: element[i].getElement('OriginalSeatRate')!.text,
-                  SocialDistancePercentage: element[i].getElement('SocialDistancePercentage')!.text,
-                  SocialDistanceTransactionType: element[i].getElement('SocialDistanceTransactionType')!.text
-              );
+                  IsSocialDistanceBlockSeat:
+                      element[i].getElement('IsSocialDistanceBlockSeat')!.text,
+                  OriginalSeatRate:
+                      element[i].getElement('OriginalSeatRate')!.text,
+                  SocialDistancePercentage:
+                      element[i].getElement('SocialDistancePercentage')!.text,
+                  SocialDistanceTransactionType: element[i]
+                      .getElement('SocialDistanceTransactionType')!
+                      .text);
+              _lowerBerth.add(itsSeatDetails);
+            } else if (element[i].getElement('UpLowBerth')!.text == "UB") {
+              ITSSeatDetails itsSeatDetails = ITSSeatDetails(
+                  SeatNo: element[i].getElement('SeatNo')!.text,
+                  IsLadiesSeat: element[i].getElement('IsLadiesSeat')!.text,
+                  Available: element[i].getElement('Available')!.text,
+                  SeatType: element[i].getElement('SeatType')!.text,
+                  Row: element[i].getElement('Row')!.text,
+                  Column: element[i].getElement('Column')!.text,
+                  UpLowBerth: element[i].getElement('UpLowBerth')!.text,
+                  BlockType: element[i].getElement('BlockType')!.text,
+                  RowSpan: element[i].getElement('RowSpan')!.text,
+                  ColumnSpan: element[i].getElement('ColumnSpan')!.text,
+                  SeatCategory: element[i].getElement('SeatCategory')!.text,
+                  SeatRate: element[i].getElement('SeatRate')!.text,
+                  IsLowPrice: element[i].getElement('IsLowPrice')!.text,
+                  BaseFare: element[i].getElement('BaseFare')!.text,
+                  ServiceTax: element[i].getElement('ServiceTax')!.text,
+                  Surcharges: element[i].getElement('Surcharges')!.text,
+                  OnlineCharge: element[i].getElement('OnlineCharge')!.text,
+                  BaseFareServicTax:
+                      element[i].getElement('BaseFareServicTax')!.text,
+                  CDH_DiscountIfDoubleSeatBooked: element[i]
+                      .getElement('CDH_DiscountIfDoubleSeatBooked')!
+                      .text,
+                  CouponCodeDetails:
+                      element[i].getElement('CouponCodeDetails')!.text,
+                  DiscountAmount: element[i].getElement('DiscountAmount')!.text,
+                  InsuranceCharges:
+                      element[i].getElement('InsuranceCharges')!.text,
+                  IsHomeDrop: element[i].getElement('IsHomeDrop')!.text,
+                  IsHomePickup: element[i].getElement('IsHomePickup')!.text,
+                  IsSocialDistanceBlockSeat:
+                      element[i].getElement('IsSocialDistanceBlockSeat')!.text,
+                  OriginalSeatRate:
+                      element[i].getElement('OriginalSeatRate')!.text,
+                  SocialDistancePercentage:
+                      element[i].getElement('SocialDistancePercentage')!.text,
+                  SocialDistanceTransactionType: element[i]
+                      .getElement('SocialDistanceTransactionType')!
+                      .text);
               _upperBerth.add(itsSeatDetails);
             }
           }

@@ -104,8 +104,7 @@ class MyApp extends StatelessWidget {
         AvailableRoutesAppScreen.routeName: (ctx) => const AvailableRoutesAppScreen(),
         SeatArrangementAppScreen.routeName: (ctx) => const SeatArrangementAppScreen(),
         LoginScreen.routeName: (ctx) => const LoginScreen(),
-        BoardingAndDroppingPointScreen.routeName: (ctx) =>
-            const BoardingAndDroppingPointScreen(),
+        BoardingAndDroppingPointScreen.routeName: (ctx) => BoardingAndDroppingPointScreen(),
         RegistrationScreen.routeName: (ctx) => RegistrationScreen(),
         ForgotPasswordScreen.routeName: (ctx) => const ForgotPasswordScreen(),
         VerificationScreen.routeName: (ctx) => const VerificationScreen(),

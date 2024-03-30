@@ -6,6 +6,8 @@ import 'package:royalcruiser/model/boarding_and_dropping_point_model.dart';
 import 'package:royalcruiser/moduals/screens/avilable_route_screen.dart';
 import 'package:royalcruiser/moduals/screens/passenger_info_screen.dart';
 
+import '../utils/helpers/helper.dart';
+
 class DroppingPointWidget extends StatefulWidget {
   final List<BoardingDroppingPointDetails> droppingPointList;
   final VoidCallback onNext;
@@ -44,20 +46,20 @@ class _DroppingPointWidgetState extends State<DroppingPointWidget> {
   }
 
   void onTapData({required int index}) {
-    SelectedValue.value = widget.droppingPointList[index].PickUpID;
-    NavigatorConstants.SelectedDroppingPointNameForPage= widget.droppingPointList[index].PickUpName;
+    SelectedValue.value = widget.droppingPointList[index].PickUpID??"";
+    NavigatorConstants.SelectedDroppingPointNameForPage= widget.droppingPointList[index].PickUpName??"";
     if (tripType == "0" || tripType == "1") {
       setState(() {
-       NavigatorConstants.SelectedDroppingPointOnwordID = widget.droppingPointList[index].PickUpID;
-       NavigatorConstants.SelectedDroppingPointOnwordName = widget.droppingPointList[index].PickUpName;
-       NavigatorConstants.SelectedDroppingPointOnwordTime = widget.droppingPointList[index].PickUpTime;
+       NavigatorConstants.SelectedDroppingPointOnwordID = widget.droppingPointList[index].PickUpID??"";
+       NavigatorConstants.SelectedDroppingPointOnwordName = widget.droppingPointList[index].PickUpName??"";
+       NavigatorConstants.SelectedDroppingPointOnwordTime = widget.droppingPointList[index].PickUpTime??"";
       });
       widget.onNext();
     } else if (tripType == "2") {
       setState(() {
-        NavigatorConstants.SelectedDroppingPointReturnID = widget.droppingPointList[index].PickUpID;
-        NavigatorConstants.SelectedDroppingPointReturnName = widget.droppingPointList[index].PickUpName;
-        NavigatorConstants.SelectedDroppingPointReturnTime = widget.droppingPointList[index].PickUpTime;
+        NavigatorConstants.SelectedDroppingPointReturnID = widget.droppingPointList[index].PickUpID??"";
+        NavigatorConstants.SelectedDroppingPointReturnName = widget.droppingPointList[index].PickUpName??"";
+        NavigatorConstants.SelectedDroppingPointReturnTime = widget.droppingPointList[index].PickUpTime??"";
       });
       widget.onNext();
     }
@@ -111,6 +113,25 @@ class _DroppingPointWidgetState extends State<DroppingPointWidget> {
                                         fontFamily: CommonConstants
                                             .FONT_FAMILY_OPEN_SANS_BOLD),
                                     textAlign: TextAlign.start,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Helper.openMap(
+                                          widget.droppingPointList[e].latitude ??
+                                              "",
+                                          widget.droppingPointList[e].longitude ??
+                                              "");
+
+                                    },
+                                    child: Text(
+                                      'Locate on Google Maps',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.blue[900],
+                                          fontFamily: CommonConstants
+                                              .FONT_FAMILY_OPEN_SANS_BOLD),
+                                      textAlign: TextAlign.start,
+                                    ),
                                   ),
 
                                 ],

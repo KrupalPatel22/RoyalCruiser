@@ -53,7 +53,8 @@ class ApiImplementer {
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
-    } else {
+    }
+    else {
       throw Exception(response.statusMessage.toString());
     }
   }
@@ -606,6 +607,7 @@ class ApiImplementer {
                               </tem:GetAvailableRoutes_STax>
                            </soapenv:Body>
                         </soapenv:Envelope>''';
+    logger.d(data);
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
@@ -613,7 +615,7 @@ class ApiImplementer {
       }),
       data: data,
     );
-    // logger.d(data);
+
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
@@ -1150,13 +1152,7 @@ class ApiImplementer {
     required String EmailID,
     required String Password,
   }) async {
-    final http.Response response = await http.post(
-      Uri.parse('${ApiUrls.str_URL}'),
-      headers: {
-        'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}Fetch_MyBookings'} ',
-      },
-      body: '''<?xml version="1.0" encoding="utf-8"?>
+    var data = '''<?xml version="1.0" encoding="utf-8"?>
                         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
                         xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
                             <soapenv:Header/>
@@ -1178,8 +1174,16 @@ class ApiImplementer {
                                     </tem:paraMyBookings>
                                 </tem:Fetch_MyBookings>
                             </soapenv:Body>
-                        </soapenv:Envelope>''',
+                        </soapenv:Envelope>''';
+    final http.Response response = await http.post(
+      Uri.parse('${ApiUrls.str_URL}'),
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}Fetch_MyBookings'} ',
+      },
+      body: data,
     );
+    logger.d(data);
     if (response.statusCode == 200) {
       XmlDocument document = XmlDocument.parse(response.body);
       return document;
@@ -1829,6 +1833,108 @@ class ApiImplementer {
       return document;
     } else {
       throw Exception('Exception====>${response.body}');
+    }
+  }
+
+  static Future<XmlDocument> getBoardingDropDetails_V2ApiImplementer({
+    required String ReferenceNumber,
+  }) async {
+
+    var data = '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:GetBoardingDropDetails_V2>
+         <!--Optional:-->
+         <tem:ParaComman>
+            <!--Optional:-->
+               <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
+            <!--Optional:-->
+            <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
+            <!--Optional:-->
+            <ns:ApplicationVersionCode>$ApplicationVersionCode</ns:ApplicationVersionCode>
+            <!--Optional:-->
+            <ns:DeviceID>$DeviceID</ns:DeviceID>
+            <!--Optional:-->
+            <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
+            <!--Optional:-->
+            <ns:RequestType>$RequestType</ns:RequestType>
+            <!--Optional:-->
+            <ns:UserId>$UserId</ns:UserId>
+            <!--Optional:-->
+            <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
+         </tem:ParaComman>
+         <!--Optional:-->
+         <tem:ReferenceNumber>${ReferenceNumber.toString()}</tem:ReferenceNumber>
+      </tem:GetBoardingDropDetails_V2>
+   </soapenv:Body>
+</soapenv:Envelope>''';
+    final response = await DioClient.getDioClient()!.post(
+      '',
+      options: Options(headers: {
+        'soapaction':
+        '${'${ApiUrls.str_SOAPActURL}GetBoardingDropDetails_V2'} ',
+      }),
+      data: data,
+    );
+    // logger.d(data);
+    if (response.statusCode == 200) {
+      XmlDocument xmlDocument = XmlDocument.parse(response.data);
+      return xmlDocument;
+    }
+    else {
+      throw Exception(response.statusMessage.toString());
+    }
+  }
+
+  static Future<XmlDocument> getGetTicketPrintDataApiImplementer({
+    required String OrderId,
+  }) async {
+    var data = '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:GetTicketPrintData>
+         <!--Optional:-->
+         <tem:ParaComman>
+            <!--Optional:-->
+            <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
+            <!--Optional:-->
+            <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
+            <!--Optional:-->
+            <ns:ApplicationVersionCode>$ApplicationVersionCode</ns:ApplicationVersionCode>
+            <!--Optional:-->
+            <ns:DeviceID>$DeviceID</ns:DeviceID>
+            <!--Optional:-->
+            <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
+            <!--Optional:-->
+            <ns:RequestType>$RequestType</ns:RequestType>
+            <!--Optional:-->
+            <ns:UserId>$UserId</ns:UserId>
+            <!--Optional:-->
+            <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
+         </tem:ParaComman>
+         <!--Optional:-->
+         <tem:OrderId>${OrderId.toString()}</tem:OrderId>
+      </tem:GetTicketPrintData>
+   </soapenv:Body>
+</soapenv:Envelope>''';
+
+    logger.d(data);
+
+    final response = await DioClient.getDioClient()!.post(
+      '',
+      options: Options(headers: {
+        'soapaction':
+        '${'${ApiUrls.str_SOAPActURL}GetTicketPrintData'} ',
+      }),
+      data: data,
+    );
+
+    if (response.statusCode == 200) {
+      XmlDocument xmlDocument = XmlDocument.parse(response.data);
+      return xmlDocument;
+    }
+    else {
+      throw Exception(response.statusMessage.toString());
     }
   }
 }

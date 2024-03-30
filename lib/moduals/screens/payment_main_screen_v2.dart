@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:royalcruiser/constants/color_constance.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
 import 'package:royalcruiser/moduals/screens/dashboard_screen.dart';
+import 'package:royalcruiser/moduals/screens/ticket_detail_screen.dart';
 import 'package:royalcruiser/utils/app_dialog.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -26,9 +27,8 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
   @override
   void didChangeDependencies() {
     final rcvData =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    webURL =
-        "${rcvData['PGURL']}&HS=${rcvData['OrderNo']}";
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    webURL = "${rcvData['PGURL']}&HS=${rcvData['OrderNo']}";
     super.didChangeDependencies();
   }
 
@@ -107,10 +107,11 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
-        checkTktStatus ? _alertBox('Are you sure you want to go back ?') : _alertBox('Are you sure cancel this transaction ?');
+        checkTktStatus
+            ? _alertBox('Are you sure you want to go back ?')
+            : _alertBox('Are you sure cancel this transaction ?');
         return true;
       },
-
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -130,57 +131,71 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
           ),
         ),
         body: Obx(
-              () => !_isLoading.value
+          () => !_isLoading.value
               ? Container()
               : Stack(
-            children: <Widget>[
-              WebView(
-                initialUrl: webURL,
-                javascriptMode: JavascriptMode.unrestricted,
-                zoomEnabled: true,
-                onPageStarted: (String url) {
-                  print('on page start ::::: $url');
-                  setState(() {
-                    _isLoadingWebView = true;
-                  });
-                  if (url.toLowerCase().contains("ticket") || url.contains("E-Ticket") || url.toLowerCase().contains('eticket')) {
-                    showDialogDynamic(msg: 'Successfully booked ticket', status: 's');
-                  }
-                  else if (url.contains("Error.aspx") ||
-                      url.contains("error.aspx") ||
-                      url.contains("LatestNews.aspx") ||
-                      url.contains("Index.aspx") ||
-                      url.contains("transtatus.aspx") ||
-                      url.contains("index.aspx") ||
-                      url.contains("Cancel_txn.jsp") ||
-                      url.contains("cancel_txn.jsp") ||
-                      url.toLowerCase().contains("cancel")) {
-                    showDialogDynamic(msg: 'error! please try again`', status: 'f');
-                  }
-                },
-                onPageFinished: (String url) {
-                  print('on page finish ::::: $url');
-                  setState(() {
-                    _isLoadingWebView = false;
-                  });
-                  if(url.toLowerCase().contains('blank') || url.toLowerCase().contains('about:blank')){
-                    Get.offAllNamed(DashboardAppScreen.routeName);
-                  }
-                  if (url.toLowerCase().contains("ticket") || url.contains("E-Ticket") || url.toLowerCase().contains('eticket')) {
-                    showDialogDynamic(msg: 'Successfully booked ticket', status: 's');
-                  }
-                  if (url.toLowerCase().contains("paymentfailed") ) {
-                    showDialogDynamic(msg: 'Payment Failed', status: 'f');
-                  }
-                },
-              ),
-              _isLoadingWebView
-                  ? Center(
-                child: AppDialogs.screenAppShowDiloag(context),
-              )
-                  : const SizedBox(),
-            ],
-          ),
+                  children: <Widget>[
+                    WebView(
+                      initialUrl: webURL,
+                      javascriptMode: JavascriptMode.unrestricted,
+                      zoomEnabled: true,
+                      onPageStarted: (String url) {
+                        print('on page start ::::: $url');
+                        setState(() {
+                          _isLoadingWebView = true;
+                        });
+                        if (url.toLowerCase().contains("ticket") ||
+                            url.contains("E-Ticket") ||
+                            url.toLowerCase().contains('eticket')) {
+                          showDialogDynamic(
+                              msg: 'Successfully booked ticket',
+                              status: 's',
+                              url: url);
+                        } else if (url.contains("Error.aspx") ||
+                            url.contains("error.aspx") ||
+                            url.contains("LatestNews.aspx") ||
+                            url.contains("Index.aspx") ||
+                            url.contains("transtatus.aspx") ||
+                            url.contains("index.aspx") ||
+                            url.contains("Cancel_txn.jsp") ||
+                            url.contains("cancel_txn.jsp") ||
+                            url.toLowerCase().contains("cancel")) {
+                          showDialogDynamic(
+                              msg: 'error! please try again`',
+                              status: 'f',
+                              url: url);
+                        }
+                      },
+                      onPageFinished: (String url) {
+                        print('on page finish ::::: $url');
+                        setState(() {
+                          _isLoadingWebView = false;
+                        });
+                        if (url.toLowerCase().contains('blank') ||
+                            url.toLowerCase().contains('about:blank')) {
+                          Get.offAllNamed(DashboardAppScreen.routeName);
+                        }
+                        if (url.toLowerCase().contains("ticket") ||
+                            url.contains("E-Ticket") ||
+                            url.toLowerCase().contains('eticket')) {
+                          showDialogDynamic(
+                              msg: 'Successfully booked ticket',
+                              status: 's',
+                              url: url);
+                        }
+                        if (url.toLowerCase().contains("paymentfailed")) {
+                          showDialogDynamic(
+                              msg: 'Payment Failed', status: 'f', url: url);
+                        }
+                      },
+                    ),
+                    _isLoadingWebView
+                        ? Center(
+                            child: AppDialogs.screenAppShowDiloag(context),
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
@@ -196,7 +211,7 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
           ),
           elevation: 2.0,
           onPressed: () {
-            Get.offAll(()=>DashboardAppScreen(defaultScreen: 4));
+            Get.offAll(() => DashboardAppScreen(defaultScreen: 4));
           },
         ),
         bottomNavigationBar: AnimatedBottomNavigationBar(
@@ -212,14 +227,15 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
           leftCornerRadius: 20,
           rightCornerRadius: 20,
           onTap: (index) {
-            Get.offAll(()=>DashboardAppScreen(defaultScreen: index));
+            Get.offAll(() => DashboardAppScreen(defaultScreen: index));
           },
         ),
       ),
     );
   }
 
-  Future<void> showDialogDynamic({required String msg, required String status}) {
+  Future<void> showDialogDynamic(
+      {required String msg, required String status, required String url}) {
     return showDialog(
       barrierDismissible: false,
       context: context,
@@ -245,19 +261,35 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if(status == 's'){
-                    Navigator.of(context).pop();
+                  if (status == 's') {
+                    //Navigator.of(context).pop();
+                    String odIsStr = url.split('?')[1];
+                    String orderId = odIsStr.split('=')[1];
+
+                    Get.off(() => TicketDetailScreen(
+                        fromCityname: "fromCityname",
+                        toCityname: "toCityname",
+                        pickupTime: "pickupTime",
+                        dropTime: "dropTime",
+                        journeyTime: "journeyTime",
+                        bustourName: "bustourName",
+                        seatNumber: "seatNumber",
+                        passengerName: "passengerName",
+                        ticketNo: "ticketNo",
+                        PNR: "PNR",
+                        fare: "fare",
+                        OrderId: orderId));
                     setState(() {
                       checkTktStatus = true;
                     });
-                  }else if(status == 'f'){
+                  } else if (status == 'f') {
                     Get.offAllNamed(DashboardAppScreen.routeName);
                   }
                   // Navigator.of(context)
                   //     .pushReplacementNamed(DashboardAppScreen.routeName);
                 },
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(10)),
+                style:
+                    ElevatedButton.styleFrom(padding: const EdgeInsets.all(10)),
                 child: const Text(
                   'OK',
                   style: TextStyle(

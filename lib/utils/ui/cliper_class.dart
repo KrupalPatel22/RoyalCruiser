@@ -6,6 +6,7 @@ class DolDurmaClipper extends CustomClipper<Path> {
 
   DolDurmaClipper({required this.holeRadius, required this.bottom});
 
+
   @override
   Path getClip(Size size) {
 

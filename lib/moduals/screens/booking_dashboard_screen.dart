@@ -113,7 +113,10 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
                                     passengerName: "${MyBookingData[item].getElement("CustName")!.text}",
                                     ticketNo: "${MyBookingData[item].getElement("M_OrderID")!.text}",
                                     PNR: "${MyBookingData[item].getElement("PNRNo")!.text}",
-                                    fare: "₹${MyBookingData[item].getElement("PNRAmount")!.text}"));
+                                    fare: "₹${MyBookingData[item].getElement("PNRAmount")!.text}",
+                                  OrderId: "${MyBookingData[item].getElement("OrderID")!.text}"
+                                ),
+                                );
                               },
                               child: Card(
                                 color: CustomeColor.main_bg,
