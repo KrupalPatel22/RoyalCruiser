@@ -221,6 +221,15 @@ class _AvailableRouteWidgetState extends State<AvailableRouteWidget> {
                 const SizedBox(height: 10),
 
                 Row(
+                  children: [
+                    Text(
+                        widget.allRouteBusLists!.getElement('BusTypeName')!
+                            .text,
+                        style: const TextStyle(fontSize: 15)),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     //Start point
@@ -242,17 +251,19 @@ class _AvailableRouteWidgetState extends State<AvailableRouteWidget> {
                         child: SvgPicture.asset('assets/images/route_bus_Icon.svg')),
 
                     //End point
-                    Column(
-                      children: [
-                        Text(widget.allRouteBusLists!.getElement('ArrivalTime')!
-                            .text,
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold)),
-                        Text(
-                            widget.allRouteBusLists!.getElement('ToCityName')!
-                                .text,
-                            style: const TextStyle(fontSize: 15)),
-                      ],
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(widget.allRouteBusLists!.getElement('ArrivalTime')!
+                              .text,
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text(
+                              widget.allRouteBusLists!.getElement('ToCityName')!
+                                  .text,
+                              style: const TextStyle(fontSize: 15)),
+                        ],
+                      ),
                     ),
                   ],
                 ),

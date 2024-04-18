@@ -83,6 +83,7 @@ class _GalleryAppScreenState extends State<GalleryAppScreen> {
                   List<XmlElement> data =
                       snapshot.data!.findAllElements('SplashScreenList').toList();
                   for (int i = 0; i < data.length; i++) {
+                    print("Gallery Data :- ${data[i]}");
                     if (data[i].getElement('Type')!.text.compareTo("3") == 0) {
                       photos.add(
                           data[i].getElement('Details')!.text.trim().toString());

@@ -325,7 +325,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 10)
                   ],
                 ),
               )

@@ -49,6 +49,8 @@ class MyTicketModel {
   String? dMDropID;
   String? pickuptime;
   String? pickupDate;
+  String? Droptime;
+  String? DropDate;
   String? serverFilePath;
   String? sDiffgrId;
   String? sMsdataRowOrder;
@@ -56,6 +58,9 @@ class MyTicketModel {
   String? PickupLongitude;
   String? DropLatitude;
   String? DropLongitude;
+  String? DropName;
+  String? DropName_Short;
+  String? DriverPhone;
 
   MyTicketModel(
       {this.pNR,
@@ -115,6 +120,11 @@ class MyTicketModel {
         this.PickupLongitude,
         this.DropLatitude,
         this.DropLongitude,
+        this.Droptime,
+        this.DropDate,
+        this.DropName,
+        this.DropName_Short,
+        this.DriverPhone,
       });
 
   MyTicketModel.fromJson(Map<String, dynamic> json) {
@@ -173,8 +183,13 @@ class MyTicketModel {
     sMsdataRowOrder = json['_msdata:rowOrder'];
     PickupLatitude = json['PickupLatitude'];
     PickupLongitude = json['PickupLongitude'];
-    PickupLongitude = json['DropLatitude'];
-    PickupLongitude = json['DropLongitude'];
+    DropLatitude = json['DropLatitude'];
+    DropLongitude = json['DropLongitude'];
+    Droptime = json['Droptime'];
+    DropDate = json['DropDate'];
+    DropName = json['DropName'];
+    DropName_Short = json['DropName_Short'];
+    DriverPhone = json['DriverPhone'];
   }
 
   Map<String, dynamic> toJson() {
@@ -236,6 +251,11 @@ class MyTicketModel {
     data['PickupLongitude'] = this.PickupLongitude;
     data['DropLatitude'] = this.DropLatitude;
     data['DropLongitude'] = this.DropLongitude;
+    data['Droptime'] = this.Droptime;
+    data['DropDate'] = this.DropDate;
+    data['DropName'] = this.DropName;
+    data['DropName_Short'] = this.DropName_Short;
+    data['DriverPhone'] = this.DriverPhone;
     return data;
   }
 }

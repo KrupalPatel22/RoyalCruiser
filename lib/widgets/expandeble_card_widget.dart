@@ -81,8 +81,8 @@ class _ExpandableCardContainerWidgetState
                           style: TextStyle(
                               letterSpacing: 1.0,
                               color: Colors.white,
-                              fontSize: 18),
-                        ),
+                              fontSize: 18)
+                        )
                       ),
                       Container(
                         width: widget.normalWidgetWidth,

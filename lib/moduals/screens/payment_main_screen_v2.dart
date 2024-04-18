@@ -135,6 +135,7 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
               ? Container()
               : Stack(
                   children: <Widget>[
+
                     WebView(
                       initialUrl: webURL,
                       javascriptMode: JavascriptMode.unrestricted,
@@ -147,11 +148,14 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                         if (url.toLowerCase().contains("ticket") ||
                             url.contains("E-Ticket") ||
                             url.toLowerCase().contains('eticket')) {
+
                           showDialogDynamic(
                               msg: 'Successfully booked ticket',
                               status: 's',
                               url: url);
-                        } else if (url.contains("Error.aspx") ||
+
+                        }
+                        else if (url.contains("Error.aspx") ||
                             url.contains("error.aspx") ||
                             url.contains("LatestNews.aspx") ||
                             url.contains("Index.aspx") ||
@@ -189,6 +193,8 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                         }
                       },
                     ),
+
+
                     _isLoadingWebView
                         ? Center(
                             child: AppDialogs.screenAppShowDiloag(context),
@@ -263,10 +269,16 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                 onPressed: () {
                   if (status == 's') {
                     //Navigator.of(context).pop();
+                    print("My Url :- ${url}");
                     String odIsStr = url.split('?')[1];
+                    print("odIsStr :- ${odIsStr}");
                     String orderId = odIsStr.split('=')[1];
+                    print("orderId :-- ${orderId}");
 
-                    Get.off(() => TicketDetailScreen(
+
+                    Get.to(() => TicketDetailScreen(
+                       //(Krupal) We don't use thous params now so just send Any string so we can continue without change Old Code
+                      //NOTE Need to send real Order id
                         fromCityname: "fromCityname",
                         toCityname: "toCityname",
                         pickupTime: "pickupTime",
@@ -278,11 +290,15 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                         ticketNo: "ticketNo",
                         PNR: "PNR",
                         fare: "fare",
+                        //Only use OrderId in next screen so send real Order id
                         OrderId: orderId));
+
                     setState(() {
                       checkTktStatus = true;
                     });
-                  } else if (status == 'f') {
+
+                  }
+                  else if (status == 'f') {
                     Get.offAllNamed(DashboardAppScreen.routeName);
                   }
                   // Navigator.of(context)

@@ -20,7 +20,7 @@ class _CustomImageSliderWithIndicatorState
   @override
   Widget build(BuildContext context) {
     return widget.imageSliders!.length != 1
-        ? Column(
+        ? Stack(
       children: [
         CarouselSlider(
           items: widget.imageSliders!
@@ -41,7 +41,7 @@ class _CustomImageSliderWithIndicatorState
                   width: MediaQuery.of(context).size.width,
                   child: Image.network(
                     i,
-                    fit: BoxFit.none,
+                    fit: BoxFit.fill,
                     frameBuilder: (context, child, frame,
                         wasSynchronouslyLoaded) {
                       return child;
@@ -81,21 +81,29 @@ class _CustomImageSliderWithIndicatorState
                 });
               }),
         ),
-        DotsIndicator(
-          dotsCount: widget.imageSliders!.length,
-          position: _currentPosition,
-          reversed: false,
-          decorator: const DotsDecorator(
-            activeColor: Colors.blue,
-            color: Colors.black,
-            spacing: EdgeInsets.only(
-              top: 8,
-              left: 4,
-              right: 4,
+        Positioned(
+          bottom: 0,
+          right: 0,
+          left: 0,
+          child: Container(
+            color: Colors.black26,
+            child: DotsIndicator(
+              dotsCount: widget.imageSliders!.length,
+              position: _currentPosition,
+              reversed: false,
+              decorator: const DotsDecorator(
+                activeColor: Colors.blue,
+                color: Colors.black,
+                spacing: EdgeInsets.only(
+                  top: 5,
+                  bottom: 5,
+                  left: 4,
+                  right: 4,
+                ),
+              ),
             ),
           ),
         ),
-        const SizedBox(height: 5)
       ],
     )
         : Column(

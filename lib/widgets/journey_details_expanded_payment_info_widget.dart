@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:royalcruiser/constants/color_constance.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
 import 'package:royalcruiser/model/available_route_stax_model.dart';
 import 'package:royalcruiser/model/passenegr_details_model.dart';
-
 
 class JourneyDetailsExpandedPaymentWidget extends StatelessWidget {
   final AllRouteBusLists allRouteBusLists;
@@ -73,7 +73,7 @@ class JourneyDetailsExpandedPaymentWidget extends StatelessWidget {
                     Text(
                       '${allRouteBusLists.CityTime}',
                       style: textStyleLower1,
-                    ),
+                    )
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -99,7 +99,10 @@ class JourneyDetailsExpandedPaymentWidget extends StatelessWidget {
                       style: textStyleHearder,
                     ),
                     Text(
-                      '${allRouteBusLists.BookingDate.toString()}',
+
+                      // '${allRouteBusLists.BookingDate.toString()}',
+                      getFormatedArrivelDate(
+                          allRouteBusLists.ApproxArrival.toString()),
                       style: textStyleHearder,
                     ),
                   ],
@@ -161,11 +164,13 @@ class JourneyDetailsExpandedPaymentWidget extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         '${passangers_ListModel[e].passengerName}',
-                        textAlign: TextAlign.center,style: textStyleLower,
+                        textAlign: TextAlign.center,
+                        style: textStyleLower,
                       ),
                       Text(
                         '${passangers_ListModel[e].seatNo.toString()}',
-                        textAlign: TextAlign.start,style: textStyleLower,
+                        textAlign: TextAlign.start,
+                        style: textStyleLower,
                       )
                     ],
                   )
@@ -177,4 +182,21 @@ class JourneyDetailsExpandedPaymentWidget extends StatelessWidget {
       ),
     );
   }
+
+  String getFormatedArrivelDate(String string) {
+
+    String returnDate = "";
+
+    DateFormat inputFormat = DateFormat("dd-MM-yyyy hh:mm a");
+    DateTime dateTime = inputFormat.parse(string);
+
+    DateFormat outputFormat = DateFormat("dd-MM-yyyy");
+    String dateString = outputFormat.format(dateTime);
+
+    print(dateString); // Output: 18-04-2024
+    returnDate = dateString;
+    return returnDate;
+
+  }
+
 }

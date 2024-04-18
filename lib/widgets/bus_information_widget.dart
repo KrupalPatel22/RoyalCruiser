@@ -30,69 +30,73 @@ class BusInformationWidget extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 10),
             width: double.infinity,
             color: CustomeColor.sub_bg.withOpacity(0.6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Departure',
-                        style: lableTextStyle,
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Departure',
+                            style: lableTextStyle,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            allRouteBusLists!.BookingDate.toString(),
+                            style: dataTextStyle,
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 5,
+                    ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'From',
+                            style: lableTextStyle,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            '${allRouteBusLists!.FromCityName}\n${allRouteBusLists!.RouteTime.toString()}',
+                            style: dataTextStyle,
+                          ),
+                        ],
                       ),
-                      Text(
-                        allRouteBusLists!.BookingDate.toString(),
-                        style: dataTextStyle,
+                    ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'To',
+                            style: lableTextStyle,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            '${allRouteBusLists!.ToCityName}',
+                            style: dataTextStyle,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+
+                  ],
                 ),
                 Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'From',
-                        style: lableTextStyle,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        '${allRouteBusLists!.FromCityName}\n${allRouteBusLists!.RouteTime.toString()}',
-                        style: dataTextStyle,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'To',
-                        style: lableTextStyle,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        '${allRouteBusLists!.ToCityName}',
-                        style: dataTextStyle,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 80,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,

@@ -647,6 +647,8 @@ class ApiImplementer {
                         </tem:GetSeatArrangementDetails_STax>
                      </soapenv:Body>
                   </soapenv:Envelope>''';
+    logger.d(data);
+
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
@@ -1931,9 +1933,14 @@ class ApiImplementer {
 
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
+      print("PickupLatitude => statusCode ${response.statusCode}");
+      logger.d(response.data);
+
+
       return xmlDocument;
     }
     else {
+      print("PickupLatitude => StatusCode ${response.statusCode}");
       throw Exception(response.statusMessage.toString());
     }
   }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:logger/logger.dart';
 import 'package:royalcruiser/api/api_imlementer.dart';
 import 'package:royalcruiser/constants/color_constance.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
@@ -40,9 +41,10 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
   final RxBool _isLoading = false.obs;
   var selectDateDynamic;
   var bookingTicketCtr = Get.put(BookingTicketController());
-  ScrollController listCtr=ScrollController();
+  ScrollController listCtr = ScrollController();
   ScrollController _scrollController = ScrollController();
   int scrollToIndex = 3;
+  int selectedDateIndex = 0;
 
   @override
   void initState() {
@@ -50,7 +52,7 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
       _sharedPreferences = sharedPreferences;
       var _recentSearch = json.decode(
           _sharedPreferences!.getString(Preferences.RECENT_SEARCH).toString());
-      if (_recentSearch != null){
+      if (_recentSearch != null) {
         for (var rrr in _recentSearch) {
           recentSearch.add(RecentSeaechModel.fromJson(rrr));
         }
@@ -71,8 +73,25 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
       bookingTicketCtr.selectedDate.value = DateTime.parse(
           DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString());
       bookingTicketCtr.get30DaysDate();
+      print("Selected Date ${bookingTicketCtr.selectedDate.value}");
+      for (int i = 0; i < bookingTicketCtr.dateList.length; i++) {
+        DateTime dt1 = bookingTicketCtr.selectedDate.value;
+        DateTime dt2 = bookingTicketCtr.dateList[i];
+
+        // Normalize both dates to midnight
+        DateTime dateOnly1 = DateTime(dt1.year, dt1.month, dt1.day);
+        DateTime dateOnly2 = DateTime(dt2.year, dt2.month, dt2.day);
+        if (dateOnly1 == dateOnly2) {
+          print("The dates are the same.");
+          selectedDateIndex = i;
+          print(
+              "Selected Date ${bookingTicketCtr.selectedDate.value} == ${bookingTicketCtr.dateList[i]}");
+        } else {
+          print("The dates are different.");
+        }
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
-       // _scrollToIndex();
+        // _scrollToIndex();
       });
     }).then((value) => _isLoading.value = true);
     super.initState();
@@ -192,10 +211,16 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                               ),
                             ),
                             FutureBuilder<XmlDocument>(
-                                future: ApiImplementer.getAvailableRouteSTaxApiImplementer(FromID: sourceCityID!, ToID: destinationCityID!, JourneyDate: journeyDate!),
+                                future: ApiImplementer
+                                    .getAvailableRouteSTaxApiImplementer(
+                                        FromID: sourceCityID!,
+                                        ToID: destinationCityID!,
+                                        JourneyDate: journeyDate!),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return AppDialogs.screenAppShowDiloag(context);
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return AppDialogs.screenAppShowDiloag(
+                                        context);
                                   } else if (snapshot.hasError) {
                                     return Center(
                                       child: Text(
@@ -207,26 +232,34 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                                         ),
                                       ),
                                     );
-                                  }/*else if(snapshot.hasData){
+                                  }
+                                  /*else if(snapshot.hasData){
 
                                   }*/
-                                  List<XmlElement> response = snapshot.data!.findAllElements('AllRouteBusLists').toList();
-                                  if (response.isNotEmpty && (tripType == "0" || tripType == "1")){
+                                  List<XmlElement> response = snapshot.data!
+                                      .findAllElements('AllRouteBusLists')
+                                      .toList();
+                                  Logger().d(response);
+                                  if (response.isNotEmpty &&
+                                      (tripType == "0" || tripType == "1")) {
                                     searchSetPref();
                                   }
 
-
-                                  return snapshot.data!.findAllElements('AllRouteBusLists').isNotEmpty
+                                  return snapshot.data!
+                                          .findAllElements('AllRouteBusLists')
+                                          .isNotEmpty
                                       ? ListView.builder(
                                           itemCount: response.length,
                                           itemBuilder: (context, index) {
-                                            return AvailableRouteWidget(allRouteBusLists: response[index],);
+                                            return AvailableRouteWidget(
+                                              allRouteBusLists: response[index],
+                                            );
                                           },
                                         )
                                       : const NoDataFoundWidget(
                                           msg: 'No Trip(s) Available',
-                                    );
-                             }),
+                                        );
+                                }),
                           ],
                         ),
                       ),
@@ -304,8 +337,7 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                     0)
                   InkWell(
                     child: const Image(
-                      image:
-                          AssetImage('assets/images/ic_arrow_left.png'),
+                      image: AssetImage('assets/images/ic_arrow_left.png'),
                       height: 25,
                       color: CustomeColor.sub_bg,
                     ),
@@ -334,8 +366,7 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                     0)
                   InkWell(
                     child: const Image(
-                      image:
-                          AssetImage('assets/images/ic_arrow_left.png'),
+                      image: AssetImage('assets/images/ic_arrow_left.png'),
                       height: 25,
                       color: CustomeColor.sub_bg,
                     ),
@@ -408,11 +439,23 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
       ),
     );
   }
+
   //New Current Date Widget (20-05-2023)
   Widget showNewDateWidget() {
-    //Future.delayed(Duration(seconds: 3)).then((value) => listCtr.jumpTo(15));
-    // Future.delayed(const Duration(seconds: 3)).then((value) => bookingTicketCtr.selectedDate.value = DateTime.parse(
-    //     DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString()));
+    //  Future.delayed(Duration(seconds: 3)).then((value) => listCtr.jumpTo(15));
+    //   Future.delayed(const Duration(seconds: 3)).then((value) => bookingTicketCtr.selectedDate.value = DateTime.parse(
+    //       DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString()));
+    // listCtr.animateTo(selectedDateIndex * 92, duration: const Duration(milliseconds: 1000), curve: Curves.ease);
+    try {
+
+      Future.delayed(
+        Duration(seconds: 1),
+      ).then((value) {
+        listCtr.animateTo(selectedDateIndex * 100,
+            duration: const Duration(milliseconds: 1000), curve: Curves.ease);
+      });
+    } catch (e) {}
+
     // bookingTicketCtr.get30DaysDate();
     return Container(
       //elevation: 2.0,
@@ -435,21 +478,20 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    bookingTicketCtr.selectedDate(bookingTicketCtr.dateList[index]);
+                    bookingTicketCtr
+                        .selectedDate(bookingTicketCtr.dateList[index]);
 
                     setState(() {
                       selectDateDynamic = bookingTicketCtr.dateList[index];
                       journeyDate = DateFormat('dd-MM-yyyy')
                           .format(selectDateDynamic)
                           .toString();
-                      if (tripType == "0" || tripType == "1"){
+                      if (tripType == "0" || tripType == "1") {
                         NavigatorConstants.ONWARD_DATE = journeyDate!;
-                      }else{
+                      } else {
                         NavigatorConstants.RETURN_DATE = journeyDate!;
                       }
-
                     });
-
                   },
                   child: Container(
                     height: 50,
@@ -482,7 +524,8 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                                 : Colors.white),
                       ),
                       Text(
-                          Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index]),
+                          Helper.getMonthNameFromDate(
+                              bookingTicketCtr.dateList[index]),
                           style: TextStyle(
                               fontSize: 12,
                               color: (bookingTicketCtr.selectedDate.value.day ==

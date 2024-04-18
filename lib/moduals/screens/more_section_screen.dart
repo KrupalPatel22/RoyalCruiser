@@ -226,7 +226,7 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                     ),
                     trailing: const Icon(CupertinoIcons.forward, color: Colors.white),
                     onTap: () async {
-                      String url = 'https://api.whatsapp.com/send?phone=9903400910';
+                      String url = 'https://api.whatsapp.com/send?phone=+919903400910';
                       if (await canLaunch(url)) {
                       await launch(url);
                       } else {

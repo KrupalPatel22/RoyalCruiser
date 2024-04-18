@@ -4,7 +4,6 @@ import 'package:royalcruiser/api/api_imlementer.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
 import 'package:royalcruiser/constants/navigation_constance.dart';
 import 'package:royalcruiser/constants/preferences_costances.dart';
-import 'package:royalcruiser/main.dart';
 import 'package:royalcruiser/moduals/screens/dashboard_screen.dart';
 import 'package:royalcruiser/moduals/screens/forgot_password_screen.dart';
 import 'package:royalcruiser/moduals/screens/no_internet_or_error_screen.dart';

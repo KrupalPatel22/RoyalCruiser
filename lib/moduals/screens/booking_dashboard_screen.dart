@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
 import 'package:royalcruiser/constants/navigation_constance.dart';
+import 'package:royalcruiser/moduals/screens/payment_main_screen_v2.dart';
 import 'package:royalcruiser/moduals/screens/ticket_detail_screen.dart';
 import 'package:royalcruiser/utils/app_dialog.dart';
 import 'package:royalcruiser/widgets/no_data_found_widget.dart';
@@ -69,6 +70,23 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
             fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD,
           ),
         ),
+        actions: [
+
+          // IconButton(onPressed: (){
+          //
+          //   Navigator.of(context).pushReplacementNamed(
+          //       PaymentMainScreenV2.routeName,
+          //       arguments: {
+          //         'PGURL': "https://royalcruiser.com/E-Ticket.aspx?OrderID=671705",
+          //         'OrderNo':
+          //         "671705",
+          //       });
+          //
+          //
+          //
+          // }, icon: Icon(Icons.add))
+
+        ],
       ),
       body: Container(
         height: size.height,
@@ -114,7 +132,8 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
                                     ticketNo: "${MyBookingData[item].getElement("M_OrderID")!.text}",
                                     PNR: "${MyBookingData[item].getElement("PNRNo")!.text}",
                                     fare: "₹${MyBookingData[item].getElement("PNRAmount")!.text}",
-                                  OrderId: "${MyBookingData[item].getElement("OrderID")!.text}"
+                                  OrderId: "${MyBookingData[item].getElement("OrderID")!.text}",
+                                  fromMybooking: true,
                                 ),
                                 );
                               },

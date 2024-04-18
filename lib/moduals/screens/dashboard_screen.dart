@@ -117,6 +117,7 @@ class _DashboardAppScreenState extends State<DashboardAppScreen> {
         return new Center(
           child: Text("Error"),
         );
+
     }
   }
 }

@@ -135,6 +135,7 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
     popup_visible = NavigatorConstants.POP_UP_BANNER_BOOL;
     _pref.then((SharedPreferences sharedPreferences) {
       _sharedPreferences = sharedPreferences;
+      print("My banner :- ${NavigatorConstants.POP_UP_BANNER}");
       var pop = json.decode(NavigatorConstants.POP_UP_BANNER);
       if (pop != null) {
         for (var banner in pop) {

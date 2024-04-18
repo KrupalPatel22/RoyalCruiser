@@ -373,7 +373,7 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
                           ],
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
         ),
@@ -807,13 +807,81 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
             ),
           ),
           const SizedBox(height: 5),
+          // Obx(
+          //   () => Visibility(
+          //     visible: _isBaseFareSuccess.value,
+          //     child: Container(
+          //       margin: const EdgeInsets.all(5),
+          //       child: Text(
+          //         'Base Fare : ' "₹" ' ${TotalBaseFare()}',
+          //         style: const TextStyle(
+          //             color: Colors.black,
+          //             fontSize: 16,
+          //             fontWeight: FontWeight.w600,
+          //             letterSpacing: 1.0),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // Visibility(
+          //   visible: _isBaseFareSuccess.value && (TotaliscountAmount()>0)/* && NavigatorConstants.USER_ID != '0' */? true : false,
+          //   child: Container(
+          //     margin: const EdgeInsets.all(5),
+          //     child: Text(
+          //       'Save Fare (-) : ' "₹" ' ${TotaliscountAmount()}',
+          //       style: const TextStyle(
+          //           color: CustomeColor.main_bg,
+          //           fontSize: 16,
+          //           fontWeight: FontWeight.w600,
+          //           letterSpacing: 1.0),
+          //     ),
+          //   ),
+          // ),
+          //
+          // //Discount price
+          // /*TotalDiscountBaseFare() > 0 && NavigatorConstants.USER_ID != '0' ? */
+          // Obx(
+          //       () => Visibility(
+          //     visible: _isBaseFareSuccess.value,
+          //     child: Container(
+          //       margin: const EdgeInsets.all(5),
+          //       child: Text(
+          //         'Discount Fare : ' "₹" ' ${TotalDiscountBaseFare()}',
+          //         style: const TextStyle(
+          //             color: Colors.green,
+          //             fontSize: 16,
+          //             fontWeight: FontWeight.w600,
+          //             letterSpacing: 1.0),
+          //       ),
+          //     ),
+          //   ),
+          // )
+          // /* : const SizedBox.shrink()*/,
+          // Obx(
+          //   () => Visibility(
+          //     visible: _isDiscountB2cApiCAll.value && _isGstSuccess.value,
+          //     child: Container(
+          //       margin: const EdgeInsets.all(5),
+          //       child: Text(
+          //         'Gst (+) : ' "₹" ' $AllTotalStax',
+          //         style: const TextStyle(
+          //             color: Colors.red,
+          //             fontSize: 16,
+          //             fontWeight: FontWeight.w600,
+          //             letterSpacing: 1.0),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+
+
           Obx(
-            () => Visibility(
+                () => Visibility(
               visible: _isBaseFareSuccess.value,
               child: Container(
                 margin: const EdgeInsets.all(5),
                 child: Text(
-                  'Base Fare : ' "₹" ' ${TotalBaseFare()}',
+                  'Base Fare : ' "₹" ' ${TotalDiscountBaseFare()}',
                   style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
@@ -823,42 +891,8 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
               ),
             ),
           ),
-          Visibility(
-            visible: _isBaseFareSuccess.value && (TotaliscountAmount()>0)/* && NavigatorConstants.USER_ID != '0' */? true : false,
-            child: Container(
-              margin: const EdgeInsets.all(5),
-              child: Text(
-                'Save Fare (-) : ' "₹" ' ${TotaliscountAmount()}',
-                style: const TextStyle(
-                    color: CustomeColor.main_bg,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.0),
-              ),
-            ),
-          ),
-
-          //Discount price
-          /*TotalDiscountBaseFare() > 0 && NavigatorConstants.USER_ID != '0' ? */
           Obx(
                 () => Visibility(
-              visible: _isBaseFareSuccess.value,
-              child: Container(
-                margin: const EdgeInsets.all(5),
-                child: Text(
-                  'Discount Fare : ' "₹" ' ${TotalDiscountBaseFare()}',
-                  style: const TextStyle(
-                      color: Colors.green,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.0),
-                ),
-              ),
-            ),
-          )
-          /* : const SizedBox.shrink()*/,
-          Obx(
-            () => Visibility(
               visible: _isDiscountB2cApiCAll.value && _isGstSuccess.value,
               child: Container(
                 margin: const EdgeInsets.all(5),
@@ -1079,7 +1113,6 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
                     xmlElement[i].getElement('TotalDiscount')!.text.toString());
                 AllDiscPerAmount = double.parse(
                     xmlElement[i].getElement('TotalDiscount')!.text.toString());
-
                 if (xmlElement[i]
                         .getElement('DiscountStatus')!
                         .text
@@ -1153,9 +1186,17 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
               }
               _isDiscountB2cApiCAll.value = true;
             });
-            if(TotaliscountAmount()>0/* && NavigatorConstants.USER_ID != '0'*/){
-              saveAmountDialog();
-            }
+
+          /*display discount popup
+            Need to code when discount come display that popup
+            current code is display discount if strikeout dis is comming
+            new code needed for any other discount
+            website and other common app dont disply strikeout discount as discount in Payment screen so we temp hide this popup */
+
+            // if(TotaliscountAmount()>0/* && NavigatorConstants.USER_ID != '0'*/){
+            //   saveAmountDialog();
+            // }
+
           }
         }
       }
@@ -1764,7 +1805,6 @@ class _PaymentMainScreenV1State extends State<PaymentMainScreenV1> {
     }
 
     if(tripType == "2"){
-
     for (int i = 0; i < _selected_return_seat_list.length; i++) {
       seatRate +=
           double.parse(_selected_return_seat_list[i].DiscountAmount).toDouble();

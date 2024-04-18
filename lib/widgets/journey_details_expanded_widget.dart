@@ -44,11 +44,15 @@ class JourneyDetailsExpandedWidget extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 SizedBox(
                   width: 25,
                 ),
-                Container(
+
+
+                Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
                         'Bus Type',
@@ -56,10 +60,27 @@ class JourneyDetailsExpandedWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 5),
                       Text('${allRouteBusLists.BusTypeName ?? "___"}',
-                          style: textStyleLower),
+                        style: textStyleLower,
+                        maxLines: 2,
+                        softWrap: true,
+                      ),
                     ],
                   ),
                 ),
+
+                // Column(
+                //   children: [
+                //     Text(
+                //       'Bus Type',
+                //       style: textStyleHearder,
+                //     ),
+                //     SizedBox(height: 5),
+                //
+                //     Text('my test tyui p jhgv vh vjh  ${allRouteBusLists.BusTypeName ?? "___"}',
+                //         style: textStyleLower,
+                //     ),
+                //   ],
+                // ),
                 // Spacer(),
               ],
             ),
