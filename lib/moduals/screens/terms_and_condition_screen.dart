@@ -60,8 +60,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
                         ConnectionState.waiting) {
                       return AppDialogs.screenAppShowDiloag(context);
                     }
-                    XmlElement xmlElement =
-                        snapshot.data!.findAllElements('NewDataSet').first;
+                    XmlElement xmlElement = snapshot.data!.findAllElements('NewDataSet').first;
                     return SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
                           horizontal: 10),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:royalcruiser/api/api_imlementer.dart';
@@ -25,8 +26,7 @@ class AvailableRoutesAppScreen extends StatefulWidget {
   const AvailableRoutesAppScreen({Key? key}) : super(key: key);
 
   @override
-  State<AvailableRoutesAppScreen> createState() =>
-      _AvailableRoutesAppScreenState();
+  State<AvailableRoutesAppScreen> createState() => _AvailableRoutesAppScreenState();
 }
 
 class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
@@ -41,17 +41,22 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
   final RxBool _isLoading = false.obs;
   var selectDateDynamic;
   var bookingTicketCtr = Get.put(BookingTicketController());
+
   ScrollController listCtr = ScrollController();
+  ScrollController returnScrollController = ScrollController();
+
   ScrollController _scrollController = ScrollController();
   int scrollToIndex = 3;
   int selectedDateIndex = 0;
+  int returnSelectedDateIndex = 0;
+
+  ValueNotifier valueNotifier = ValueNotifier(0);
 
   @override
   void initState() {
     _pref.then((SharedPreferences sharedPreferences) {
       _sharedPreferences = sharedPreferences;
-      var _recentSearch = json.decode(
-          _sharedPreferences!.getString(Preferences.RECENT_SEARCH).toString());
+      var _recentSearch = json.decode(_sharedPreferences!.getString(Preferences.RECENT_SEARCH).toString());
       if (_recentSearch != null) {
         for (var rrr in _recentSearch) {
           recentSearch.add(RecentSeaechModel.fromJson(rrr));
@@ -59,8 +64,7 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
       }
     }).then((value) {
       getData().then((value) {
-        selectDateDynamic = DateTime.parse(
-            DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString());
+        selectDateDynamic = DateTime.parse(DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString());
       });
       print('test date:- ${journeyDate}');
       /*_scrollController.addListener(() {
@@ -70,26 +74,45 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollController.jumpTo(10);
       });*/
-      bookingTicketCtr.selectedDate.value = DateTime.parse(
-          DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString());
+      bookingTicketCtr.selectedDate.value = DateTime.parse(DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString());
       bookingTicketCtr.get30DaysDate();
-      print("Selected Date ${bookingTicketCtr.selectedDate.value}");
-      for (int i = 0; i < bookingTicketCtr.dateList.length; i++) {
-        DateTime dt1 = bookingTicketCtr.selectedDate.value;
-        DateTime dt2 = bookingTicketCtr.dateList[i];
 
-        // Normalize both dates to midnight
-        DateTime dateOnly1 = DateTime(dt1.year, dt1.month, dt1.day);
-        DateTime dateOnly2 = DateTime(dt2.year, dt2.month, dt2.day);
-        if (dateOnly1 == dateOnly2) {
-          print("The dates are the same.");
-          selectedDateIndex = i;
-          print(
-              "Selected Date ${bookingTicketCtr.selectedDate.value} == ${bookingTicketCtr.dateList[i]}");
-        } else {
-          print("The dates are different.");
+      if (tripType!.compareTo("0") == 0 || tripType!.compareTo("1") == 0) {
+        print("Selected Date ${bookingTicketCtr.selectedDate.value}");
+        for (int i = 0; i < bookingTicketCtr.dateList.length; i++) {
+          DateTime dt1 = bookingTicketCtr.selectedDate.value;
+          DateTime dt2 = bookingTicketCtr.dateList[i];
+
+          // Normalize both dates to midnight
+          DateTime dateOnly1 = DateTime(dt1.year, dt1.month, dt1.day);
+          DateTime dateOnly2 = DateTime(dt2.year, dt2.month, dt2.day);
+          if (dateOnly1 == dateOnly2) {
+            print("The dates are the same.");
+            selectedDateIndex = i;
+            print("Selected Date ${bookingTicketCtr.selectedDate.value} == ${bookingTicketCtr.dateList[i]}");
+          } else {
+            print("The dates are different.");
+          }
+        }
+      } else {
+        print("Selected Date ${bookingTicketCtr.selectedDate.value}");
+        for (int i = 0; i < bookingTicketCtr.dateList.length; i++) {
+          DateTime dt1 = bookingTicketCtr.selectedDate.value;
+          DateTime dt2 = bookingTicketCtr.dateList[i];
+
+          // Normalize both dates to midnight
+          DateTime dateOnly1 = DateTime(dt1.year, dt1.month, dt1.day);
+          DateTime dateOnly2 = DateTime(dt2.year, dt2.month, dt2.day);
+          if (dateOnly1 == dateOnly2) {
+            print("The dates are the same.");
+            returnSelectedDateIndex = i;
+            print("Selected Date ${bookingTicketCtr.selectedDate.value} == ${bookingTicketCtr.dateList[i]}");
+          } else {
+            print("The dates are different.");
+          }
         }
       }
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // _scrollToIndex();
       });
@@ -129,11 +152,13 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
       /*setState(() {
         scrollToIndex--;
       });*/
+
       Future.delayed(const Duration(milliseconds: 600), _scrollToIndex);
     }
   }
 
   Future<void> getData() async {
+    print("I am cll src");
     tripType = NavigatorConstants.TRIP_TYPE;
     if (tripType == "0" || tripType == "1") {
       journeyDate = NavigatorConstants.ONWARD_DATE;
@@ -153,6 +178,23 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    if (NavigatorConstants.TRIP_TYPE!.compareTo("0") == 0 || NavigatorConstants.TRIP_TYPE!.compareTo("1") == 0) {
+      try {
+        Future.delayed(
+          Duration(seconds: 1),
+        ).then((value) {
+          listCtr.animateTo(selectedDateIndex * 100, duration: const Duration(milliseconds: 1000), curve: Curves.ease);
+        });
+      } catch (e) {}
+    } else {
+      Future.delayed(
+        Duration(seconds: 1),
+      ).then((value) {
+        returnScrollController.animateTo(returnSelectedDateIndex * 92, duration: const Duration(milliseconds: 1000), curve: Curves.ease);
+      });
+    }
+
     return WillPopScope(
       onWillPop: () async {
         _setPref();
@@ -196,70 +238,78 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      showNewDateWidget(),
+                      if (tripType!.compareTo("0") == 0 || tripType!.compareTo("1") == 0) ...{
+                        ValueListenableBuilder(
+                          valueListenable: valueNotifier,
+                          builder: (ctx, val, _) {
+                            return showNewDateWidget();
+                          },
+                        )
+                      } else ...{
+                        ValueListenableBuilder(
+                          valueListenable: valueNotifier,
+                          builder: (ctx, val, _) {
+                            return showReturnNewDateWidget();
+                          },
+                        )
+                      },
                       Expanded(
                         child: Stack(
                           children: [
                             Container(
                               decoration: const BoxDecoration(
                                 image: DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/bannerbg.png"),
+                                  image: AssetImage("assets/images/bannerbg.png"),
                                   opacity: 80.0,
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
-                            FutureBuilder<XmlDocument>(
-                                future: ApiImplementer
-                                    .getAvailableRouteSTaxApiImplementer(
-                                        FromID: sourceCityID!,
-                                        ToID: destinationCityID!,
-                                        JourneyDate: journeyDate!),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return AppDialogs.screenAppShowDiloag(
-                                        context);
-                                  } else if (snapshot.hasError) {
-                                    return Center(
-                                      child: Text(
-                                        snapshot.error.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  /*else if(snapshot.hasData){
-
-                                  }*/
-                                  List<XmlElement> response = snapshot.data!
-                                      .findAllElements('AllRouteBusLists')
-                                      .toList();
-                                  Logger().d(response);
-                                  if (response.isNotEmpty &&
-                                      (tripType == "0" || tripType == "1")) {
-                                    searchSetPref();
-                                  }
-
-                                  return snapshot.data!
-                                          .findAllElements('AllRouteBusLists')
-                                          .isNotEmpty
-                                      ? ListView.builder(
-                                          itemCount: response.length,
-                                          itemBuilder: (context, index) {
-                                            return AvailableRouteWidget(
-                                              allRouteBusLists: response[index],
-                                            );
-                                          },
-                                        )
-                                      : const NoDataFoundWidget(
-                                          msg: 'No Trip(s) Available',
+                            ValueListenableBuilder(
+                              builder: (ctx, val, _) {
+                                return FutureBuilder<XmlDocument>(
+                                    future: ApiImplementer.getAvailableRouteSTaxApiImplementer(FromID: sourceCityID!, ToID: destinationCityID!, JourneyDate: journeyDate!),
+                                    builder: (context, snapshot) {
+                                      print("src id :-$sourceCityID");
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return AppDialogs.screenAppShowDiloag(context);
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                          child: Text(
+                                            snapshot.error.toString(),
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         );
-                                }),
+                                      }
+                                      /*else if(snapshot.hasData){
+
+                                    }*/
+                                      List<XmlElement> response = snapshot.data!.findAllElements('AllRouteBusLists').toList();
+                                      Logger().d(response);
+                                      if (response.isNotEmpty && (tripType == "0" || tripType == "1")) {
+                                        searchSetPref();
+                                      }
+
+                                      return snapshot.data!.findAllElements('AllRouteBusLists').isNotEmpty
+                                          ? ListView.builder(
+                                              itemCount: response.length,
+                                              itemBuilder: (context, index) {
+                                                return AvailableRouteWidget(
+                                                  allRouteBusLists: response[index],
+                                                );
+                                              },
+                                            )
+                                          : const NoDataFoundWidget(
+                                              msg: 'No Trip(s) Available',
+                                            );
+                                    });
+                              },
+                              valueListenable: valueNotifier,
+                            ),
                           ],
                         ),
                       ),
@@ -304,19 +354,12 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
 
   void searchSetPref() {
     recentSearch.removeWhere((element) {
-      return element.S_CityID == sourceCityID &&
-          element.D_CityID == destinationCityID;
+      return element.S_CityID == sourceCityID && element.D_CityID == destinationCityID;
     });
     _sharedPreferences!.remove(Preferences.RECENT_SEARCH);
-    RecentSeaechModel model = RecentSeaechModel(
-        S_CityID: sourceCityID!,
-        D_CityID: destinationCityID!,
-        S_CityName: sourceCityName!,
-        D_CityName: destinationCityName!,
-        J_Date: journeyDate!);
+    RecentSeaechModel model = RecentSeaechModel(S_CityID: sourceCityID!, D_CityID: destinationCityID!, S_CityName: sourceCityName!, D_CityName: destinationCityName!, J_Date: journeyDate!);
     recentSearch.add(model);
-    _sharedPreferences!.setString(Preferences.RECENT_SEARCH,
-        json.encode(recentSearch as List<RecentSeaechModel>));
+    _sharedPreferences!.setString(Preferences.RECENT_SEARCH, json.encode(recentSearch as List<RecentSeaechModel>));
   }
 
   //Old Date Widget
@@ -332,9 +375,7 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
           children: <Widget>[
             ...[
               if (tripType == "0" || tripType == "1") ...[
-                if (journeyDate!.compareTo(
-                        DateFormat('dd-MM-yyyy').format(DateTime.now())) !=
-                    0)
+                if (journeyDate!.compareTo(DateFormat('dd-MM-yyyy').format(DateTime.now())) != 0)
                   InkWell(
                     child: const Image(
                       image: AssetImage('assets/images/ic_arrow_left.png'),
@@ -343,11 +384,8 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                     ),
                     onTap: () {
                       setState(() {
-                        selectDateDynamic = DateTime(selectDateDynamic.year,
-                            selectDateDynamic.month, selectDateDynamic.day - 1);
-                        journeyDate = DateFormat('dd-MM-yyyy')
-                            .format(selectDateDynamic)
-                            .toString();
+                        selectDateDynamic = DateTime(selectDateDynamic.year, selectDateDynamic.month, selectDateDynamic.day - 1);
+                        journeyDate = DateFormat('dd-MM-yyyy').format(selectDateDynamic).toString();
 
                         NavigatorConstants.ONWARD_DATE = journeyDate!;
                       });
@@ -358,9 +396,7 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
               ] else if (tripType == "2") ...[
                 if (journeyDate!.compareTo(DateFormat('dd-MM-yyyy').format(
                       DateTime.parse(
-                        DateFormat('dd-MM-yyyy')
-                            .parse(NavigatorConstants.ONWARD_DATE)
-                            .toString(),
+                        DateFormat('dd-MM-yyyy').parse(NavigatorConstants.ONWARD_DATE).toString(),
                       ),
                     )) !=
                     0)
@@ -372,11 +408,8 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                     ),
                     onTap: () {
                       setState(() {
-                        selectDateDynamic = DateTime(selectDateDynamic.year,
-                            selectDateDynamic.month, selectDateDynamic.day - 1);
-                        journeyDate = DateFormat('dd-MM-yyyy')
-                            .format(selectDateDynamic)
-                            .toString();
+                        selectDateDynamic = DateTime(selectDateDynamic.year, selectDateDynamic.month, selectDateDynamic.day - 1);
+                        journeyDate = DateFormat('dd-MM-yyyy').format(selectDateDynamic).toString();
                         NavigatorConstants.RETURN_DATE = journeyDate!;
                       });
                     },
@@ -406,11 +439,8 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                   ),
                   onTap: () {
                     setState(() {
-                      selectDateDynamic = DateTime(selectDateDynamic.year,
-                          selectDateDynamic.month, selectDateDynamic.day + 1);
-                      journeyDate = DateFormat('dd-MM-yyyy')
-                          .format(selectDateDynamic)
-                          .toString();
+                      selectDateDynamic = DateTime(selectDateDynamic.year, selectDateDynamic.month, selectDateDynamic.day + 1);
+                      journeyDate = DateFormat('dd-MM-yyyy').format(selectDateDynamic).toString();
                       NavigatorConstants.ONWARD_DATE = journeyDate!;
                     });
                   },
@@ -424,11 +454,8 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
                   ),
                   onTap: () {
                     setState(() {
-                      selectDateDynamic = DateTime(selectDateDynamic.year,
-                          selectDateDynamic.month, selectDateDynamic.day + 1);
-                      journeyDate = DateFormat('dd-MM-yyyy')
-                          .format(selectDateDynamic)
-                          .toString();
+                      selectDateDynamic = DateTime(selectDateDynamic.year, selectDateDynamic.month, selectDateDynamic.day + 1);
+                      journeyDate = DateFormat('dd-MM-yyyy').format(selectDateDynamic).toString();
                       NavigatorConstants.RETURN_DATE = journeyDate!;
                     });
                   },
@@ -442,28 +469,24 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
 
   //New Current Date Widget (20-05-2023)
   Widget showNewDateWidget() {
+    print("My trip type :-${NavigatorConstants.TRIP_TYPE}");
+
     //  Future.delayed(Duration(seconds: 3)).then((value) => listCtr.jumpTo(15));
     //   Future.delayed(const Duration(seconds: 3)).then((value) => bookingTicketCtr.selectedDate.value = DateTime.parse(
     //       DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString()));
     // listCtr.animateTo(selectedDateIndex * 92, duration: const Duration(milliseconds: 1000), curve: Curves.ease);
-    try {
-
-      Future.delayed(
-        Duration(seconds: 1),
-      ).then((value) {
-        listCtr.animateTo(selectedDateIndex * 100,
-            duration: const Duration(milliseconds: 1000), curve: Curves.ease);
-      });
-    } catch (e) {}
+    // try {
+    //   Future.delayed(
+    //     Duration(seconds: 1),
+    //   ).then((value) {
+    //     listCtr.animateTo(selectedDateIndex * 100, duration: const Duration(milliseconds: 1000), curve: Curves.ease);
+    //   });
+    // } catch (e) {}
 
     // bookingTicketCtr.get30DaysDate();
     return Container(
       //elevation: 2.0,
-      decoration: const BoxDecoration(
-          color: CustomeColor.main_bg,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20))),
+      decoration: const BoxDecoration(color: CustomeColor.main_bg, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
       child: Obx(() => SizedBox(
             height: 80,
             width: MediaQuery.of(context).size.width,
@@ -478,66 +501,88 @@ class _AvailableRoutesAppScreenState extends State<AvailableRoutesAppScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    bookingTicketCtr
-                        .selectedDate(bookingTicketCtr.dateList[index]);
+                    bookingTicketCtr.selectedDate(bookingTicketCtr.dateList[index]);
 
-                    setState(() {
-                      selectDateDynamic = bookingTicketCtr.dateList[index];
-                      journeyDate = DateFormat('dd-MM-yyyy')
-                          .format(selectDateDynamic)
-                          .toString();
-                      if (tripType == "0" || tripType == "1") {
-                        NavigatorConstants.ONWARD_DATE = journeyDate!;
-                      } else {
-                        NavigatorConstants.RETURN_DATE = journeyDate!;
-                      }
-                    });
+                    selectDateDynamic = bookingTicketCtr.dateList[index];
+                    journeyDate = DateFormat('dd-MM-yyyy').format(selectDateDynamic).toString();
+                    if (tripType == "0" || tripType == "1") {
+                      NavigatorConstants.ONWARD_DATE = journeyDate!;
+                    } else {
+                      NavigatorConstants.RETURN_DATE = journeyDate!;
+                    }
+
+                    valueNotifier.value = Random().nextInt(900000);
                   },
                   child: Container(
                     height: 50,
                     width: 80,
-                    decoration: BoxDecoration(
-                        color: (bookingTicketCtr.selectedDate.value.day ==
-                                    bookingTicketCtr.dateList[index].day &&
-                                Helper.getMonthNameFromDate(
-                                        bookingTicketCtr.selectedDate.value) ==
-                                    Helper.getMonthNameFromDate(
-                                        bookingTicketCtr.dateList[index]))
-                            ? Colors.white
-                            : CustomeColor.main_bg,
-                        borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: (bookingTicketCtr.selectedDate.value.day == bookingTicketCtr.dateList[index].day && Helper.getMonthNameFromDate(bookingTicketCtr.selectedDate.value) == Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index])) ? Colors.white : CustomeColor.main_bg, borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.all(10),
                     child: Column(children: [
                       Text(
                         '${bookingTicketCtr.dateList[index].day}',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: (bookingTicketCtr.selectedDate.value.day ==
-                                        bookingTicketCtr.dateList[index].day &&
-                                    Helper.getMonthNameFromDate(bookingTicketCtr
-                                            .selectedDate.value) ==
-                                        Helper.getMonthNameFromDate(
-                                            bookingTicketCtr.dateList[index]))
-                                ? CustomeColor.main_bg
-                                : Colors.white),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: (bookingTicketCtr.selectedDate.value.day == bookingTicketCtr.dateList[index].day && Helper.getMonthNameFromDate(bookingTicketCtr.selectedDate.value) == Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index])) ? CustomeColor.main_bg : Colors.white),
                       ),
+                      Text(Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index]), style: TextStyle(fontSize: 12, color: (bookingTicketCtr.selectedDate.value.day == bookingTicketCtr.dateList[index].day && Helper.getMonthNameFromDate(bookingTicketCtr.selectedDate.value) == Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index])) ? CustomeColor.main_bg : Colors.white)),
+                    ]),
+                  ),
+                );
+              },
+            ),
+          )),
+    );
+  }
+
+  Widget showReturnNewDateWidget() {
+    //  Future.delayed(Duration(seconds: 3)).then((value) => listCtr.jumpTo(15));
+    //   Future.delayed(const Duration(seconds: 3)).then((value) => bookingTicketCtr.selectedDate.value = DateTime.parse(
+    //       DateFormat("dd-MM-yyyy").parse(journeyDate.toString()).toString()));
+    // listCtr.animateTo(selectedDateIndex * 92, duration: const Duration(milliseconds: 1000), curve: Curves.ease);
+
+    // bookingTicketCtr.get30DaysDate();
+    return Container(
+      //elevation: 2.0,
+      decoration: const BoxDecoration(color: CustomeColor.main_bg, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+      child: Obx(() => SizedBox(
+            height: 80,
+            width: MediaQuery.of(context).size.width,
+            // padding: EdgeInsets.symmetric(
+            //     horizontal: 10,
+            //     vertical: 10),
+            child: ListView.builder(
+              controller: returnScrollController,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: bookingTicketCtr.dateList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {
+                    bookingTicketCtr.selectedDate(bookingTicketCtr.dateList[index]);
+
+                    // setState(() {
+                    selectDateDynamic = bookingTicketCtr.dateList[index];
+                    journeyDate = DateFormat('dd-MM-yyyy').format(selectDateDynamic).toString();
+                    if (tripType == "0" || tripType == "1") {
+                      NavigatorConstants.ONWARD_DATE = journeyDate!;
+                    } else {
+                      NavigatorConstants.RETURN_DATE = journeyDate!;
+                    }
+                    valueNotifier.value = Random().nextInt(90000);
+                    // });
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 80,
+                    decoration: BoxDecoration(color: (bookingTicketCtr.selectedDate.value.day == bookingTicketCtr.dateList[index].day && Helper.getMonthNameFromDate(bookingTicketCtr.selectedDate.value) == Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index])) ? Colors.white : CustomeColor.main_bg, borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
+                    child: Column(children: [
                       Text(
-                          Helper.getMonthNameFromDate(
-                              bookingTicketCtr.dateList[index]),
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: (bookingTicketCtr.selectedDate.value.day ==
-                                          bookingTicketCtr
-                                              .dateList[index].day &&
-                                      Helper.getMonthNameFromDate(
-                                              bookingTicketCtr
-                                                  .selectedDate.value) ==
-                                          Helper.getMonthNameFromDate(
-                                              bookingTicketCtr.dateList[index]))
-                                  ? CustomeColor.main_bg
-                                  : Colors.white)),
+                        '${bookingTicketCtr.dateList[index].day}',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: (bookingTicketCtr.selectedDate.value.day == bookingTicketCtr.dateList[index].day && Helper.getMonthNameFromDate(bookingTicketCtr.selectedDate.value) == Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index])) ? CustomeColor.main_bg : Colors.white),
+                      ),
+                      Text(Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index]), style: TextStyle(fontSize: 12, color: (bookingTicketCtr.selectedDate.value.day == bookingTicketCtr.dateList[index].day && Helper.getMonthNameFromDate(bookingTicketCtr.selectedDate.value) == Helper.getMonthNameFromDate(bookingTicketCtr.dateList[index])) ? CustomeColor.main_bg : Colors.white)),
                     ]),
                   ),
                 );

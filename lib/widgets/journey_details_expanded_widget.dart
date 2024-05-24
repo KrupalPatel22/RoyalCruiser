@@ -60,6 +60,7 @@ class JourneyDetailsExpandedWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 5),
                       Text('${allRouteBusLists.BusTypeName ?? "___"}',
+                        textAlign: TextAlign.end,
                         style: textStyleLower,
                         maxLines: 2,
                         softWrap: true,

@@ -149,10 +149,36 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                             url.contains("E-Ticket") ||
                             url.toLowerCase().contains('eticket')) {
 
-                          showDialogDynamic(
-                              msg: 'Successfully booked ticket',
-                              status: 's',
-                              url: url);
+                          // showDialogDynamic(
+                          //     msg: 'Successfully booked ticket',
+                          //     status: 's',
+                          //     url: url);
+
+                          print("My Url :- ${url}");
+                          String odIsStr = url.split('?')[1];
+                          print("odIsStr :- ${odIsStr}");
+                          String orderId = odIsStr.split('=')[1];
+                          print("orderId :-- ${orderId}");
+                          Get.to(() => TicketDetailScreen(
+                            //(Krupal) We don't use thous params now so just send Any string so we can continue without change Old Code
+                            //NOTE Need to send real Order id
+                              fromCityname: "fromCityname",
+                              toCityname: "toCityname",
+                              pickupTime: "pickupTime",
+                              dropTime: "dropTime",
+                              journeyTime: "journeyTime",
+                              bustourName: "bustourName",
+                              seatNumber: "seatNumber",
+                              passengerName: "passengerName",
+                              ticketNo: "ticketNo",
+                              PNR: "PNR",
+                              fare: "fare",
+                              //Only use OrderId in next screen so send real Order id
+                              OrderId: orderId));
+                          setState(() {
+                            checkTktStatus = true;
+                          });
+
 
                         }
                         else if (url.contains("Error.aspx") ||
@@ -179,19 +205,71 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                             url.toLowerCase().contains('about:blank')) {
                           Get.offAllNamed(DashboardAppScreen.routeName);
                         }
-                        if (url.toLowerCase().contains("ticket") ||
-                            url.contains("E-Ticket") ||
-                            url.toLowerCase().contains('eticket')) {
-                          showDialogDynamic(
-                              msg: 'Successfully booked ticket',
-                              status: 's',
-                              url: url);
-                        }
+
+                        // if (url.toLowerCase().contains("ticket") ||
+                        //     url.contains("E-Ticket") ||
+                        //     url.toLowerCase().contains('eticket')) {
+                        //   showDialogDynamic(
+                        //       msg: 'Successfully booked ticket',
+                        //       status: 's',
+                        //       url: url);
+                        // }
+
                         if (url.toLowerCase().contains("paymentfailed")) {
                           showDialogDynamic(
                               msg: 'Payment Failed', status: 'f', url: url);
                         }
+
                       },
+
+                      // navigationDelegate: (navigationDelegate) {
+                      //
+                      //     String url = navigationDelegate.url;
+                      //     print("Redirect url :- ${url}");
+                      //
+                      //     // if (url.contains("Error.aspx") ||
+                      //     //     url.contains("error.aspx") ||
+                      //     //     url.contains("LatestNews.aspx") ||
+                      //     //     url.contains("Index.aspx") ||
+                      //     //     url.contains("transtatus.aspx") ||
+                      //     //     url.contains("index.aspx") ||
+                      //     //     url.contains("Cancel_txn.jsp") ||
+                      //     //     url.contains("cancel_txn.jsp") ||
+                      //     //     url.contains("Cancel") ||
+                      //     //     url.contains("cancel") ||
+                      //     //     url.contains("paymentfailed.aspx")) {
+                      //     //   AppDialogs.showInformationDialogue(
+                      //     //     context: context,
+                      //     //     barrierDismissible: false,
+                      //     //     description: 'Error! Please Try Again!',
+                      //     //     onOkBntClick: () => Get.offAllNamed(
+                      //     //       AppRoutes.dashBoardScreen,
+                      //     //     ),
+                      //     //   );
+                      //     //
+                      //     //   return NavigationDecision.prevent;
+                      //     // }
+                      //
+                      //     if (url.toLowerCase().contains("ticket") ||
+                      //         url.contains("E-Ticket") ||
+                      //         url.toLowerCase().contains('eticket')) {
+                      //
+                      //       return NavigationDecision.prevent;
+                      //
+                      //       // showDialogDynamic(
+                      //       //     msg: 'Successfully booked ticket',
+                      //       //     status: 's',
+                      //       //     url: url);
+                      //
+                      //     }
+                      //
+                      //     else {
+                      //       return NavigationDecision.navigate;
+                      //     }
+                      //
+                      //
+                      // }
+
                     ),
 
 
@@ -274,8 +352,6 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                     print("odIsStr :- ${odIsStr}");
                     String orderId = odIsStr.split('=')[1];
                     print("orderId :-- ${orderId}");
-
-
                     Get.to(() => TicketDetailScreen(
                        //(Krupal) We don't use thous params now so just send Any string so we can continue without change Old Code
                       //NOTE Need to send real Order id
@@ -292,11 +368,9 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                         fare: "fare",
                         //Only use OrderId in next screen so send real Order id
                         OrderId: orderId));
-
                     setState(() {
                       checkTktStatus = true;
                     });
-
                   }
                   else if (status == 'f') {
                     Get.offAllNamed(DashboardAppScreen.routeName);

@@ -1,7 +1,6 @@
 import '../constants/common_constance.dart';
 
 class ApiUrls {
-
   static const String PACKAGE_NAME = "com.infinityinfoway.royalcruiser";
   static final String APP_NAME = CommonConstants.APP_NAME;
   static const String COMPANY_NAME = "Royal Cruiser";
@@ -16,5 +15,4 @@ class ApiUrls {
   static const String str_URL = "https://apiroyalcruiser.itspl.net/royalcruiserService.svc";
   static const String str_SOAPActURL = "http://tempuri.org/Iapiroyalcruiser/";
   static const bool AEH_ENABLE = true;
-
 }

@@ -96,21 +96,22 @@ class BusInformationWidget extends StatelessWidget {
 
                   ],
                 ),
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                Padding(
+                  padding: const EdgeInsets.only(left: 20,top: 8),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
                         'Bus',
                         style: lableTextStyle,
                       ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        '${allRouteBusLists!.ArrangementName.toString()}',
-                        style: dataTextStyle,
+                      SizedBox(width: 8,),
+                      Expanded(
+                        child: Text(
+                          '${allRouteBusLists!.ArrangementName.toString()}',
+                          style: dataTextStyle,
+                        ),
                       ),
                     ],
                   ),

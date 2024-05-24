@@ -41,10 +41,10 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    if(GetPlatform.isAndroid){
+    if (GetPlatform.isAndroid) {
       CommonConstants.STR_KEY = "b58355b594b8478bac8894cc6d32744032636264883275428303";
       CommonConstants.APP_NAME = "royalcruiser";
-    } else if(GetPlatform.isIOS){
+    } else if (GetPlatform.isIOS) {
       //TODO make changes
       CommonConstants.STR_KEY = "0709a5fd6d5143f58ca88a8f572b793244637509050727609232";
       CommonConstants.APP_NAME = "royalcruiserIOS";
@@ -88,15 +88,12 @@ class MyApp extends StatelessWidget {
         UpdateApplicationScreen.routeName: (ctx) => UpdateApplicationScreen(),
         DashboardAppScreen.routeName: (ctx) => DashboardAppScreen(),
         HomePageFragmnet.routeName: (ctx) => const HomePageFragmnet(),
-        FromCitySearchApplicationScreen.routeName: (ctx) =>
-            const FromCitySearchApplicationScreen(),
-        ToCitySearchApplicationScreen.routeName: (ctx) =>
-            const ToCitySearchApplicationScreen(),
+        FromCitySearchApplicationScreen.routeName: (ctx) => const FromCitySearchApplicationScreen(),
+        ToCitySearchApplicationScreen.routeName: (ctx) => const ToCitySearchApplicationScreen(),
         MyBookingAppScreen.routeName: (ctx) => const MyBookingAppScreen(),
         MyBookingDashBoardScreen.routeName: (ctx) => const MyBookingDashBoardScreen(),
         CancellationAppScreen.routeName: (ctx) => const CancellationAppScreen(),
-        ConfirmCancellationAppScreen.routeName: (ctx) =>
-            const ConfirmCancellationAppScreen(),
+        ConfirmCancellationAppScreen.routeName: (ctx) => const ConfirmCancellationAppScreen(),
         GalleryAppScreen.routeName: (ctx) => const GalleryAppScreen(),
         FeedbackAppScreen.routeName: (ctx) => const FeedbackAppScreen(),
         AboutUsAppScreen.routeName: (ctx) => const AboutUsAppScreen(),

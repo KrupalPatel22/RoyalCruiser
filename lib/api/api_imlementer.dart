@@ -6,24 +6,24 @@ import 'package:royalcruiser/constants/navigation_constance.dart';
 import 'package:xml/xml.dart';
 import 'package:http/http.dart' as http;
 
+import '../constants/common_constance.dart';
+
 class ApiImplementer {
   static String ApplicationName = ApiUrls.APP_NAME;
   static String VerifyCall = ApiUrls.str_Key;
   static String CompanyID = ApiUrls.COMPANY_ID;
   static String AppType = ApiUrls.ApplicationType;
   static String RequestType = "2";
-  static String ApplicationVersion =
-      NavigatorConstants.APPLICATION_VERSION_NAME;
-  static String ApplicationVersionCode =
-      NavigatorConstants.APPLICATION_VERSION_CODE;
+  static String ApplicationVersion = NavigatorConstants.APPLICATION_VERSION_NAME;
+  static String ApplicationVersionCode = NavigatorConstants.APPLICATION_VERSION_CODE;
   static String DeviceID = NavigatorConstants.DEVICE_ID;
   static String DeviceOsVersion = NavigatorConstants.DEVICE_OS_VERSION;
   static String UserId = NavigatorConstants.USER_ID;
-
+  static Map<String, dynamic> getHeader = {"VerifyCall": "$VerifyCall", "Content-Type": "application/json"};
   static Logger logger = Logger();
 
   static Future<XmlDocument> applicationVersionCheckApiImplementer() async {
-    var body='''<?xml version="1.0" encoding="utf-8"?>
+    var body = '''<?xml version="1.0" encoding="utf-8"?>
              <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
              xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
                <soapenv:Header/>
@@ -48,13 +48,12 @@ class ApiImplementer {
       options: Options(headers: {
         'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationVersionCheck'} ',
       }),
-      data:body ,
+      data: body,
     );
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
-    }
-    else {
+    } else {
       throw Exception(response.statusMessage.toString());
     }
   }
@@ -148,8 +147,7 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}PartialCancellationDetails'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}PartialCancellationDetails'} ',
       }),
       data: body,
     );
@@ -175,7 +173,8 @@ class ApiImplementer {
     required String RefundAmount_R,
     required String SeatNo_R,
   }) async {
-    var body = OrderDetailsID_R != null || OrderDetailsID_R != '' ? '''<?xml version="1.0" encoding="utf-8"?>
+    var body = OrderDetailsID_R != null || OrderDetailsID_R != ''
+        ? '''<?xml version="1.0" encoding="utf-8"?>
                                 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
                                 xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
                                    <soapenv:Header/>
@@ -212,7 +211,7 @@ class ApiImplementer {
                                       </tem:PartialConfirmCancellation>
                                    </soapenv:Body>
                                 </soapenv:Envelope>'''
-    : '''<?xml version="1.0" encoding="utf-8"?>
+        : '''<?xml version="1.0" encoding="utf-8"?>
                                 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
                                 xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
                                    <soapenv:Header/>
@@ -244,8 +243,7 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}PartialConfirmCancellation'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}PartialConfirmCancellation'} ',
       }),
       data: body,
     );
@@ -257,11 +255,9 @@ class ApiImplementer {
     }
   }
 
-  static Future<XmlDocument>
-      CheckValidPNRNOAndFetchTicketPrintDataApiImplementer({
+  static Future<XmlDocument> CheckValidPNRNOAndFetchTicketPrintDataApiImplementer({
     required String PNRNo,
   }) async {
-
     var body = '''<?xml version="1.0" encoding="utf-8"?>
                         <soapenv:Envelope
                         	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -295,8 +291,7 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}CheckValidPNRNOAndFetchTicketPrintData'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}CheckValidPNRNOAndFetchTicketPrintData'} ',
       }),
       data: body,
     );
@@ -305,23 +300,17 @@ class ApiImplementer {
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
-    }
-    else {
+    } else {
       throw Exception(response.statusMessage.toString());
     }
-
   }
 
-  static Future<XmlDocument> applicationSplashScreenListApiImplementer(
-      {required String currentDate,
-      required String height,
-      required String width}) async {
+  static Future<XmlDocument> applicationSplashScreenListApiImplementer({required String currentDate, required String height, required String width}) async {
     final http.Response response = await http.post(
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}ApplicationSplashScreenList'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationSplashScreenList'} ',
       },
       body: '''<?xml version="1.0" encoding="utf-8"?>
                         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
@@ -390,13 +379,11 @@ class ApiImplementer {
     }
   }
 
-  static Future<XmlDocument> getDestinationsBasedOnSourceApiImplementer(
-      {required String sourceID}) async {
+  static Future<XmlDocument> getDestinationsBasedOnSourceApiImplementer({required String sourceID}) async {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}GetDestinationsBasedOnSource'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetDestinationsBasedOnSource'} ',
       }),
       data: '''<?xml version="1.0" encoding="utf-8"?>
               <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
@@ -449,8 +436,7 @@ class ApiImplementer {
       Uri.parse(ApiUrls.str_URL),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction':
-        '${'${ApiUrls.str_SOAPActURL}Cheack_RegisterdCustomer'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}Cheack_RegisterdCustomer'} ',
       },
       body: body,
     );
@@ -508,7 +494,6 @@ class ApiImplementer {
     }
   }
 
-
   static Future<XmlDocument> getApplicationExtraSettingsApiImplementer() async {
     var data = '''<?xml version="1.0" encoding="utf-8"?>
                         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
@@ -532,8 +517,7 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}GetApplicationExtraSettings'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetApplicationExtraSettings'} ',
       }),
       data: data,
     );
@@ -585,7 +569,7 @@ class ApiImplementer {
     required String ToID,
     required String JourneyDate,
   }) async {
-    var data='''<?xml version="1.0" encoding="utf-8"?>
+    var data = '''<?xml version="1.0" encoding="utf-8"?>
                         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
                         xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
                            <soapenv:Header/>
@@ -652,8 +636,7 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}GetSeatArrangementDetails_STax'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetSeatArrangementDetails_STax'} ',
       }),
       data: data,
     );
@@ -667,6 +650,25 @@ class ApiImplementer {
   }
 
   static Future<XmlDocument> getTermsAndConditionApiImplementer() async {
+    /*var data1 = '''<?xml version="1.0" encoding="utf-8"?>
+                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+                    xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+                       <soapenv:Header/>
+                       <soapenv:Body>
+                          <tem:GetTermsAndConditions>
+                             <tem:ParaComman>
+                                <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
+                                <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
+                                <ns:ApplicationVersionCode>$ApplicationVersionCode</ns:ApplicationVersionCode>
+                                <ns:DeviceID>$DeviceID</ns:DeviceID>
+                                <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
+                                <ns:RequestType>$RequestType</ns:RequestType>
+                                <ns:UserId>$UserId</ns:UserId>
+                                <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
+                             </tem:ParaComman>
+                          </tem:GetTermsAndConditions>
+                       </soapenv:Body>
+                    </soapenv:Envelope>''';*/
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
@@ -692,6 +694,7 @@ class ApiImplementer {
                        </soapenv:Body>
                     </soapenv:Envelope>''',
     );
+    //logger.d(data1);
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
@@ -942,8 +945,7 @@ class ApiImplementer {
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}ApplicationRegistration_V2'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationRegistration_V2'} ',
       },
       body: body,
     );
@@ -988,8 +990,7 @@ class ApiImplementer {
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}ApplicationVerifyVerificationCode'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationVerifyVerificationCode'} ',
       },
       body: body,
     );
@@ -1080,14 +1081,12 @@ class ApiImplementer {
                               </soapenv:Body>
                           </soapenv:Envelope>''';
     logger.d(body);
-    final http.Response response =
-        await http.post(Uri.parse('${ApiUrls.str_URL}'),
-            headers: {
-              'Content-Type': 'text/xml; charset=utf-8',
-              'soapaction':
-                  '${'${ApiUrls.str_SOAPActURL}CancellationDetails'} ',
-            },
-            body: body);
+    final http.Response response = await http.post(Uri.parse('${ApiUrls.str_URL}'),
+        headers: {
+          'Content-Type': 'text/xml; charset=utf-8',
+          'soapaction': '${'${ApiUrls.str_SOAPActURL}CancellationDetails'} ',
+        },
+        body: body);
     if (response.statusCode == 200) {
       // logger.d(body);
       XmlDocument document = XmlDocument.parse(response.body);
@@ -1133,13 +1132,12 @@ class ApiImplementer {
                           </soapenv:Body>
                       </soapenv:Envelope>''';
     logger.d(body);
-    final http.Response response =
-        await http.post(Uri.parse('${ApiUrls.str_URL}'),
-            headers: {
-              'Content-Type': 'text/xml; charset=utf-8',
-              'soapaction': '${'${ApiUrls.str_SOAPActURL}ConfirmCancellation'}',
-            },
-            body: body);
+    final http.Response response = await http.post(Uri.parse('${ApiUrls.str_URL}'),
+        headers: {
+          'Content-Type': 'text/xml; charset=utf-8',
+          'soapaction': '${'${ApiUrls.str_SOAPActURL}ConfirmCancellation'}',
+        },
+        body: body);
     if (response.statusCode == 200) {
       XmlDocument document = XmlDocument.parse(response.body);
       logger.d(body);
@@ -1208,8 +1206,7 @@ class ApiImplementer {
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction':
-            '${'${ApiUrls.str_SOAPActURL}FetchDefaultDiscountCoupon'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}FetchDefaultDiscountCoupon'} ',
       },
       body: TripType.compareTo("1") == 0
           ? '''<?xml version="1.0" encoding="utf-8"?>
@@ -1473,6 +1470,7 @@ class ApiImplementer {
     required String Surcharges_total,
 
 /////////////////////////////////////////////////////////////
+
     String? Surcharges,
     required String AgeList,
     required String ArrangementID,
@@ -1841,7 +1839,6 @@ class ApiImplementer {
   static Future<XmlDocument> getBoardingDropDetails_V2ApiImplementer({
     required String ReferenceNumber,
   }) async {
-
     var data = '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
    <soapenv:Header/>
    <soapenv:Body>
@@ -1873,8 +1870,7 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction':
-        '${'${ApiUrls.str_SOAPActURL}GetBoardingDropDetails_V2'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetBoardingDropDetails_V2'} ',
       }),
       data: data,
     );
@@ -1882,8 +1878,7 @@ class ApiImplementer {
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
-    }
-    else {
+    } else {
       throw Exception(response.statusMessage.toString());
     }
   }
@@ -1917,7 +1912,7 @@ class ApiImplementer {
          <!--Optional:-->
          <tem:OrderId>${OrderId.toString()}</tem:OrderId>
       </tem:GetTicketPrintData>
-   </soapenv:Body>
+   </soapenv:Body>  
 </soapenv:Envelope>''';
 
     logger.d(data);
@@ -1925,8 +1920,7 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction':
-        '${'${ApiUrls.str_SOAPActURL}GetTicketPrintData'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetTicketPrintData'} ',
       }),
       data: data,
     );
@@ -1936,10 +1930,8 @@ class ApiImplementer {
       print("PickupLatitude => statusCode ${response.statusCode}");
       logger.d(response.data);
 
-
       return xmlDocument;
-    }
-    else {
+    } else {
       print("PickupLatitude => StatusCode ${response.statusCode}");
       throw Exception(response.statusMessage.toString());
     }

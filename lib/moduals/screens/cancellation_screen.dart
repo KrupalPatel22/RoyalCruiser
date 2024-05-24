@@ -530,8 +530,7 @@ class _CancellationAppScreenState extends State<CancellationAppScreen> {
           ),
           InkWell(
             onTap: () {
-              Navigator.of(context)
-                  .pushNamed(TermsAndConditionScreen.routeName);
+              Navigator.of(context).pushNamed(TermsAndConditionScreen.routeName);
             },
             child: const Text(
               'Terms And Condition',
@@ -574,8 +573,7 @@ class _CancellationAppScreenState extends State<CancellationAppScreen> {
   }
 
   void getCancellationApiCall() {
-    ApiImplementer.getCancellationPolicyApiImplementer()
-        .then((XmlDocument document) {
+    ApiImplementer.getCancellationPolicyApiImplementer().then((XmlDocument document) {
       if (document != null) {
         bool xmlElement = document.findAllElements('NewDataSet').isNotEmpty;
         if (xmlElement) {

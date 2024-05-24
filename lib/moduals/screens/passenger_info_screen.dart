@@ -139,17 +139,10 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: <Widget>[
-                              BusInformationWidget(
-                                  allRouteBusLists: allRouteBusOnwardLists),
-                              passReListModel.length != null &&
-                                      allRouteBusReturnLists != null
-                                  ? BusInformationWidget(
-                                      allRouteBusLists: allRouteBusReturnLists)
-                                  : const SizedBox.shrink(),
+                              BusInformationWidget(allRouteBusLists: allRouteBusOnwardLists),
+                              passReListModel.length != null && allRouteBusReturnLists != null ? BusInformationWidget(allRouteBusLists: allRouteBusReturnLists) : const SizedBox.shrink(),
                               Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 5,
-                                    horizontal: 5),
+                                margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                                 child: ExpandableCardContainerWidget(
                                   expandedwidgetWidth: size.width,
                                   normalWidgetWidth: size.width,
@@ -158,13 +151,11 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                                   normalWidgetHeight: 52,
                                   avatarRadius: 20,
                                   expandedwidgetHeight: 75,
-                                  expandedwidget: JourneyDetailsExpandedWidget(
-                                      allRouteBusLists: allRouteBusOnwardLists!),
+                                  expandedwidget: JourneyDetailsExpandedWidget(allRouteBusLists: allRouteBusOnwardLists!),
                                   normalWidget: JourneyDetailsNormalWidget(
-                                      seatPrice: onTotalSeatRate(),
-                                      allRouteBusLists: allRouteBusOnwardLists!,
-                                      seatLength:
-                                          selectedOnSeatList.length,
+                                    seatPrice: onTotalSeatRate(),
+                                    allRouteBusLists: allRouteBusOnwardLists!,
+                                    seatLength: selectedOnSeatList.length,
                                     discount: selectedSeatOriginal(),
                                   ),
                                   headerText: 'Journey Details Onward',
@@ -173,13 +164,9 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                               const SizedBox(
                                 height: 3,
                               ),
-                              passReListModel.length != null &&
-                                      allRouteBusReturnLists != null
+                              passReListModel.length != null && allRouteBusReturnLists != null
                                   ? Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          vertical: 5,
-                                          horizontal: 5),
-
+                                      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                                       child: ExpandableCardContainerWidget(
                                         expandedwidgetWidth: size.width,
                                         normalWidgetWidth: size.width,
@@ -188,10 +175,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                                         normalWidgetHeight: 52,
                                         avatarRadius: 20,
                                         expandedwidgetHeight: 75,
-                                        expandedwidget:
-                                            JourneyDetailsExpandedWidget(
-                                                allRouteBusLists:
-                                                    allRouteBusReturnLists!),
+                                        expandedwidget: JourneyDetailsExpandedWidget(allRouteBusLists: allRouteBusReturnLists!),
                                         normalWidget: JourneyDetailsNormalWidget(
                                           allRouteBusLists: allRouteBusReturnLists!,
                                           seatLength: selectedReSeatList.length,
@@ -212,8 +196,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                                 ),
                                 child: onwardTicketInfo(),
                               ),
-                              passReListModel.length != null &&
-                                      allRouteBusReturnLists != null
+                              passReListModel.length != null && allRouteBusReturnLists != null
                                   ? Container(
                                       margin: const EdgeInsets.symmetric(
                                         vertical: 5,
@@ -249,18 +232,10 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 8),
           child: const Text(
             'Passenger Information(Onward)',
-            style: TextStyle(
-                letterSpacing: 1.0,
-                color: Colors.white,
-                fontSize: 18),
+            style: TextStyle(letterSpacing: 1.0, color: Colors.white, fontSize: 18),
           ),
         ),
-        ...[
-          for (var index = 0;
-              index < selectedOnSeatList.length;
-              index++)
-            seatNameOrPassDetailsOnward(index: index)
-        ],
+        ...[for (var index = 0; index < selectedOnSeatList.length; index++) seatNameOrPassDetailsOnward(index: index)],
       ],
     );
   }
@@ -268,12 +243,9 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
   Widget seatNameOrPassDetailsOnward({required int index}) {
     return Card(
       elevation: 3,
-      margin: const EdgeInsets.symmetric(
-          horizontal: 6, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-            vertical: 8,
-            horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -286,8 +258,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                     setState(() {
                       txtFieldOnNameController[index].text = txtFieldOnNameController[index - 1].text.toString();
                       txtFieldOnAgeController[index].text = txtFieldOnAgeController[index - 1].text.toString();
-                      txtFieldOnGenderController[index] =
-                      txtFieldOnGenderController[index - 1];
+                      txtFieldOnGenderController[index] = txtFieldOnGenderController[index - 1];
                     });
                   },
                   child: const Text(
@@ -310,9 +281,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                 ),
                 Text(
                   'Passenger - ${index + 1}',
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -339,18 +308,12 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                   children: <Widget>[
                     const Text(
                       'Seat No',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 13),
                     Container(
                       alignment: Alignment.center,
-                      child: Text(
-                          selectedOnSeatList[index].SeatNo,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                              fontSize: 18)),
+                      child: Text(selectedOnSeatList[index].SeatNo, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18)),
                     ),
                   ],
                 ),
@@ -362,9 +325,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                   children: <Widget>[
                     const Text(
                       'Age',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 1),
                     SizedBox(
@@ -374,9 +335,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                         controller: txtFieldOnAgeController[index],
                         keyboardType: TextInputType.number,
                         validator: (val) => val!.isNotEmpty ? null : 'Enter Age ',
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(2)
-                        ],
+                        inputFormatters: [LengthLimitingTextInputFormatter(2)],
                         style: const TextStyle(fontSize: 18),
                         decoration: const InputDecoration(
                           border: InputBorder.none,
@@ -398,9 +357,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                       padding: const EdgeInsets.only(left: 2, bottom: 2),
                       child: const Text(
                         'Gender',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                     ),
                     Row(
@@ -413,23 +370,31 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                               txtFieldOnGenderController[index] = 1;
                             });
                           },
-                          child: Card(
-                            margin: const EdgeInsets.only(top: 8),
-                            elevation: txtFieldOnGenderController[index] == 1 ? 2.0 : 0.0,
-                            color: txtFieldOnGenderController[index] == 1 ? CustomeColor.main_bg : Colors.white,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10.0),
+                          child: Column(
+                            children: [
+                              Card(
+                                margin: const EdgeInsets.only(top: 8),
+                                elevation: txtFieldOnGenderController[index] == 1 ? 2.0 : 0.0,
+                                color: txtFieldOnGenderController[index] == 1 ? CustomeColor.main_bg : Colors.white,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Image(
+                                    image: const AssetImage('assets/images/ic_male_white.png'),
+                                    color: txtFieldOnGenderController[index] == 1 ? Colors.white : CustomeColor.sub_bg,
+                                    height: 20,
+                                  ),
+                                ),
                               ),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: Image(
-                                image: const AssetImage('assets/images/ic_male_white.png'),
-                                color: txtFieldOnGenderController[index] == 1 ? Colors.white : CustomeColor.sub_bg,
-                                height: 20,
-                              ),
-                            ),
+                              Text(
+                                'Male',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                              )
+                            ],
                           ),
                         ),
                         const SizedBox(width: 5),
@@ -439,23 +404,31 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                               txtFieldOnGenderController[index] = 2;
                             });
                           },
-                          child: Card(
-                            margin: const EdgeInsets.only(top: 8),
-                            elevation: txtFieldOnGenderController[index] == 2 ? 2.0 : 0.0,
-                            color: txtFieldOnGenderController[index] == 2 ? CustomeColor.main_bg : Colors.white,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10.0),
+                          child: Column(
+                            children: [
+                              Card(
+                                margin: const EdgeInsets.only(top: 8),
+                                elevation: txtFieldOnGenderController[index] == 2 ? 2.0 : 0.0,
+                                color: txtFieldOnGenderController[index] == 2 ? CustomeColor.main_bg : Colors.white,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Image(
+                                    image: const AssetImage('assets/images/ic_female_green.png'),
+                                    color: txtFieldOnGenderController[index] == 2 ? Colors.white : CustomeColor.sub_bg,
+                                    height: 20,
+                                  ),
+                                ),
                               ),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(5),
-                              child: Image(
-                                image: const AssetImage('assets/images/ic_female_green.png'),
-                                color: txtFieldOnGenderController[index] == 2 ? Colors.white : CustomeColor.sub_bg,
-                                height: 20,
-                              ),
-                            ),
+                              Text(
+                                'Female',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                              )
+                            ],
                           ),
                         ),
                       ],
@@ -485,18 +458,10 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 8),
           child: const Text(
             'Passenger Information(Return)',
-            style: TextStyle(
-                letterSpacing: 1.0,
-                color: Colors.white,
-                fontSize: 18),
+            style: TextStyle(letterSpacing: 1.0, color: Colors.white, fontSize: 18),
           ),
         ),
-        ...[
-          for (var index = 0;
-              index < selectedReSeatList.length;
-              index++)
-            seatNameOrPassDetailsReturn(index: index)
-        ],
+        ...[for (var index = 0; index < selectedReSeatList.length; index++) seatNameOrPassDetailsReturn(index: index)],
       ],
     );
   }
@@ -504,12 +469,9 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
   Widget seatNameOrPassDetailsReturn({required int index}) {
     return Card(
       elevation: 3,
-      margin: const EdgeInsets.symmetric(
-          horizontal: 6, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-            vertical: 8,
-            horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -545,9 +507,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                 ),
                 Text(
                   'Passenger - ${index + 1}',
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -574,9 +534,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                   children: <Widget>[
                     const Text(
                       'Seat No',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 13),
                     Container(
@@ -584,8 +542,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                       child: Text(
                         selectedReSeatList[index].SeatNo,
                         textAlign: TextAlign.center,
-                        style:
-                            const TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ),
                   ],
@@ -598,9 +555,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                   children: <Widget>[
                     const Text(
                       'Age',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: 1),
                     SizedBox(
@@ -609,9 +564,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                       child: TextFormField(
                         controller: txtFieldReAgeController[index],
                         keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(2)
-                        ],
+                        inputFormatters: [LengthLimitingTextInputFormatter(2)],
                         validator: (val) => val!.isNotEmpty ? null : 'Enter Age ',
                         style: const TextStyle(fontSize: 18),
                         decoration: const InputDecoration(
@@ -634,9 +587,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
                       padding: const EdgeInsets.only(left: 2, bottom: 2),
                       child: const Text(
                         'Gender',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                     ),
                     Row(
@@ -714,7 +665,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
       _seat_rate += double.parse(selectedOnSeatList[i].BaseFare).toDouble();
       seatStrikeRate += double.parse(selectedOnSeatList[i].OriginalSeatRate).toDouble();
     }
-    if(seatStrikeRate > 0 /*&& NavigatorConstants.USER_ID == '0'*/){
+    if (seatStrikeRate > 0 /*&& NavigatorConstants.USER_ID == '0'*/) {
       _seat_rate = _seat_rate;
     }
     return _seat_rate;
@@ -743,7 +694,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
       _seat_rate += double.parse(selectedReSeatList[i].BaseFare).toDouble();
       seatStrikeRate += double.parse(selectedReSeatList[i].OriginalSeatRate).toDouble();
     }
-    if(seatStrikeRate > 0 /*&& NavigatorConstants.USER_ID == '0'*/){
+    if (seatStrikeRate > 0 /*&& NavigatorConstants.USER_ID == '0'*/) {
       _seat_rate = _seat_rate;
     }
     return _seat_rate;
@@ -839,9 +790,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
     return InkWell(
       child: Container(
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: CustomeColor.sub_bg,
@@ -849,11 +798,7 @@ class _PassengerInfoScreenState extends State<PassengerInfoScreen> {
         width: size.width,
         child: Text(
           'Continue'.toUpperCase(),
-          style: const TextStyle(
-              letterSpacing: 1.0,
-              fontSize: 18,
-              color: Colors.white,
-              fontWeight: FontWeight.bold),
+          style: const TextStyle(letterSpacing: 1.0, fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
       ),

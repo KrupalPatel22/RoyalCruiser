@@ -74,8 +74,7 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
   List<MenuList> menu = [
     MenuList(title: 'My Booking', ontap: MyBookingAppScreen.routeName),
     MenuList(title: 'PNR Enquiry', ontap: PNREnquiryScreen.routeName),
-    MenuList(
-        title: 'Terms And Condition', ontap: TermsAndConditionScreen.routeName),
+    MenuList(title: 'Terms And Condition', ontap: TermsAndConditionScreen.routeName),
     MenuList(title: 'About Us', ontap: AboutUsAppScreen.routeName),
     MenuList(title: 'Gallery', ontap: GalleryAppScreen.routeName),
     MenuList(title: 'Feedback', ontap: FeedbackAppScreen.routeName),
