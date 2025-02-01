@@ -7,6 +7,8 @@ import 'package:royalcruiser/constants/common_constance.dart';
 import 'package:royalcruiser/moduals/screens/dashboard_screen.dart';
 import 'package:royalcruiser/moduals/screens/ticket_detail_screen.dart';
 import 'package:royalcruiser/utils/app_dialog.dart';
+import 'package:royalcruiser/utils/helpers/helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentMainScreenV2 extends StatefulWidget {
@@ -29,8 +31,10 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
     final rcvData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     webURL = "${rcvData['PGURL']}&HS=${rcvData['OrderNo']}";
+    //webURL = "https://royalcruiser.com/E-Ticket.aspx?OrderID=685532";
     super.didChangeDependencies();
   }
+
 
 /*  @override
   void dispose() {
@@ -135,7 +139,6 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
               ? Container()
               : Stack(
                   children: <Widget>[
-
                     WebView(
                       initialUrl: webURL,
                       javascriptMode: JavascriptMode.unrestricted,
@@ -149,37 +152,42 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                             url.contains("E-Ticket") ||
                             url.toLowerCase().contains('eticket')) {
 
-                          // showDialogDynamic(
-                          //     msg: 'Successfully booked ticket',
-                          //     status: 's',
-                          //     url: url);
 
                           print("My Url :- ${url}");
-                          String odIsStr = url.split('?')[1];
-                          print("odIsStr :- ${odIsStr}");
-                          String orderId = odIsStr.split('=')[1];
-                          print("orderId :-- ${orderId}");
-                          Get.to(() => TicketDetailScreen(
-                            //(Krupal) We don't use thous params now so just send Any string so we can continue without change Old Code
-                            //NOTE Need to send real Order id
-                              fromCityname: "fromCityname",
-                              toCityname: "toCityname",
-                              pickupTime: "pickupTime",
-                              dropTime: "dropTime",
-                              journeyTime: "journeyTime",
-                              bustourName: "bustourName",
-                              seatNumber: "seatNumber",
-                              passengerName: "passengerName",
-                              ticketNo: "ticketNo",
-                              PNR: "PNR",
-                              fare: "fare",
-                              //Only use OrderId in next screen so send real Order id
-                              OrderId: orderId));
+
+                          if (Helper.showCustomTicket == "1") {
+
+                            showDialogDynamic(
+                                msg: 'Successfully booked ticket',
+                                status: 's',
+                                url: url);
+
+                          }
+                          else {
+                            String odIsStr = url.split('?')[1];
+                            //print("odIsStr :- ${odIsStr}");
+                            String orderId = odIsStr.split('=')[1];
+                            // print("orderId :-- ${orderId}");
+                            Get.to(() => TicketDetailScreen(
+                                //(Krupal) We don't use thous params now so just send Any string so we can continue without change Old Code
+                                //NOTE Need to send real Order id
+                                fromCityname: "fromCityname",
+                                toCityname: "toCityname",
+                                pickupTime: "pickupTime",
+                                dropTime: "dropTime",
+                                journeyTime: "journeyTime",
+                                bustourName: "bustourName",
+                                seatNumber: "seatNumber",
+                                passengerName: "passengerName",
+                                ticketNo: "ticketNo",
+                                PNR: "PNR",
+                                fare: "fare",
+                                //Only use OrderId in next screen so send real Order id
+                                OrderId: orderId));
+                          }
                           setState(() {
                             checkTktStatus = true;
                           });
-
-
                         }
                         else if (url.contains("Error.aspx") ||
                             url.contains("error.aspx") ||
@@ -219,7 +227,28 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                           showDialogDynamic(
                               msg: 'Payment Failed', status: 'f', url: url);
                         }
+                      },
+                      navigationDelegate: (navigationDelegate) async {
+                        String url = navigationDelegate.url;
 
+                        if (url.contains("upi:") || url.contains("upi/")) {
+                          print("Nav Url :- ${url}");
+                          try {
+                            launchUrl(Uri.parse(url));
+                          } catch (e) {
+                            AppDialogs.showErrorDialog(
+                                context: context,
+                                errorMsg: "Error Occurred",
+                                title:
+                                    "Enable to Open UpiApp, or no Upi app found.",
+                                onOkBtnClickListener: () {
+                                  Get.back();
+                                });
+                          }
+                          return NavigationDecision.prevent;
+                        } else {
+                          return NavigationDecision.navigate;
+                        }
                       },
 
                       // navigationDelegate: (navigationDelegate) {
@@ -269,10 +298,7 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
                       //
                       //
                       // }
-
                     ),
-
-
                     _isLoadingWebView
                         ? Center(
                             child: AppDialogs.screenAppShowDiloag(context),
@@ -346,28 +372,35 @@ class _PaymentMainScreenV2State extends State<PaymentMainScreenV2> {
               ElevatedButton(
                 onPressed: () {
                   if (status == 's') {
+
+                    Get.back();
+
                     //Navigator.of(context).pop();
-                    print("My Url :- ${url}");
-                    String odIsStr = url.split('?')[1];
-                    print("odIsStr :- ${odIsStr}");
-                    String orderId = odIsStr.split('=')[1];
-                    print("orderId :-- ${orderId}");
-                    Get.to(() => TicketDetailScreen(
-                       //(Krupal) We don't use thous params now so just send Any string so we can continue without change Old Code
-                      //NOTE Need to send real Order id
-                        fromCityname: "fromCityname",
-                        toCityname: "toCityname",
-                        pickupTime: "pickupTime",
-                        dropTime: "dropTime",
-                        journeyTime: "journeyTime",
-                        bustourName: "bustourName",
-                        seatNumber: "seatNumber",
-                        passengerName: "passengerName",
-                        ticketNo: "ticketNo",
-                        PNR: "PNR",
-                        fare: "fare",
-                        //Only use OrderId in next screen so send real Order id
-                        OrderId: orderId));
+                    // print("My Url :- ${url}");
+                    // String odIsStr = url.split('?')[1];
+                    // print("odIsStr :- ${odIsStr}");
+                    // String orderId = odIsStr.split('=')[1];
+                    // print("orderId :-- ${orderId}");
+                    //
+                    //
+                    // Get.to(() => TicketDetailScreen(
+                    //     //(Krupal) We don't use thous params now so just send Any string so we can continue without change Old Code
+                    //     //NOTE Need to send real Order id
+                    //     fromCityname: "fromCityname",
+                    //     toCityname: "toCityname",
+                    //     pickupTime: "pickupTime",
+                    //     dropTime: "dropTime",
+                    //     journeyTime: "journeyTime",
+                    //     bustourName: "bustourName",
+                    //     seatNumber: "seatNumber",
+                    //     passengerName: "passengerName",
+                    //     ticketNo: "ticketNo",
+                    //     PNR: "PNR",
+                    //     fare: "fare",
+                    //     //Only use OrderId in next screen so send real Order id
+                    //     OrderId: orderId));
+
+
                     setState(() {
                       checkTktStatus = true;
                     });

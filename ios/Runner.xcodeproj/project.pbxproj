@@ -364,6 +364,7 @@
 				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = B98W93KH2L;
 				ENABLE_BITCODE = NO;
+				FLUTTER_BUILD_NAME = 3.0.7;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Royal Cruiser";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
@@ -504,6 +505,7 @@
 				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = B98W93KH2L;
 				ENABLE_BITCODE = NO;
+				FLUTTER_BUILD_NAME = 3.0.7;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Royal Cruiser";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
@@ -538,6 +540,7 @@
 				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = B98W93KH2L;
 				ENABLE_BITCODE = NO;
+				FLUTTER_BUILD_NAME = 3.0.7;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Royal Cruiser";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";

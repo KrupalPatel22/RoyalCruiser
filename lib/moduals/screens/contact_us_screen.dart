@@ -38,12 +38,14 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
 
   void contactApiCall() {
     AppDialogs.showProgressDialog(context: context);
-    ApiImplementer.getContactDetailsListApiImplementer().then((XmlDocument document) {
+    ApiImplementer.getContactDetailsListApiImplementer()
+        .then((XmlDocument document) {
       Get.back();
       _isLoading.value = true;
       bool xmlElement = document.findAllElements('NewDataSet').isNotEmpty;
       if (xmlElement) {
-        List<XmlElement> element = document.findAllElements('ContactDetailsList').toList();
+        List<XmlElement> element =
+            document.findAllElements('ContactDetailsList').toList();
         for (int i = 0; i < element.length; i++) {
           if (element[i].getElement('IsHoOffice')!.text == "1") {
             _contactUsDataIsHearOffice = ContactUsData(
@@ -71,6 +73,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
               element[i].getElement('Address')?.text.toString() ?? "",
               element[i].getElement('ContactNumber')?.text.toString() ?? "",
               element[i].getElement('EmailID')?.text.toString() ?? "",
+              // "22.2504971930328",
+              // "70.80188363661982",
               element[i].getElement('longitude')?.text.toString() ?? "",
               element[i].getElement('latitude')?.text.toString() ?? "",
               element[i].getElement('OrderBy')?.text.toString() ?? "",
@@ -90,7 +94,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     }).catchError((onError) {
       print('  onError:::getDestinationsBasedOnSource===>$onError');
       Get.back();
-      Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+      Navigator.of(context)
+          .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
     });
   }
 
@@ -135,7 +140,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,
-                                  fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD,
+                                  fontFamily: CommonConstants
+                                      .FONT_FAMILY_OPEN_SANS_BOLD,
                                 ),
                               )
                             ],
@@ -156,7 +162,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                 _contactUsDataIsHearOffice!.CityAreaName,
                                 style: const TextStyle(
                                   fontSize: 15,
-                                  fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD,
+                                  fontFamily: CommonConstants
+                                      .FONT_FAMILY_OPEN_SANS_BOLD,
                                 ),
                               ),
                               const SizedBox(height: 5),
@@ -164,15 +171,52 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                 _contactUsDataIsHearOffice!.Address,
                                 style: const TextStyle(
                                   fontSize: 15,
-                                  fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                                  fontFamily: CommonConstants
+                                      .FONT_FAMILY_OPEN_SANS_REGULAR,
                                 ),
                               ),
+
+                              Visibility(
+                                visible: getMyVisiblity(),
+                                child: InkWell(
+                                  onTap: () async {
+                                    final String googleMapsUrl =
+                                        "https://www.google.com/maps/search/?api=1&query=${_contactUsDataIsHearOffice!.latitude},${_contactUsDataIsHearOffice!.longitude}";
+                                    final String appleMapsUrl =
+                                        "https://maps.apple.com/?q=${_contactUsDataIsHearOffice!.latitude},${_contactUsDataIsHearOffice!.longitude}";
+
+                                    if (await canLaunch(googleMapsUrl)) {
+                                      await launch(googleMapsUrl);
+                                    } else if (await canLaunch(appleMapsUrl)) {
+                                      await launch(appleMapsUrl);
+                                    } else {
+                                      throw 'Could not launch map URL';
+                                    }
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Open In Map",
+                                        style: TextStyle(
+                                            color: CustomeColor.main_bg),
+                                      ),
+                                      Icon(
+                                        Icons.location_pin,
+                                        color: CustomeColor.main_bg,
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
                               const SizedBox(height: 2),
                               Text(
                                 _contactUsDataIsHearOffice!.StateName,
                                 style: const TextStyle(
                                   fontSize: 15,
-                                  fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                                  fontFamily: CommonConstants
+                                      .FONT_FAMILY_OPEN_SANS_REGULAR,
                                 ),
                               ),
                               const SizedBox(height: 5),
@@ -185,9 +229,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                               //new Krupal code (27 march 24)
                               InkWell(
                                   onTap: () {
-                                    getPhonenumberForCall(_contactUsDataIsHearOffice!.ContactNumbers);
+                                    getPhonenumberForCall(
+                                        _contactUsDataIsHearOffice!
+                                            .ContactNumbers);
                                   },
-                                  child: Text(_contactUsDataIsHearOffice!.ContactNumber))
+                                  child: Text(_contactUsDataIsHearOffice!
+                                      .ContactNumber))
                             ],
                           ),
                         ),
@@ -216,7 +263,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                             },
                             hint: const Text("-Select-"),
                             icon: const Image(
-                              image: AssetImage('assets/images/ic_dropdown.png'),
+                              image:
+                                  AssetImage('assets/images/ic_dropdown.png'),
                             ),
                             isExpanded: true,
                             value: droupDownId,
@@ -225,7 +273,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                   .map(
                                     (e) => DropdownMenuItem(
                                       child: Text(e.CityName),
-                                      value: e.CityName.toLowerCase().toString(),
+                                      value:
+                                          e.CityName.toLowerCase().toString(),
                                     ),
                                   )
                                   .toList(),
@@ -242,7 +291,11 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                           children: [
                             if (droupDownId != null)
                               for (int i = 0; i < contactdata.length; i++)
-                                if (droupDownId == contactdata[i].CityName.toLowerCase().toString()) ...{
+                                if (droupDownId ==
+                                    contactdata[i]
+                                        .CityName
+                                        .toLowerCase()
+                                        .toString()) ...{
                                   Card(
                                     elevation: 2.0,
                                     margin: const EdgeInsets.all(5),
@@ -250,16 +303,20 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                       width: size.width,
                                       padding: const EdgeInsets.all(15),
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             contactdata[i].CityAreaName,
                                             style: const TextStyle(
                                               fontSize: 15,
-                                              fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD,
+                                              fontFamily: CommonConstants
+                                                  .FONT_FAMILY_OPEN_SANS_BOLD,
                                               wordSpacing: 2.0,
-                                              decoration: TextDecoration.underline,
+                                              decoration:
+                                                  TextDecoration.underline,
                                             ),
                                           ),
                                           const SizedBox(height: 10),
@@ -267,15 +324,18 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                             contactdata[i].Address,
                                             style: const TextStyle(
                                               fontSize: 15,
-                                              fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                                              fontFamily: CommonConstants
+                                                  .FONT_FAMILY_OPEN_SANS_REGULAR,
                                             ),
                                           ),
+                                          TrackAddressinGoogleMap(i),
                                           const SizedBox(height: 10),
                                           Text(
                                             contactdata[i].StateName,
                                             style: const TextStyle(
                                               fontSize: 15,
-                                              fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                                              fontFamily: CommonConstants
+                                                  .FONT_FAMILY_OPEN_SANS_REGULAR,
                                             ),
                                           ),
                                           const SizedBox(height: 10),
@@ -287,9 +347,12 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                           //New Code Krupal
                                           InkWell(
                                             onTap: () {
-                                              getPhonenumberForCall(contactdata[i].ContactNumbers);
+                                              getPhonenumberForCall(
+                                                  contactdata[i]
+                                                      .ContactNumbers);
                                             },
-                                            child: Text(contactdata[i].ContactNumber),
+                                            child: Text(
+                                                contactdata[i].ContactNumber),
                                           )
                                         ],
                                       ),
@@ -315,7 +378,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      UiUtils.errorSnackBar(title: "Error", message: "Unable to make call").show();
+      UiUtils.errorSnackBar(title: "Error", message: "Unable to make call")
+          .show();
       throw 'Could not launch $url';
     }
   }
@@ -338,13 +402,17 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
                     Text(
                       "Select Number",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: CustomeColor.main_bg),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: CustomeColor.main_bg),
                     ),
                     SizedBox(height: 10),
                     ...List.generate(
                         moNoList.length,
                         (index) => Container(
-                              margin: EdgeInsets.only(right: 10, left: 10, top: 10),
+                              margin:
+                                  EdgeInsets.only(right: 10, left: 10, top: 10),
                               child: InkWell(
                                   onTap: () {
                                     _makePhoneCall(moNoList[index]);
@@ -359,7 +427,8 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
-                                      Icon(Icons.call, color: CustomeColor.main_bg)
+                                      Icon(Icons.call,
+                                          color: CustomeColor.main_bg)
                                     ],
                                   )),
                             )),
@@ -368,6 +437,65 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           });
     } else {
       _makePhoneCall(moNoList.first);
+    }
+  }
+
+  Widget TrackAddressinGoogleMap(int i) {
+    if (contactdata[i].latitude != null &&
+        contactdata[i].latitude.isNotEmpty &&
+        contactdata[i].latitude != "0" &&
+        contactdata[i].longitude != null &&
+        contactdata[i].longitude.isNotEmpty &&
+        contactdata[i].longitude != "0") {
+      return Column(
+        children: [
+          SizedBox(height: 5),
+          InkWell(
+            onTap: () async {
+              final String googleMapsUrl =
+                  "https://www.google.com/maps/search/?api=1&query=${contactdata[i].latitude},${contactdata[i].longitude}";
+              final String appleMapsUrl =
+                  "https://maps.apple.com/?q=${contactdata[i].latitude},${contactdata[i].longitude}";
+
+              if (await canLaunch(googleMapsUrl)) {
+                await launch(googleMapsUrl);
+              } else if (await canLaunch(appleMapsUrl)) {
+                await launch(appleMapsUrl);
+              } else {
+                throw 'Could not launch map URL';
+              }
+            },
+            child: Row(
+              children: [
+                Text(
+                  "Open In Map",
+                  style: TextStyle(color: CustomeColor.main_bg),
+                ),
+                Icon(
+                  Icons.location_pin,
+                  color: CustomeColor.main_bg,
+                  size: 20,
+                ),
+              ],
+            ),
+          )
+        ],
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  getMyVisiblity() {
+    if (_contactUsDataIsHearOffice!.latitude != null &&
+        _contactUsDataIsHearOffice!.latitude.isNotEmpty &&
+        _contactUsDataIsHearOffice!.latitude != "0" &&
+        _contactUsDataIsHearOffice!.longitude != null &&
+        _contactUsDataIsHearOffice!.longitude.isNotEmpty &&
+        _contactUsDataIsHearOffice!.longitude != "0") {
+      return true;
+    } else {
+      return false;
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:royalcruiser/api/api_imlementer.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:royalcruiser/utils/ui/ui_utils.dart';
 import 'package:xml/xml.dart';
 
 class CancellationAppScreen extends StatefulWidget {
@@ -162,7 +165,9 @@ class _CancellationAppScreenState extends State<CancellationAppScreen> {
                         ),
                       ),
                       onPressed: () {
+
                         if (_isValid()) {
+
                           getCancellationDetailsApiCall();
                         }
                       },
@@ -249,7 +254,7 @@ class _CancellationAppScreenState extends State<CancellationAppScreen> {
         Container(
           padding: const EdgeInsets.all(0.0),
           margin: const EdgeInsets.all(0.0),
-          height: 40,
+          height: 45,
           decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -546,6 +551,7 @@ class _CancellationAppScreenState extends State<CancellationAppScreen> {
   }
 
   bool _isValid() {
+
     if (primary_pnr_textEditing.text.isEmpty) {
       ToastMsg(message: 'Enter PNR No.');
       return false;
@@ -668,9 +674,21 @@ class _CancellationAppScreenState extends State<CancellationAppScreen> {
               0) {
             List<XmlElement> listCancellationDetails =
                 xmlDocument.findAllElements('CancellationDetails').toList();
-            Navigator.of(context).pushNamed(
-                ConfirmCancellationAppScreen.routeName,
-                arguments: listCancellationDetails);
+            if(listCancellationDetails[0].getElement('RefundAmount')!=null){
+              Navigator.of(context).pushNamed(
+                  ConfirmCancellationAppScreen.routeName,
+                  arguments: listCancellationDetails);
+            }else{
+              if(listCancellationDetails[0].getElement('StatusMsg')!=null){
+
+              UiUtils.errorSnackBar(message: listCancellationDetails[0].getElement('StatusMsg')!.text).show();
+              }else{
+                UiUtils.errorSnackBar(message: "Something went Wrong").show();
+
+              }
+            }
+            log(listCancellationDetails.toString());
+
           } else if (xmlDocument
                   .findAllElements('StatusMessage')
                   .first

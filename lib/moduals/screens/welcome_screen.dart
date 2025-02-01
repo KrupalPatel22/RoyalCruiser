@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,7 +40,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Timer? _timer;
   int _currentPage = 0;
-  TextStyle sliderTextStyle = TextStyle(fontSize: 18, color: CustomeColor.main_bg);
+  TextStyle sliderTextStyle =
+      TextStyle(fontSize: 18, color: CustomeColor.main_bg);
   ValueNotifier otpNotify = ValueNotifier<bool>(false);
   String verificationCode = "";
   XmlDocument? loginResponce;
@@ -79,7 +81,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Container(
           child: Column(children: [
             Center(
-              child: Container(constraints: BoxConstraints(maxWidth: 300), child: Image.asset('assets/images/royal_logo.png')),
+              child: Container(
+                  constraints: BoxConstraints(maxWidth: 300),
+                  child: Image.asset('assets/images/royal_logo.png')),
             ),
             Expanded(
               child: Stack(children: [
@@ -156,152 +160,272 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: SmoothPageIndicator(
                       controller: slideCtr,
                       count: 3,
-                      effect: WormEffect(dotWidth: 8, dotHeight: 8, activeDotColor: CustomeColor.main_bg),
+                      effect: WormEffect(
+                          dotWidth: 8,
+                          dotHeight: 8,
+                          activeDotColor: CustomeColor.main_bg),
                     ),
                   ),
                 )
               ]),
             ),
             Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
               padding: EdgeInsets.all(30),
               alignment: Alignment.centerLeft,
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(
-                  'Welcome to ROYAL CRUISER',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'We will send on OTP on this mobile number.',
-                  style: TextStyle(fontSize: 15, color: Colors.grey),
-                ),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome to ROYAL CRUISER',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'We will send on OTP on this mobile number.',
+                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    ),
 
-                //Phone Number
-                Form(
-                  key: _key,
-                  child: ValueListenableBuilder(
-                      valueListenable: otpNotify,
-                      builder: (ctx, val, _) {
-                        return Visibility(
-                          visible: !val,
-                          child: TextFormField(
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'please enter mobile number';
-                              } else if (val.length != 10) {
-                                return 'mobile number is not valid.';
-                              }
-                            },
-                            controller: phNumberCtr,
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                            ],
-                            decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              labelText: 'Enter mobile number',
-                              labelStyle: TextStyle(
-                                fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                                fontSize: 16,
+                    //Phone Number
+                    Form(
+                      key: _key,
+                      child: ValueListenableBuilder(
+                          valueListenable: otpNotify,
+                          builder: (ctx, val, _) {
+                            return Visibility(
+                              visible: !val,
+                              child: TextFormField(
+                                validator: (val) {
+                                  if (val == null || val.isEmpty) {
+                                    return 'please enter mobile number';
+                                  } else if (val.length != 10) {
+                                    return 'mobile number is not valid.';
+                                  }
+                                },
+                                controller: phNumberCtr,
+                                keyboardType: TextInputType.phone,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp("[0-9]")),
+                                ],
+                                decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Enter mobile number',
+                                  labelStyle: TextStyle(
+                                    fontFamily: CommonConstants
+                                        .FONT_FAMILY_OPEN_SANS_REGULAR,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: CommonConstants
+                                      .FONT_FAMILY_OPEN_SANS_REGULAR,
+                                ),
                               ),
+                            );
+                          }),
+                    ),
+
+                    SizedBox(height: 10),
+
+                    ValueListenableBuilder(
+                        valueListenable: otpNotify,
+                        builder: (ctx, val, _) {
+                          return Visibility(
+                            visible: val,
+                            child: Column(
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Enter Otp',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: CustomeColor.main_bg)),
+                                SizedBox(height: 10),
+                                OtpTextField(
+                                  numberOfFields: 4,
+                                  borderColor: CustomeColor.main_bg,
+                                  cursorColor: CustomeColor.main_bg,
+                                  enabledBorderColor: CustomeColor.main_bg,
+                                  focusedBorderColor: CustomeColor.main_bg,
+                                  showFieldAsBox: true,
+                                  onCodeChanged: (String code) {
+                                    verificationCode = code;
+                                  },
+                                  onSubmit: (String code) {
+                                    verificationCode = code;
+                                    print(verificationCode);
+
+                                    // showDialog(
+                                    //     context: context,
+                                    //     builder: (context) {
+                                    //       return AlertDialog(
+                                    //         title: Text("Verification Code"),
+                                    //         content: Text(
+                                    //             'Code entered is $verificationCode'),
+                                    //         actions: [
+                                    //           ElevatedButton(onPressed: (){
+                                    //             Get.offAllNamed(DashboardAppScreen.routeName);
+                                    //           }, child: Text('Ok'))
+                                    //         ],
+                                    //       );
+                                    //     });
+
+                                  }, // end onSubmit
+                                ),
+                              ],
                             ),
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                            ),
+                          );
+                        }),
+
+                    SizedBox(height: 10),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: ValueListenableBuilder(
+                          valueListenable: otpNotify,
+                          builder: (ctx, val, _) {
+                            return AppButton(
+                              () {
+
+                                if (otpNotify.value) {
+                                  //Old Code
+                                  // print("$otpTxt == $verificationCode");
+                                  // if (otpTxt == verificationCode) {
+                                  //   setDataFromApi(
+                                  //       xmlElement: loginResponce!
+                                  //           .findAllElements('GetDetails')
+                                  //           .first);
+                                  //   UiUtils.successSnackBar(
+                                  //           message: 'Login Successfully')
+                                  //       .show();
+                                  // }
+                                  // else {
+                                  //   UiUtils.errorSnackBar(
+                                  //           message: 'Invalid otp')
+                                  //       .show();
+                                  // }
+
+                                  //New Code
+                                  ApiImplementer.VerifyOTPApiImplimenter(
+                                          CustMobile: phNumberCtr.value.text,
+                                          CustVerificationCode: verificationCode
+                                  ).then((XmlDocument xmlDocument) {
+                                    // Navigator.of(context).pop();
+                                    if (!xmlDocument.isNull) {
+                                      print('Otp:- ${xmlDocument}');
+
+                                      bool xmlElement = xmlDocument
+                                          .findAllElements('VerifyStatus')
+                                          .isNotEmpty;
+
+
+                                      String verifyOtpStatus = xmlDocument
+                                          .findAllElements('VerifyStatus')
+                                          .first.getElement('Status')!.text;
+
+                                      print("My Test ${verifyOtpStatus}");
+
+
+                                      if (xmlElement) {
+                                        //loginResponce = xmlDocument;
+
+                                        print("Mytst = $xmlDocument");
+
+                                        if (verifyOtpStatus.compareTo("1") == 0) {
+
+                                          print("My Test otp is right ${loginResponce!
+                                              .findAllElements('Status')
+                                              .first
+                                              .getElement('Status')!
+                                              .text}");
+
+
+                                          if (loginResponce!
+                                                  .findAllElements('Status')
+                                                  .first
+                                                  .getElement('Status')!
+                                                  .text
+                                                  .compareTo("0") == 0) {
+
+                                            print("My Test Go to register");
+
+
+
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        RegistrationScreen(
+                                                            mobileNo:
+                                                                phNumberCtr
+                                                                    .value
+                                                                    .text)));
+                                          }
+                                          else {
+                                            print("My Test Login User");
+
+                                            setDataFromApi(xmlElement: loginResponce!
+                                                .findAllElements('GetDetails')
+                                                .first);
+                                            // Get.offAllNamed(DashboardAppScreen.routeName);
+
+                                          }
+                                        }
+                                        else {
+                                          print("My Test otp is Wrong");
+                                            UiUtils.errorSnackBar(message: 'Invalid otp')
+                                                .show();
+                                        }
+
+                                      }
+                                    }
+
+                                  });
+
+                                }
+                                else {
+                                  if (_key.currentState!.validate()) {
+                                    getOTPApiCall(
+                                        phnNumber: phNumberCtr.value.text);
+
+                                    //Get.offAllNamed(DashboardAppScreen.routeName);
+                                  }
+                                }
+                              },
+                              text: otpNotify.value ? 'Login' : 'PROCEED',
+                              round: 10,
+                            );
+                          }),
+                    ),
+                    SizedBox(height: 10),
+
+                    ValueListenableBuilder(valueListenable: otpNotify, builder: (ctx,val,_){
+
+                      if(otpNotify.value){
+                        return InkWell(
+                          onTap: () {
+                            otpNotify.value=false;
+                            // setUserIsNotFirstTime();
+                            // Get.offAllNamed(DashboardAppScreen.routeName);
+                          },
+                          child: Center(
+                            child: Text('Change Mobile Number',
+                                style: TextStyle(
+                                    color: CustomeColor.main_bg,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15)),
                           ),
                         );
-                      }),
-                ),
+                      }else{
+                        return SizedBox.shrink();
+                      }
 
-                SizedBox(height: 10),
-
-                ValueListenableBuilder(
-                    valueListenable: otpNotify,
-                    builder: (ctx, val, _) {
-                      return Visibility(
-                        visible: val,
-                        child: Column(
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Enter Otp', style: TextStyle(fontSize: 15, color: CustomeColor.main_bg)),
-                            SizedBox(height: 10),
-                            OtpTextField(
-                              numberOfFields: 4,
-                              borderColor: CustomeColor.main_bg,
-                              cursorColor: CustomeColor.main_bg,
-                              enabledBorderColor: CustomeColor.main_bg,
-                              focusedBorderColor: CustomeColor.main_bg,
-                              showFieldAsBox: true,
-                              onCodeChanged: (String code) {
-                                verificationCode = code;
-                              },
-                              onSubmit: (String code) {
-                                verificationCode = code;
-                                print(verificationCode);
-
-                                // showDialog(
-                                //     context: context,
-                                //     builder: (context) {
-                                //       return AlertDialog(
-                                //         title: Text("Verification Code"),
-                                //         content: Text(
-                                //             'Code entered is $verificationCode'),
-                                //         actions: [
-                                //           ElevatedButton(onPressed: (){
-                                //             Get.offAllNamed(DashboardAppScreen.routeName);
-                                //           }, child: Text('Ok'))
-                                //         ],
-                                //       );
-                                //     });
-                              }, // end onSubmit
-                            ),
-                          ],
-                        ),
-                      );
                     }),
 
-                SizedBox(height: 10),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: ValueListenableBuilder(
-                      valueListenable: otpNotify,
-                      builder: (ctx, val, _) {
-                        return AppButton(
-                          () {
-                            if (otpNotify.value) {
-                              print("$otpTxt == $verificationCode");
-                              if (otpTxt == verificationCode) {
-                                setDataFromApi(xmlElement: loginResponce!.findAllElements('GetDetails').first);
-                                UiUtils.successSnackBar(message: 'Login Successfully').show();
-                              } else {
-                                UiUtils.errorSnackBar(message: 'Invalid otp').show();
-                              }
-                            } else {
-                              if (_key.currentState!.validate()) {
-                                getOTPApiCall(phnNumber: phNumberCtr.value.text);
-
-                                //Get.offAllNamed(DashboardAppScreen.routeName);
-                              }
-                            }
-                          },
-                          text: otpNotify.value ? 'Login' : 'PROCEED',
-                          round: 10,
-                        );
-                      }),
-                ),
-                SizedBox(height: 10),
-                InkWell(
-                  onTap: () {
-                    setUserIsNotFirstTime();
-                    Get.offAllNamed(DashboardAppScreen.routeName);
-                  },
-                  child: Center(
-                    child: Text('Skip', style: TextStyle(color: CustomeColor.main_bg, fontWeight: FontWeight.w600, fontSize: 15)),
-                  ),
-                )
-              ]),
+                  ]),
             )
           ]),
         ),
@@ -311,7 +435,39 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   void getOTPApiCall({required String phnNumber}) {
     AppDialogs.showProgressDialog(context: context);
-    ApiImplementer.getOTPLoginApiImplementer(
+
+    ///Old Code
+    // ApiImplementer.getOTPLoginApiImplementer(
+    //   CustMobile: phnNumber,
+    // ).then((XmlDocument xmlDocument) {
+    //   Navigator.of(context).pop();
+    //   if (!xmlDocument.isNull) {
+    //     print('Otp:- ${xmlDocument}');
+    //
+    //     bool xmlElement = xmlDocument.findAllElements('NewDataSet').isNotEmpty;
+    //     if (xmlElement) {
+    //       loginResponce = xmlDocument;
+    //       if (xmlDocument.findAllElements('Status').first.getElement('Status')!.text.compareTo("1") == 0) {
+    //         otpNotify.value = true;
+    //         //_text_OTP_controller.text = xmlDocument.findAllElements('GetDetails').first.getElement('VerificationCode1')!.text;
+    //         otpTxt = xmlDocument.findAllElements('GetDetails').first.getElement('VerificationCode1')!.text.toString();
+    //
+    //         print('Otp:- ${otpTxt}');
+    //       } else {
+    //         setUserIsNotFirstTime();
+    //         //User Not Found Navigate to Register
+    //         Navigator.of(context).push(MaterialPageRoute(builder: (_) => RegistrationScreen(mobileNo: phNumberCtr.value.text)));
+    //       }
+    //     }
+    //   }
+    // }).catchError((onError) {
+    //   Navigator.of(context).pop();
+    //   Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+    //   print('MyBookingLoginApiImplementeronError===>$onError');
+    // });
+
+    ///New Code
+    ApiImplementer.getOTPBaseLogin_MobileBase(
       CustMobile: phnNumber,
     ).then((XmlDocument xmlDocument) {
       Navigator.of(context).pop();
@@ -321,24 +477,43 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         bool xmlElement = xmlDocument.findAllElements('NewDataSet').isNotEmpty;
         if (xmlElement) {
           loginResponce = xmlDocument;
-          if (xmlDocument.findAllElements('Status').first.getElement('Status')!.text.compareTo("1") == 0) {
+          if (xmlDocument
+                  .findAllElements('Status')
+                  .first
+                  .getElement('Status')!
+                  .text
+                  .compareTo("1") ==
+              0) {
             otpNotify.value = true;
-            //_text_OTP_controller.text = xmlDocument.findAllElements('GetDetails').first.getElement('VerificationCode1')!.text;
-            otpTxt = xmlDocument.findAllElements('GetDetails').first.getElement('VerificationCode1')!.text.toString();
-
+            otpTxt = xmlDocument
+                .findAllElements('GetDetails')
+                .first
+                .getElement('VerificationCode')!
+                .text
+                .toString();
             print('Otp:- ${otpTxt}');
           } else {
-            setUserIsNotFirstTime();
+            //  setUserIsNotFirstTime();
             //User Not Found Navigate to Register
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) => RegistrationScreen(mobileNo: phNumberCtr.value.text)));
+
+            ApiImplementer.NewUser_GetOTPApiImplimenter(CustMobile: phnNumber).then((XmlDocument xmlDoc) {
+              log("Send otp to new user Responce :- $xmlDoc");
+            });
+
+            otpNotify.value = true;
+            // Navigator.of(context).push(MaterialPageRoute(
+            //     builder: (_) =>
+            //         RegistrationScreen(mobileNo: phNumberCtr.value.text)));
           }
         }
       }
-    }).catchError((onError) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
-      print('MyBookingLoginApiImplementeronError===>$onError');
-    });
+    })
+        //     .catchError((onError) {
+        //   Navigator.of(context).pop();
+        //   print('MyBookingLoginApiImplementeronError===>$onError');
+        //   Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+        // })
+        ;
   }
 
   SharedPreferences? _sharedPreferences;
@@ -346,17 +521,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Future<void> setDataFromApi({required XmlElement xmlElement}) async {
     _sharedPreferences = await SharedPreferences.getInstance();
 
-    NavigatorConstants.USER_ID = xmlElement.getElement('CustID')!.text.toString();
-    NavigatorConstants.USER_NAME = xmlElement.getElement('CustName')!.text.toString();
-    NavigatorConstants.USER_EMAIL = xmlElement.getElement('CustEmail')!.text.toString();
-    NavigatorConstants.USER_PHONE = xmlElement.getElement('CustMobile')!.text.toString();
-    NavigatorConstants.USER_PASSWORD = xmlElement.getElement('CustPassword')!.text.toString();
+    NavigatorConstants.USER_ID =
+        xmlElement.getElement('CustID')!.text.toString();
+    NavigatorConstants.USER_NAME =
+        xmlElement.getElement('CustName')!.text.toString();
+    NavigatorConstants.USER_EMAIL =
+        xmlElement.getElement('CustEmail')!.text.toString();
+    NavigatorConstants.USER_PHONE =
+        xmlElement.getElement('CustMobile')!.text.toString();
+    NavigatorConstants.USER_PASSWORD =
+        xmlElement.getElement('CustPassword')!.text.toString();
 
-    _sharedPreferences!.setString(Preferences.CUST_ID, xmlElement.getElement('CustID')!.text.toString());
-    _sharedPreferences!.setString(Preferences.CUST_NAME, xmlElement.getElement('CustName')!.text.toString());
-    _sharedPreferences!.setString(Preferences.CUST_EMAIL, xmlElement.getElement('CustEmail')!.text.toString());
-    _sharedPreferences!.setString(Preferences.CUST_PHONE, xmlElement.getElement('CustMobile')!.text.toString());
-    _sharedPreferences!.setString(Preferences.CUST_PASSWORD, xmlElement.getElement('CustPassword')!.text.toString());
+    _sharedPreferences!.setString(
+        Preferences.CUST_ID, xmlElement.getElement('CustID')!.text.toString());
+    _sharedPreferences!.setString(Preferences.CUST_NAME,
+        xmlElement.getElement('CustName')!.text.toString());
+    _sharedPreferences!.setString(Preferences.CUST_EMAIL,
+        xmlElement.getElement('CustEmail')!.text.toString());
+    _sharedPreferences!.setString(Preferences.CUST_PHONE,
+        xmlElement.getElement('CustMobile')!.text.toString());
+    _sharedPreferences!.setString(Preferences.CUST_PASSWORD,
+        xmlElement.getElement('CustPassword')!.text.toString());
 
     // print({
     //   'Shared____CUST_ID==>${_sharedPreferences!.getString(Preferences.CUST_ID)}'
@@ -380,7 +565,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     print('USER_PHONE====>${NavigatorConstants.USER_PHONE}');
     print('USER_PASSWORD====>${NavigatorConstants.USER_PASSWORD}');
     Get.offAllNamed(DashboardAppScreen.routeName);
-    setUserIsNotFirstTime();
+    // setUserIsNotFirstTime();
   }
 
   setUserIsNotFirstTime() async {

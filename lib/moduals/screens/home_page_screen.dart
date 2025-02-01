@@ -7,6 +7,7 @@ import 'package:royalcruiser/constants/preferences_costances.dart';
 import 'package:royalcruiser/model/recent_search_model.dart';
 import 'package:royalcruiser/moduals/screens/avilable_route_screen.dart';
 import 'package:royalcruiser/moduals/screens/from_city_screen.dart';
+import 'package:royalcruiser/moduals/screens/ticket_detail_screen.dart';
 import 'package:royalcruiser/moduals/screens/to_city_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -93,9 +94,9 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
   }
 
   void onTapSearch(String? recentDate) {
-    if(recentDate != ""){
+    if (recentDate != "") {
       NavigatorConstants.ONWARD_DATE = recentDate!;
-    }else{
+    } else {
       NavigatorConstants.ONWARD_DATE = onward_date.value;
     }
     NavigatorConstants.SelectedDroppingPointOnwordID = '0';
@@ -109,8 +110,7 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
         NavigatorConstants.TRIP_TYPE = "1";
         Navigator.of(context).pushNamed(AvailableRoutesAppScreen.routeName);
       }
-    }
-    else if (_visibility == false) {
+    } else if (_visibility == false) {
       NavigatorConstants.TRIP_TYPE = "0";
       NavigatorConstants.RETURN_DATE = '';
       Navigator.of(context).pushNamed(AvailableRoutesAppScreen.routeName);
@@ -136,6 +136,7 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
 
   @override
   void initState() {
+
     popup_visible = NavigatorConstants.POP_UP_BANNER_BOOL;
     _pref.then((SharedPreferences sharedPreferences) {
       _sharedPreferences = sharedPreferences;
@@ -148,7 +149,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
         }
       }
 
-      var resent = json.decode(_sharedPreferences!.getString(Preferences.RECENT_SEARCH).toString());
+      var resent = json.decode(
+          _sharedPreferences!.getString(Preferences.RECENT_SEARCH).toString());
       if (resent != null)
         for (var search in resent) {
           recentSearchList.add(RecentSeaechModel.fromJson(search));
@@ -165,6 +167,23 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
     NavigatorConstants.ONWARD_DATE = '';
     NavigatorConstants.RETURN_DATE = '';
     dateformandtoBydefault();
+
+    // Get.to(() => TicketDetailScreen(
+    //       OrderId: "684212",
+    //       bustourName: "",
+    //       dropTime: "",
+    //       fare: "",
+    //       fromCityname: "",
+    //       journeyTime: "",
+    //       passengerName: "",
+    //       pickupTime: "",
+    //   PNR: "",
+    //   seatNumber: "",
+    //   ticketNo: "",
+    //   toCityname: "",
+    //   fromMybooking: true
+    //     ));
+
     super.initState();
   }
 
@@ -338,7 +357,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  color: _visibility == false ? CustomeColor.sub_bg : Colors.white,
+                  color:
+                      _visibility == false ? CustomeColor.sub_bg : Colors.white,
                   borderRadius: const BorderRadius.all(
                     Radius.circular(50),
                   ),
@@ -350,7 +370,9 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                     color: _visibility == false ? Colors.white : Colors.grey,
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    fontFamily: _visibility == false ? CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD : CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                    fontFamily: _visibility == false
+                        ? CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD
+                        : CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
                   ),
                 ),
               ),
@@ -366,7 +388,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  color: _visibility == true ? CustomeColor.sub_bg : Colors.white,
+                  color:
+                      _visibility == true ? CustomeColor.sub_bg : Colors.white,
                   borderRadius: const BorderRadius.all(
                     Radius.circular(50),
                   ),
@@ -378,7 +401,9 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                     color: _visibility == true ? Colors.white : Colors.grey,
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    fontFamily: _visibility == true ? CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD : CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                    fontFamily: _visibility == true
+                        ? CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD
+                        : CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
                   ),
                 ),
               ),
@@ -441,7 +466,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
               Radius.circular(15),
             ),
             onTap: () {
-              if (fromCitytextEditingController.text.isNotEmpty && toCitytextEditingController.text.isNotEmpty) {
+              if (fromCitytextEditingController.text.isNotEmpty &&
+                  toCitytextEditingController.text.isNotEmpty) {
                 changeCityIcon();
               }
             },
@@ -497,11 +523,13 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
           setState(() {
             onward_only_date = formatter_only_date.format(pickedDate);
             onward_only_week = formatter_week_name.format(pickedDate);
-            onward_only_month_with_year = formatter_month_with_year.format(pickedDate);
+            onward_only_month_with_year =
+                formatter_month_with_year.format(pickedDate);
             onward_date.value = "${formatter_api_call.format(pickedDate)}";
             return_only_date = formatter_only_date.format(pickedDate);
             return_only_week = formatter_week_name.format(pickedDate);
-            return_only_month_with_year = formatter_month_with_year.format(pickedDate);
+            return_only_month_with_year =
+                formatter_month_with_year.format(pickedDate);
             return_date.value = "";
           });
         }
@@ -543,7 +571,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                         '$onward_only_date',
                         style: TextStyle(
                           fontSize: 26,
-                          fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                          fontFamily:
+                              CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
                         ),
                       ),
                     ),
@@ -560,7 +589,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                               '$onward_only_week',
                               style: TextStyle(
                                 fontSize: 14,
-                                fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                                fontFamily: CommonConstants
+                                    .FONT_FAMILY_OPEN_SANS_REGULAR,
                               ),
                             ),
                           ),
@@ -569,7 +599,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                               '$onward_only_month_with_year',
                               style: TextStyle(
                                 fontSize: 14,
-                                fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                                fontFamily: CommonConstants
+                                    .FONT_FAMILY_OPEN_SANS_REGULAR,
                               ),
                             ),
                           ),
@@ -597,8 +628,12 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
           onTap: () async {
             DateTime? pickedDate = await showDatePicker(
               context: context,
-              initialDate: DateTime.parse(DateFormat("dd-MM-yyyy").parse(onward_date.toString()).toString()),
-              firstDate: DateTime.parse(DateFormat("dd-MM-yyyy").parse(onward_date.toString()).toString()),
+              initialDate: DateTime.parse(DateFormat("dd-MM-yyyy")
+                  .parse(onward_date.toString())
+                  .toString()),
+              firstDate: DateTime.parse(DateFormat("dd-MM-yyyy")
+                  .parse(onward_date.toString())
+                  .toString()),
               lastDate: DateTime(2101),
               builder: (context, child) {
                 return Theme(
@@ -623,7 +658,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
               setState(() {
                 return_only_date = formatter_only_date.format(pickedDate);
                 return_only_week = formatter_week_name.format(pickedDate);
-                return_only_month_with_year = formatter_month_with_year.format(pickedDate);
+                return_only_month_with_year =
+                    formatter_month_with_year.format(pickedDate);
                 return_date.value = "${formatter_api_call.format(pickedDate)}";
               });
             }
@@ -665,8 +701,11 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                             '$return_only_date',
                             style: TextStyle(
                               fontSize: 26,
-                              fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                              color: return_date.value.isEmpty ? Colors.grey.shade500 : null,
+                              fontFamily:
+                                  CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                              color: return_date.value.isEmpty
+                                  ? Colors.grey.shade500
+                                  : null,
                             ),
                           ),
                         ),
@@ -683,8 +722,11 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                                   '$return_only_week',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                                    color: return_date.value.isEmpty ? Colors.grey.shade500 : null,
+                                    fontFamily: CommonConstants
+                                        .FONT_FAMILY_OPEN_SANS_REGULAR,
+                                    color: return_date.value.isEmpty
+                                        ? Colors.grey.shade500
+                                        : null,
                                   ),
                                 ),
                               ),
@@ -693,8 +735,11 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                                   '$return_only_month_with_year',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                                    color: return_date.value.isEmpty ? Colors.grey.shade500 : null,
+                                    fontFamily: CommonConstants
+                                        .FONT_FAMILY_OPEN_SANS_REGULAR,
+                                    color: return_date.value.isEmpty
+                                        ? Colors.grey.shade500
+                                        : null,
                                   ),
                                 ),
                               ),
@@ -759,7 +804,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
   }
 
   Widget recentSearchWidget() {
-    return Obx(() => _isrecentSearchLoad.value
+    return Obx(
+      () => _isrecentSearchLoad.value
           ? recentSearchListfinal.length > 0
               ? Align(
                   alignment: Alignment.topLeft,
@@ -769,7 +815,10 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                     children: [
                       Text(
                         'Recent Search',
-                        style: TextStyle(fontSize: 18, fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontFamily:
+                                CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD),
                       ).paddingOnly(left: 8),
                       SizedBox(height: 10),
                       SingleChildScrollView(
@@ -779,17 +828,24 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ...recentSearchListfinal.map((e) => RecentSearchWidget(
+                            ...recentSearchListfinal.map(
+                              (e) => RecentSearchWidget(
                                 FormCity: e.S_CityName,
                                 ToCity: e.D_CityName,
                                 J_Date: e.J_Date,
                                 onTapItem: () {
-                                  NavigatorConstants.SOURCE_CITY_NAME = e.S_CityName;
-                                  NavigatorConstants.SOURCE_CITY_ID = e.S_CityID;
-                                  NavigatorConstants.DESTINATION_CITY_NAME = e.D_CityName;
-                                  NavigatorConstants.DESTINATION_CITY_ID = e.D_CityID;
-                                  fromCitytextEditingController.text = e.S_CityName;
-                                  toCitytextEditingController.text = e.D_CityName;
+                                  NavigatorConstants.SOURCE_CITY_NAME =
+                                      e.S_CityName;
+                                  NavigatorConstants.SOURCE_CITY_ID =
+                                      e.S_CityID;
+                                  NavigatorConstants.DESTINATION_CITY_NAME =
+                                      e.D_CityName;
+                                  NavigatorConstants.DESTINATION_CITY_ID =
+                                      e.D_CityID;
+                                  fromCitytextEditingController.text =
+                                      e.S_CityName;
+                                  toCitytextEditingController.text =
+                                      e.D_CityName;
                                   onTapSearch(e.J_Date);
                                 },
                               ),
@@ -826,7 +882,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
   }
 
   pushNamedFromCityScreen(BuildContext context) async {
-    final result = await Navigator.of(context).pushNamed(FromCitySearchApplicationScreen.routeName);
+    final result = await Navigator.of(context)
+        .pushNamed(FromCitySearchApplicationScreen.routeName);
     if (result != null) {
       fromCitytextEditingController.text = '$result';
       toCitytextEditingController.clear();
@@ -834,7 +891,8 @@ class _HomePageFragmnetState extends State<HomePageFragmnet> {
   }
 
   pushNamedToCityScreen(BuildContext context) async {
-    final result1 = await Navigator.of(context).pushNamed(ToCitySearchApplicationScreen.routeName);
+    final result1 = await Navigator.of(context)
+        .pushNamed(ToCitySearchApplicationScreen.routeName);
     if (result1 != null) {
       toCitytextEditingController.text = '$result1';
     }

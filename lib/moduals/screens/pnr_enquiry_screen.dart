@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:royalcruiser/api/api_imlementer.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
 import 'package:royalcruiser/moduals/screens/no_internet_or_error_screen.dart';
@@ -182,9 +184,13 @@ class _PNREnquiryScreenState extends State<PNREnquiryScreen> {
                                   ),
                                   TextFormField(
                                     controller: primary_captha_textEditing,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.deny(RegExp(r'\s')), // Deny any whitespace character
+                                    ],
                                     decoration: InputDecoration(
                                       border: const UnderlineInputBorder(),
                                       labelText: 'Type Here Captcha.',
+
                                       prefixIcon: const Icon(Icons.qr_code_sharp),
                                       labelStyle: TextStyle(
                                         fontFamily: CommonConstants
@@ -373,6 +379,7 @@ class _PNREnquiryScreenState extends State<PNREnquiryScreen> {
       }
     } else if (_otpTextfield.isTrue) {
       if (_isValid() && _isValidOTP()) {
+
         Get.toNamed(PNRhtmlScreen.routeName,arguments: HtmlWidgetData);
       }
     }

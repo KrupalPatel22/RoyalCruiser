@@ -54,9 +54,13 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+  GlobalKey<ScaffoldMessengerState>();
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       theme: ThemeData(
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {

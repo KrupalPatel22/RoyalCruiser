@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,9 +10,12 @@ import 'package:royalcruiser/constants/navigation_constance.dart';
 import 'package:royalcruiser/moduals/screens/no_internet_or_error_screen.dart';
 import 'package:royalcruiser/moduals/screens/verification_screen.dart';
 import 'package:royalcruiser/utils/app_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
 
+import '../../constants/preferences_costances.dart';
 import '../../utils/ui/ui_utils.dart';
+import 'dashboard_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const routeName = '/registration_screen';
@@ -113,21 +118,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
                     ),
                   ),
-                  TextFormField(
-                    controller: primary_mobile_textEditing,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [LengthLimitingTextInputFormatter(10)],
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Mobile No.',
-                      labelStyle: TextStyle(
-                        fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                        fontSize: 16,
+                  AbsorbPointer(
+                    absorbing: true,
+                    child: TextFormField(
+                      controller: primary_mobile_textEditing,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                      decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        labelText: 'Mobile No.',
+                        labelStyle: TextStyle(
+                          fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                      ),
                     ),
                   ),
                   TextFormField(
@@ -201,44 +209,44 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ],
                     ),
                   ),
-                  TextFormField(
-                    controller: primary_password_textEditing,
-                    obscureText: _obscureText,
-                    decoration: InputDecoration(
-                      border: const UnderlineInputBorder(),
-                      labelText: 'Password',
-                      suffixIcon: InkWell(
-                        onTap: _toggle,
-                        child: Icon(
-                          _obscureText ? Icons.visibility_off : Icons.visibility,
-                        ),
-                      ),
-                      labelStyle: const TextStyle(
-                        fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                        fontSize: 16,
-                      ),
-                    ),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                    ),
-                  ),
-                  TextFormField(
-                    controller: primary_confirm_password_textEditing,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Confirm Password',
-                      labelStyle: TextStyle(
-                        fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                        fontSize: 16,
-                      ),
-                    ),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
-                    ),
-                  ),
+                  // TextFormField(
+                  //   controller: primary_password_textEditing,
+                  //   obscureText: _obscureText,
+                  //   decoration: InputDecoration(
+                  //     border: const UnderlineInputBorder(),
+                  //     labelText: 'Password',
+                  //     suffixIcon: InkWell(
+                  //       onTap: _toggle,
+                  //       child: Icon(
+                  //         _obscureText ? Icons.visibility_off : Icons.visibility,
+                  //       ),
+                  //     ),
+                  //     labelStyle: const TextStyle(
+                  //       fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                  //       fontSize: 16,
+                  //     ),
+                  //   ),
+                  //   style: const TextStyle(
+                  //     fontSize: 16,
+                  //     fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                  //   ),
+                  // ),
+                  // TextFormField(
+                  //   controller: primary_confirm_password_textEditing,
+                  //   obscureText: true,
+                  //   decoration: const InputDecoration(
+                  //     border: UnderlineInputBorder(),
+                  //     labelText: 'Confirm Password',
+                  //     labelStyle: TextStyle(
+                  //       fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                  //       fontSize: 16,
+                  //     ),
+                  //   ),
+                  //   style: const TextStyle(
+                  //     fontSize: 16,
+                  //     fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                  //   ),
+                  // ),
                   Container(
                     width: double.infinity,
                     padding:
@@ -291,7 +299,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     required String Password,
   }) {
     AppDialogs.showProgressDialog(context: context);
-    ApiImplementer.geAppRegApiImplementer(
+    ApiImplementer.ApplicationRegistration_MobileBase_V2(
         EmailID: EmailID,
         Gender: Gender,
         MobileNo: MobileNo,
@@ -301,26 +309,98 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       if(!xmlDocument.isNull) {
          bool element = xmlDocument.findAllElements('NewDataSet').isNotEmpty;
          if (element) {
-          if (xmlDocument.findAllElements('ApplicationRegistration').first.getElement('Status')!.text.compareTo("1") == 0) {
-            // print('object1');
-            // Future.delayed(Duration(milliseconds: 100), () {
-              getLoginOtpApiCall();
-            // },);
+
+           log(xmlDocument.toString());
+
+           print("My reg print :- ${xmlDocument.findAllElements('NewDataSet').first.getElement('Status')!.getElement("Status")?.text}");
+
+          if (xmlDocument.findAllElements('NewDataSet').first.getElement('Status')!.getElement("Status")?.text.compareTo("1") == 0) {
+
+            UiUtils.successSnackBar(message: "Register successfully").show();
+
+            setDataFromApi(xmlElement: xmlDocument
+                .findAllElements('CustomerDetails')
+                .first);
+
+            // Get.offAllNamed(DashboardAppScreen.routeName);
+
+            // // print('object1');
+            // // Future.delayed(Duration(milliseconds: 100), () {
+            //   getLoginOtpApiCall();
+            // // },);
+
           }
-          else if (xmlDocument.findAllElements('ApplicationRegistration').first.getElement('Status')!.text.compareTo("0") == 0) {
+          else if (xmlDocument.findAllElements('NewDataSet').first.getElement('Status')!.getElement("Status")?.text.compareTo("0") == 0) {
             showToastMsg('Mobile number already registered.');
             // showToastMsg(xmlDocument.findAllElements('ApplicationRegistration').first.getElement('StatusMessage')!.text.toString());
-          } else {
+          }
+          else {
             showToastMsg('Something went wrong.');
           }
-        }
+
+         }
       }
-    }).catchError((onError) {
-      print('onError===>$onError');
-      Navigator.of(context).pop();
-      Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
-    });
+    })
+
+    //     .catchError((onError) {
+    //   print('onError===>$onError');
+    //   Navigator.of(context).pop();
+    //   Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+    // })
+    ;
   }
+
+  Future<void> setDataFromApi({required XmlElement xmlElement}) async {
+    SharedPreferences? _sharedPreferences;
+
+    _sharedPreferences = await SharedPreferences.getInstance();
+
+    NavigatorConstants.USER_ID =
+        xmlElement.getElement('CustID')!.text.toString();
+    NavigatorConstants.USER_NAME =
+        xmlElement.getElement('CustName')!.text.toString();
+    NavigatorConstants.USER_EMAIL =
+        xmlElement.getElement('CustEmail')!.text.toString();
+    NavigatorConstants.USER_PHONE =
+        xmlElement.getElement('CustMobile')!.text.toString();
+    NavigatorConstants.USER_PASSWORD =
+        xmlElement.getElement('CustPassword')!.text.toString();
+
+    _sharedPreferences!.setString(
+        Preferences.CUST_ID, xmlElement.getElement('CustID')!.text.toString());
+    _sharedPreferences!.setString(Preferences.CUST_NAME,
+        xmlElement.getElement('CustName')!.text.toString());
+    _sharedPreferences!.setString(Preferences.CUST_EMAIL,
+        xmlElement.getElement('CustEmail')!.text.toString());
+    _sharedPreferences!.setString(Preferences.CUST_PHONE,
+        xmlElement.getElement('CustMobile')!.text.toString());
+    _sharedPreferences!.setString(Preferences.CUST_PASSWORD,
+        xmlElement.getElement('CustPassword')!.text.toString());
+
+    // print({
+    //   'Shared____CUST_ID==>${_sharedPreferences!.getString(Preferences.CUST_ID)}'
+    // });
+    // print({
+    //   'Shared____CUST_NAME==>${_sharedPreferences!.getString(Preferences.CUST_NAME)}'
+    // });
+    // print({
+    //   'Shared____CUST_EMAIL==>${_sharedPreferences!.getString(Preferences.CUST_EMAIL)}'
+    // });
+    // print({
+    //   'Shared____CUST_PHONE==>${_sharedPreferences!.getString(Preferences.CUST_PHONE)}'
+    // });
+    // print({
+    //   'Shared____CUST_PASSWORD==>${_sharedPreferences!.getString(Preferences.CUST_PASSWORD)}'
+    // });
+
+    print('USER_ID====>${NavigatorConstants.USER_ID}');
+    print('USER_NAME====>${NavigatorConstants.USER_NAME}');
+    print('USER_EMAIL====>${NavigatorConstants.USER_EMAIL}');
+    print('USER_PHONE====>${NavigatorConstants.USER_PHONE}');
+    print('USER_PASSWORD====>${NavigatorConstants.USER_PASSWORD}');
+    Get.offAllNamed(DashboardAppScreen.routeName);
+  }
+
 
   Future<void> getLoginOtpApiCall() async {
     // AppDialogs.showProgressDialog(context: context);
@@ -390,17 +470,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } else if (gender == null) {
       showToastMsg('Please select gender');
       return false;
-    } else if (primary_password_textEditing.text.isEmpty) {
-      showToastMsg('Please enter password');
-      return false;
-    } else if (primary_confirm_password_textEditing.text.isEmpty) {
-      showToastMsg('Please enter confirm password');
-      return false;
-    } else if (primary_password_textEditing.text !=
-        primary_confirm_password_textEditing.text) {
-      showToastMsg('password does not match');
-      return false;
     }
+    // else if (primary_password_textEditing.text.isEmpty) {
+    //   showToastMsg('Please enter password');
+    //   return false;
+    // }
+    // else if (primary_confirm_password_textEditing.text.isEmpty) {
+    //   showToastMsg('Please enter confirm password');
+    //   return false;
+    // }
+    // else if (primary_password_textEditing.text !=
+    //     primary_confirm_password_textEditing.text) {
+    //   showToastMsg('password does not match');
+    //   return false;
+    // }
     return true;
   }
 

@@ -5,12 +5,15 @@ import 'package:royalcruiser/constants/common_constance.dart';
 import 'package:royalcruiser/constants/navigation_constance.dart';
 import 'package:royalcruiser/moduals/screens/payment_main_screen_v2.dart';
 import 'package:royalcruiser/moduals/screens/ticket_detail_screen.dart';
+import 'package:royalcruiser/moduals/screens/webview_screen.dart';
 import 'package:royalcruiser/utils/app_dialog.dart';
+import 'package:royalcruiser/utils/helpers/helper.dart';
 import 'package:royalcruiser/widgets/no_data_found_widget.dart';
 import 'package:xml/xml.dart';
 import '../../api/api_imlementer.dart';
 import '../../constants/color_constance.dart';
 import '../../utils/ui/cliper_class.dart';
+import '../../utils/ui/ui_utils.dart';
 
 class MyBookingDashBoardScreen extends StatefulWidget {
   static const routeName = '/booking_dashboard_screen';
@@ -18,7 +21,8 @@ class MyBookingDashBoardScreen extends StatefulWidget {
   const MyBookingDashBoardScreen({Key? key}) : super(key: key);
 
   @override
-  State<MyBookingDashBoardScreen> createState() => _MyBookingDashBoardScreenState();
+  State<MyBookingDashBoardScreen> createState() =>
+      _MyBookingDashBoardScreenState();
 }
 
 class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
@@ -37,6 +41,8 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
 
   Future<void> getData() async {
     UserId = NavigatorConstants.USER_ID;
+    print("NavigatorConstants_USER_ID ${UserId}");
+
     UserPassword = NavigatorConstants.USER_PASSWORD;
     UserEmail = NavigatorConstants.USER_EMAIL;
   }
@@ -45,9 +51,15 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    TextStyle titletextStyle = TextStyle(fontSize: 14, color: Colors.white, fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD);
+    TextStyle titletextStyle = TextStyle(
+        fontSize: 14,
+        color: Colors.white,
+        fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_BOLD);
 
-    TextStyle textStyle = TextStyle(fontSize: 14, color: Colors.white, fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR);
+    TextStyle textStyle = TextStyle(
+        fontSize: 14,
+        color: Colors.white,
+        fontFamily: CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR);
 
     return Scaffold(
       appBar: AppBar(
@@ -83,7 +95,8 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
         height: size.height,
         width: size.width,
         child: FutureBuilder<XmlDocument>(
-            future: ApiImplementer.Fetch_MyBookingsApiImplementer(EmailID: UserEmail!, Password: UserPassword!),
+            future: ApiImplementer.Fetch_MyBookingsApiImplementer(
+                EmailID: UserEmail!, Password: UserPassword!),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return AppDialogs.screenAppShowDiloag(context);
@@ -99,7 +112,8 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
                   ),
                 );
               }
-              List<XmlElement> MyBookingData = snapshot.data!.findAllElements('MyBookingData').toList();
+              List<XmlElement> MyBookingData =
+                  snapshot.data!.findAllElements('MyBookingData').toList();
               Logger().d(MyBookingData);
               return MyBookingData.length > 0
                   ? ListView.builder(
@@ -107,23 +121,94 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
                       itemBuilder: (context, item) {
                         return InkWell(
                           onTap: () {
-                            Get.to(
-                              () => TicketDetailScreen(
-                                fromCityname: '${MyBookingData[item].getElement("FromCityName")!.text}',
-                                toCityname: '${MyBookingData[item].getElement("ToCityName")!.text}',
-                                pickupTime: '${MyBookingData[item].getElement("PickupTime")!.text}',
-                                dropTime: '${MyBookingData[item].getElement("DropTime")!.text}',
-                                journeyTime: '${MyBookingData[item].getElement("DisplayJourneyDate")!.text}',
-                                bustourName: '${MyBookingData[item].getElement("PickupName")!.text}',
-                                seatNumber: '${MyBookingData[item].getElement("SeatList")!.text}',
-                                passengerName: "${MyBookingData[item].getElement("CustName")!.text}",
-                                ticketNo: "${MyBookingData[item].getElement("M_OrderID")!.text}",
-                                PNR: "${MyBookingData[item].getElement("PNRNo")!.text}",
-                                fare: "₹${MyBookingData[item].getElement("PNRAmount")!.text}",
-                                OrderId: "${MyBookingData[item].getElement("OrderID")!.text}",
-                                fromMybooking: true,
-                              ),
-                            );
+                            if (Helper.showCustomTicket == "1") {
+                              //Show Web-view
+
+                              ApiImplementer.GetTicketPrintURLApiImplimenter(
+                                      PNRNO:
+                                          "${MyBookingData[item].getElement("PNRNo")!.text}",
+                                      OrderId:
+                                          "${MyBookingData[item].getElement("OrderID")!.text}")
+                                  .then((XmlDocument xmlDocument) {
+                                if (xmlDocument != null) {
+                                  bool xmlElement = xmlDocument
+                                      .findAllElements('TicketPrintURL')
+                                      .isNotEmpty;
+                                  if (xmlElement) {
+                                    XmlElement xmlElement = xmlDocument
+                                        .findAllElements('TicketPrintURL')
+                                        .first;
+
+                                    String status =
+                                        xmlElement.getElement("Status")!.text;
+
+                                    if (status == "1") {
+                                      String url = xmlElement
+                                          .getElement("URL")!
+                                          .text
+                                          .replaceAll("&amp;", "&");
+
+                                      print(url);
+
+                                      Get.to(() => WebviewScreen(
+                                            pdfUrl: url,
+                                            pdfView: false,
+                                          ));
+
+                                    } else {
+                                      String statusMessage = xmlElement
+                                          .getElement("StatusMessage")!
+                                          .text;
+
+                                      if (statusMessage == null ||
+                                          statusMessage.isEmpty) {
+                                        statusMessage = "Something Went Wrong";
+                                      }
+
+                                      UiUtils.errorSnackBar(
+                                              message: statusMessage)
+                                          .show();
+                                    }
+
+                                    // String status = xmlDocument
+                                    //     .findAllElements('Status')
+                                    //     .first
+                                    //     .getElement("Status")!.text;
+
+                                    // /print("${status}");
+                                  }
+                                }
+                              });
+                            } else {
+                              //Show Custom Ticket
+                              Get.to(() => TicketDetailScreen(
+                                    fromCityname:
+                                        '${MyBookingData[item].getElement("FromCityName")!.text}',
+                                    toCityname:
+                                        '${MyBookingData[item].getElement("ToCityName")!.text}',
+                                    pickupTime:
+                                        '${MyBookingData[item].getElement("PickupTime")!.text}',
+                                    dropTime:
+                                        '${MyBookingData[item].getElement("DropTime")!.text}',
+                                    journeyTime:
+                                        '${MyBookingData[item].getElement("DisplayJourneyDate")!.text}',
+                                    bustourName:
+                                        '${MyBookingData[item].getElement("PickupName")!.text}',
+                                    seatNumber:
+                                        '${MyBookingData[item].getElement("SeatList")!.text}',
+                                    passengerName:
+                                        "${MyBookingData[item].getElement("CustName")!.text}",
+                                    ticketNo:
+                                        "${MyBookingData[item].getElement("M_OrderID")!.text}",
+                                    PNR:
+                                        "${MyBookingData[item].getElement("PNRNo")!.text}",
+                                    fare:
+                                        "₹${MyBookingData[item].getElement("PNRAmount")!.text}",
+                                    OrderId:
+                                        "${MyBookingData[item].getElement("OrderID")!.text}",
+                                    fromMybooking: true,
+                                  ));
+                            }
                           },
                           child: Card(
                             color: CustomeColor.main_bg,
@@ -137,8 +222,10 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Container(
                                         child: Row(
@@ -172,8 +259,10 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
                                   ),
                                   SizedBox(height: 5),
                                   Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Container(
                                         child: Row(
@@ -208,6 +297,21 @@ class _MyBookingDashBoardScreenState extends State<MyBookingDashBoardScreen> {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Status : ',
+                                          style: titletextStyle,
+                                        ),
+                                        Text(
+                                          '${MyBookingData[item].getElement('strOrderStatus')!.text}',
+                                          style: textStyle,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),

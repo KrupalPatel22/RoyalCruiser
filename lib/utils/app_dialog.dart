@@ -18,58 +18,64 @@ class AppDialogs {
     return showDialog(
       context: context,
       barrierDismissible: isDismissible,
-      builder: (ctx) => Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Container(
-            height: 75,
-            width: 200,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.white,
-            ),
-            padding: EdgeInsets.symmetric(
-              vertical: 16.0,
-              horizontal: 18.0,
-            ),
-            child: Container(
-              child: Row(
-                children: [
-                  SpinKitChasingDots(
-                    size: 25,
-                    itemBuilder: (BuildContext context, int index) {
-                      return DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: index.isEven ? Colors.red : Colors.blue,
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Material(
-                    child: FittedBox(
-                      child: Text(
-                        msg,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily:
-                              CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+      builder: (ctx) => WillPopScope(
+        onWillPop: (){
+          return Future.value(false);
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Container(
+              height: 75,
+              width: 200,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: 16.0,
+                horizontal: 18.0,
+              ),
+              child: Container(
+                child: Row(
+                  children: [
+                    SpinKitChasingDots(
+                      size: 25,
+                      itemBuilder: (BuildContext context, int index) {
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: index.isEven ? Colors.red : Colors.blue,
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Material(
+                      child: FittedBox(
+                        child: Text(
+                          msg,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily:
+                                CommonConstants.FONT_FAMILY_OPEN_SANS_REGULAR,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
+
 
   static Future<void> showErrorDialog(
       {required BuildContext context,

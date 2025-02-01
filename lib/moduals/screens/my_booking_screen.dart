@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:royalcruiser/constants/navigation_constance.dart';
 import 'package:royalcruiser/moduals/screens/booking_dashboard_screen.dart';
 import 'package:royalcruiser/moduals/screens/login_screen.dart';
+import 'package:royalcruiser/moduals/screens/welcome_screen.dart';
 
 class MyBookingAppScreen extends StatefulWidget {
   static const routeName = '/my_booking_frg';
@@ -32,6 +33,8 @@ class _MyBookingAppScreenState extends State<MyBookingAppScreen> {
   }
 
   Future<void> getData() async {
+
+
     UserId = NavigatorConstants.USER_ID;
     UserPassword = NavigatorConstants.USER_PASSWORD;
     UserEmail = NavigatorConstants.USER_EMAIL;
@@ -44,7 +47,8 @@ class _MyBookingAppScreenState extends State<MyBookingAppScreen> {
     return Scaffold(
       body: Obx(
         () => !_isLoading.value
-            ? LoginScreen(appTitle: 'My Booking',)
+            ? WelcomeScreen()
+              // LoginScreen(appTitle: 'My Booking',)
             : MyBookingDashBoardScreen()
       ),
     );

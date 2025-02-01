@@ -9,6 +9,13 @@ import 'package:url_launcher/url_launcher.dart';
 class Helper {
   static const MethodChannel _channel = MethodChannel('unique_identifier');
 
+  static String InsuranceDeatils = "";
+  static String Disclaimer = "";
+  static String InsuranceDocs = "";
+  static String InsuranceHTML = "";
+
+  static String showCustomTicket = "";
+
   static Color parseColor(String hexCode, {double? opacity}) {
     try {
       return Color(int.parse(hexCode.replaceAll("#", "0xFF")))

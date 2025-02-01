@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:royalcruiser/api/api_url.dart';
 import 'package:logger/logger.dart';
@@ -14,12 +16,17 @@ class ApiImplementer {
   static String CompanyID = ApiUrls.COMPANY_ID;
   static String AppType = ApiUrls.ApplicationType;
   static String RequestType = "2";
-  static String ApplicationVersion = NavigatorConstants.APPLICATION_VERSION_NAME;
-  static String ApplicationVersionCode = NavigatorConstants.APPLICATION_VERSION_CODE;
+  static String ApplicationVersion =
+      NavigatorConstants.APPLICATION_VERSION_NAME;
+  static String ApplicationVersionCode =
+      NavigatorConstants.APPLICATION_VERSION_CODE;
   static String DeviceID = NavigatorConstants.DEVICE_ID;
   static String DeviceOsVersion = NavigatorConstants.DEVICE_OS_VERSION;
-  static String UserId = NavigatorConstants.USER_ID;
-  static Map<String, dynamic> getHeader = {"VerifyCall": "$VerifyCall", "Content-Type": "application/json"};
+  //static String UserId = NavigatorConstants.USER_ID;
+  static Map<String, dynamic> getHeader = {
+    "VerifyCall": "$VerifyCall",
+    "Content-Type": "application/json"
+  };
   static Logger logger = Logger();
 
   static Future<XmlDocument> applicationVersionCheckApiImplementer() async {
@@ -36,20 +43,22 @@ class ApiImplementer {
                           <ns:DeviceID>$DeviceID</ns:DeviceID>
                           <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                           <ns:RequestType>$RequestType</ns:RequestType>
-                          <ns:UserId>$UserId</ns:UserId>
+                          <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                           <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                        </tem:ParaComman>
                     </tem:ApplicationVersionCheck>
                </soapenv:Body>
             </soapenv:Envelope>''';
+
     logger.d(body);
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationVersionCheck'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationVersionCheck'}',
       }),
       data: body,
     );
+
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
@@ -73,6 +82,7 @@ class ApiImplementer {
     required String ToCityID_R,
     required String Type,
   }) async {
+    print("Type ${Type}");
     var body = Type == "0"
         ? '''<?xml version="1.0" encoding="utf-8"?>
                               <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
@@ -87,7 +97,7 @@ class ApiImplementer {
                                           <ns:DeviceID>$DeviceID</ns:DeviceID>
                                           <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                           <ns:RequestType>$RequestType</ns:RequestType>
-                                          <ns:UserId>$UserId</ns:UserId>
+                                          <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                           <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                        </tem:ParaComman>
                                        <tem:ParaCancellationDetails>
@@ -118,7 +128,7 @@ class ApiImplementer {
                                         				<ns:DeviceID>$DeviceID</ns:DeviceID>
                                         				<ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                         				<ns:RequestType>$RequestType</ns:RequestType>
-                                        				<ns:UserId>$UserId</ns:UserId>
+                                        				<ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                         				<ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                         			</tem:ParaComman>
                                         			<tem:ParaCancellationDetails>
@@ -147,7 +157,8 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}PartialCancellationDetails'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}PartialCancellationDetails'} ',
       }),
       data: body,
     );
@@ -173,7 +184,8 @@ class ApiImplementer {
     required String RefundAmount_R,
     required String SeatNo_R,
   }) async {
-    var body = OrderDetailsID_R != null || OrderDetailsID_R != ''
+    print("OrderDetailsID_R ${OrderDetailsID_R},");
+    var body = OrderDetailsID_R != null && OrderDetailsID_R.isNotEmpty
         ? '''<?xml version="1.0" encoding="utf-8"?>
                                 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
                                 xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
@@ -187,7 +199,7 @@ class ApiImplementer {
                                             <ns:DeviceID>$DeviceID</ns:DeviceID>
                                             <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                             <ns:RequestType>$RequestType</ns:RequestType>
-                                            <ns:UserId>$UserId</ns:UserId>
+                                            <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                             <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                          </tem:ParaComman>
                                          <tem:ParaConfirmCancellation>
@@ -224,7 +236,7 @@ class ApiImplementer {
                                             <ns:DeviceID>$DeviceID</ns:DeviceID>
                                             <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                             <ns:RequestType>$RequestType</ns:RequestType>
-                                            <ns:UserId>$UserId</ns:UserId>
+                                            <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                             <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                          </tem:ParaComman>
                                          <tem:ParaConfirmCancellation>
@@ -236,14 +248,17 @@ class ApiImplementer {
                                                <ns:RefundAmount>$RefundAmount</ns:RefundAmount>
                                                <ns:SeatNo>$SeatNo</ns:SeatNo>
                                             </ns:PROP_REG_PartialConfirmCancellation>
+                                             </tem:ParaConfirmCancellation>
                                       </tem:PartialConfirmCancellation>
                                    </soapenv:Body>
                                 </soapenv:Envelope>''';
+
     logger.d(body);
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}PartialConfirmCancellation'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}PartialConfirmCancellation'} ',
       }),
       data: body,
     );
@@ -253,11 +268,15 @@ class ApiImplementer {
     } else {
       throw Exception(response.statusMessage.toString());
     }
+
+    // return XmlDocument();
   }
 
-  static Future<XmlDocument> CheckValidPNRNOAndFetchTicketPrintDataApiImplementer({
+  static Future<XmlDocument>
+      CheckValidPNRNOAndFetchTicketPrintDataApiImplementer({
     required String PNRNo,
   }) async {
+    print("object");
     var body = '''<?xml version="1.0" encoding="utf-8"?>
                         <soapenv:Envelope
                         	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -273,7 +292,7 @@ class ApiImplementer {
                         				<ns:DeviceID>$DeviceID</ns:DeviceID>
                         				<ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                         				<ns:RequestType>$RequestType</ns:RequestType>
-                        				<ns:UserId>$UserId</ns:UserId>
+                        				<ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                         				<ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                         			</tem:ParaComman>
                         			<tem:Para_TE>
@@ -288,15 +307,17 @@ class ApiImplementer {
                         	</soapenv:Body>
                         </soapenv:Envelope>''';
 
+    logger.d(body);
+
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}CheckValidPNRNOAndFetchTicketPrintData'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}CheckValidPNRNOAndFetchTicketPrintData'} ',
       }),
       data: body,
     );
 
-    logger.d(body);
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
@@ -305,12 +326,16 @@ class ApiImplementer {
     }
   }
 
-  static Future<XmlDocument> applicationSplashScreenListApiImplementer({required String currentDate, required String height, required String width}) async {
+  static Future<XmlDocument> applicationSplashScreenListApiImplementer(
+      {required String currentDate,
+      required String height,
+      required String width}) async {
     final http.Response response = await http.post(
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationSplashScreenList'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}ApplicationSplashScreenList'} ',
       },
       body: '''<?xml version="1.0" encoding="utf-8"?>
                         <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
@@ -325,7 +350,7 @@ class ApiImplementer {
                                     <ns:DeviceID>$DeviceID</ns:DeviceID>
                                     <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                     <ns:RequestType>$RequestType</ns:RequestType>
-                                    <ns:UserId>$UserId</ns:UserId>
+                                    <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                     <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                  </tem:ParaComman>
                                  <tem:ParaSplashScreen>
@@ -364,7 +389,7 @@ class ApiImplementer {
                                     <ns:DeviceID>$DeviceID</ns:DeviceID>
                                     <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                     <ns:RequestType>$RequestType</ns:RequestType>
-                                    <ns:UserId>$UserId</ns:UserId>
+                                    <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                     <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                  </tem:ParaComman>
                               </tem:GetSources>
@@ -379,11 +404,13 @@ class ApiImplementer {
     }
   }
 
-  static Future<XmlDocument> getDestinationsBasedOnSourceApiImplementer({required String sourceID}) async {
+  static Future<XmlDocument> getDestinationsBasedOnSourceApiImplementer(
+      {required String sourceID}) async {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetDestinationsBasedOnSource'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}GetDestinationsBasedOnSource'} ',
       }),
       data: '''<?xml version="1.0" encoding="utf-8"?>
               <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
@@ -400,7 +427,7 @@ class ApiImplementer {
                           <ns:DeviceID>$DeviceID</ns:DeviceID>
                           <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                           <ns:RequestType>$RequestType</ns:RequestType>
-                          <ns:UserId>$UserId</ns:UserId>
+                          <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                           <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                        </tem:ParaComman>
                     </tem:GetDestinationsBasedOnSource>
@@ -467,7 +494,7 @@ class ApiImplementer {
                                               <ns:DeviceID>$DeviceID</ns:DeviceID>
                                               <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                               <ns:RequestType>$RequestType</ns:RequestType>
-                                              <ns:UserId>$UserId</ns:UserId>
+                                              <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                               <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                            </tem:ParaComman>
                                            <tem:CustMobile>$CustMobile</tem:CustMobile>
@@ -508,7 +535,7 @@ class ApiImplementer {
                                     <ns:DeviceID>$DeviceID</ns:DeviceID>
                                     <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                     <ns:RequestType>$RequestType</ns:RequestType>
-                                    <ns:UserId>$UserId</ns:UserId>
+                                    <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                     <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                  </tem:ParaComman>
                               </tem:GetApplicationExtraSettings>
@@ -517,7 +544,8 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetApplicationExtraSettings'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}GetApplicationExtraSettings'} ',
       }),
       data: data,
     );
@@ -549,7 +577,7 @@ class ApiImplementer {
                                       <ns:DeviceID>$DeviceID</ns:DeviceID>
                                       <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                       <ns:RequestType>$RequestType</ns:RequestType>
-                                      <ns:UserId>$UserId</ns:UserId>
+                                      <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                       <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                    </tem:ParaComman>
                                 </GetCompanyAboutus>
@@ -582,7 +610,7 @@ class ApiImplementer {
                                     <ns:DeviceID>$DeviceID</ns:DeviceID>
                                     <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                     <ns:RequestType>$RequestType</ns:RequestType>
-                                    <ns:UserId>$UserId</ns:UserId>
+                                    <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                     <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                  </tem:ParaComman>
                                  <tem:FromID>$FromID</tem:FromID>
@@ -624,7 +652,7 @@ class ApiImplementer {
                               <ns:DeviceID>$DeviceID</ns:DeviceID>
                               <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                               <ns:RequestType>$RequestType</ns:RequestType>
-                              <ns:UserId>$UserId</ns:UserId>
+                              <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                               <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                            </tem:ParaComman>
                            <tem:ReferenceNumber>${ReferenceNumber.toString()}</tem:ReferenceNumber>
@@ -636,7 +664,8 @@ class ApiImplementer {
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetSeatArrangementDetails_STax'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}GetSeatArrangementDetails_STax'} ',
       }),
       data: data,
     );
@@ -651,7 +680,7 @@ class ApiImplementer {
 
   static Future<XmlDocument> getTermsAndConditionApiImplementer() async {
     /*var data1 = '''<?xml version="1.0" encoding="utf-8"?>
-                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
                     xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
                        <soapenv:Header/>
                        <soapenv:Body>
@@ -687,7 +716,7 @@ class ApiImplementer {
                                 <ns:DeviceID>$DeviceID</ns:DeviceID>
                                 <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                 <ns:RequestType>$RequestType</ns:RequestType>
-                                <ns:UserId>$UserId</ns:UserId>
+                                <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                 <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                              </tem:ParaComman>
                           </tem:GetTermsAndConditions>
@@ -722,7 +751,7 @@ class ApiImplementer {
                                   <ns:DeviceID>$DeviceID</ns:DeviceID>
                                   <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                   <ns:RequestType>$RequestType</ns:RequestType>
-                                  <ns:UserId>$UserId</ns:UserId>
+                                  <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                   <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                </tem:ParaComman>
                             </tem:GetCancellationPolicy>
@@ -766,7 +795,7 @@ class ApiImplementer {
                               				<ns:DeviceID>$DeviceID</ns:DeviceID>
                               				<ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                               				<ns:RequestType>$RequestType</ns:RequestType>
-                              				<ns:UserId>$UserId</ns:UserId>
+                              				<ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                               				<ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                               			</tem:ParaComman>
                               			<tem:paraFeedback>
@@ -812,7 +841,7 @@ class ApiImplementer {
                                       <ns:DeviceID>$DeviceID</ns:DeviceID>
                                       <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                       <ns:RequestType>$RequestType</ns:RequestType>
-                                      <ns:UserId>$UserId</ns:UserId>
+                                      <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                       <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                    </tem:ParaComman>
                                    <tem:paraForgetPassword>
@@ -845,7 +874,7 @@ class ApiImplementer {
                                   <ns:DeviceID>$DeviceID</ns:DeviceID>
                                   <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                   <ns:RequestType>$RequestType</ns:RequestType>
-                                  <ns:UserId>$UserId</ns:UserId>
+                                  <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                   <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                </tem:ParaComman>
                                <tem:ParaContactDetails>
@@ -924,7 +953,7 @@ class ApiImplementer {
                                  <ns:DeviceID>$DeviceID</ns:DeviceID>
                                  <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                  <ns:RequestType>$RequestType</ns:RequestType>
-                                 <ns:UserId>$UserId</ns:UserId>
+                                 <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                  <ns:VerifyCall>$VerifyCall </ns:VerifyCall>
                              </tem:ParaComman>
                              <tem:ParaRegistration>
@@ -945,7 +974,8 @@ class ApiImplementer {
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationRegistration_V2'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}ApplicationRegistration_V2'} ',
       },
       body: body,
     );
@@ -975,7 +1005,7 @@ class ApiImplementer {
                        				<ns:DeviceID>$DeviceID</ns:DeviceID>
                        				<ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                        				<ns:RequestType>$RequestType</ns:RequestType>
-                       				<ns:UserId>$UserId</ns:UserId>
+                       				<ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                        				<ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                        			</tem:ParaComman>
                        			<tem:ParaVerifyVerificationCode>
@@ -990,7 +1020,8 @@ class ApiImplementer {
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplicationVerifyVerificationCode'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}ApplicationVerifyVerificationCode'} ',
       },
       body: body,
     );
@@ -1020,7 +1051,7 @@ class ApiImplementer {
                                           <ns:DeviceID>$DeviceID</ns:DeviceID>
                                           <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                           <ns:RequestType>$RequestType</ns:RequestType>
-                                          <ns:UserId>$UserId</ns:UserId>
+                                          <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                           <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                       </tem:ParaComman>
                                       <tem:ParaMyBookingLogin>
@@ -1067,7 +1098,7 @@ class ApiImplementer {
                                           <ns:DeviceID>$DeviceID</ns:DeviceID>
                                           <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                           <ns:RequestType>$RequestType</ns:RequestType>
-                                          <ns:UserId>$UserId</ns:UserId>
+                                          <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                           <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                       </tem:ParaComman>
                                       <tem:ParaCancellationDetails>
@@ -1081,12 +1112,14 @@ class ApiImplementer {
                               </soapenv:Body>
                           </soapenv:Envelope>''';
     logger.d(body);
-    final http.Response response = await http.post(Uri.parse('${ApiUrls.str_URL}'),
-        headers: {
-          'Content-Type': 'text/xml; charset=utf-8',
-          'soapaction': '${'${ApiUrls.str_SOAPActURL}CancellationDetails'} ',
-        },
-        body: body);
+    final http.Response response =
+        await http.post(Uri.parse('${ApiUrls.str_URL}'),
+            headers: {
+              'Content-Type': 'text/xml; charset=utf-8',
+              'soapaction':
+                  '${'${ApiUrls.str_SOAPActURL}CancellationDetails'} ',
+            },
+            body: body);
     if (response.statusCode == 200) {
       // logger.d(body);
       XmlDocument document = XmlDocument.parse(response.body);
@@ -1117,7 +1150,7 @@ class ApiImplementer {
                                       <ns:DeviceID>$DeviceID</ns:DeviceID>
                                       <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                       <ns:RequestType>$RequestType</ns:RequestType>
-                                      <ns:UserId>$UserId</ns:UserId>
+                                      <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                       <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                   </tem:ParaComman>
                                   <tem:ParaConfirmCancellation>
@@ -1132,12 +1165,13 @@ class ApiImplementer {
                           </soapenv:Body>
                       </soapenv:Envelope>''';
     logger.d(body);
-    final http.Response response = await http.post(Uri.parse('${ApiUrls.str_URL}'),
-        headers: {
-          'Content-Type': 'text/xml; charset=utf-8',
-          'soapaction': '${'${ApiUrls.str_SOAPActURL}ConfirmCancellation'}',
-        },
-        body: body);
+    final http.Response response =
+        await http.post(Uri.parse('${ApiUrls.str_URL}'),
+            headers: {
+              'Content-Type': 'text/xml; charset=utf-8',
+              'soapaction': '${'${ApiUrls.str_SOAPActURL}ConfirmCancellation'}',
+            },
+            body: body);
     if (response.statusCode == 200) {
       XmlDocument document = XmlDocument.parse(response.body);
       logger.d(body);
@@ -1165,12 +1199,13 @@ class ApiImplementer {
                                         <ns:DeviceID>$DeviceID</ns:DeviceID>
                                         <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                         <ns:RequestType>$RequestType</ns:RequestType>
-                                        <ns:UserId>$UserId</ns:UserId>
+                                        <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                         <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                     </tem:ParaComman>
                                     <tem:paraMyBookings>
                                         <ns:EmailID>$EmailID</ns:EmailID>
                                         <ns:Password>$Password</ns:Password>
+                                        <ns:CustID>${NavigatorConstants.USER_ID}</ns:CustID>
                                     </tem:paraMyBookings>
                                 </tem:Fetch_MyBookings>
                             </soapenv:Body>
@@ -1206,7 +1241,8 @@ class ApiImplementer {
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}FetchDefaultDiscountCoupon'} ',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}FetchDefaultDiscountCoupon'} ',
       },
       body: TripType.compareTo("1") == 0
           ? '''<?xml version="1.0" encoding="utf-8"?>
@@ -1222,7 +1258,7 @@ class ApiImplementer {
                                   <ns:DeviceID>$DeviceID</ns:DeviceID>
                                   <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                   <ns:RequestType>$RequestType</ns:RequestType>
-                                  <ns:UserId>$UserId</ns:UserId>
+                                  <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                   <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                </tem:ParaComman>
                                <tem:ParaDefaultCouponDetails>
@@ -1253,7 +1289,7 @@ class ApiImplementer {
                                   <ns:DeviceID>$DeviceID</ns:DeviceID>
                                   <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                   <ns:RequestType>$RequestType</ns:RequestType>
-                                  <ns:UserId>$UserId</ns:UserId>
+                                  <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                   <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                </tem:ParaComman>
                                <tem:ParaDefaultCouponDetails>
@@ -1292,6 +1328,7 @@ class ApiImplementer {
     required String SeatDetails,
     required String ServiceTaxPer,
     required String ServiceTaxRoundUP,
+    required String isInsurance,
     String? RReferenceNumber,
     String? RIsIncludeTax,
     String? ReturnSeatTotal,
@@ -1306,7 +1343,7 @@ class ApiImplementer {
                     xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
                        <soapenv:Header/>
                        <soapenv:Body>
-                          <tem:ApplyDiscountCoupon>
+                          <tem:ApplyDiscountCoupon_V2>
                              <tem:ParaComman>
                                 <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
                                 <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
@@ -1314,7 +1351,7 @@ class ApiImplementer {
                                 <ns:DeviceID>$DeviceID</ns:DeviceID>
                                 <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                 <ns:RequestType>$RequestType</ns:RequestType>
-                                <ns:UserId>$UserId</ns:UserId>
+                                <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                 <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                              </tem:ParaComman>
                              <tem:ParaDiscountCouponsCode>
@@ -1322,6 +1359,7 @@ class ApiImplementer {
                                 <ns:ApplicationType>$AppType</ns:ApplicationType>
                                 <ns:CouponCode>$CouponCode</ns:CouponCode>
                                 <ns:EmailID>$EmailID</ns:EmailID>
+                                <ns:Isinsurance>$isInsurance</ns:Isinsurance>
                                 <ns:IsIncludeTax>$IsIncludeTax</ns:IsIncludeTax>
                                 <ns:IsIncludeTax_Return>0</ns:IsIncludeTax_Return>
                                 <ns:JourneyType>$TripType</ns:JourneyType>
@@ -1342,7 +1380,7 @@ class ApiImplementer {
                                 <ns:ServiceTaxRoundUP>$ServiceTaxRoundUP</ns:ServiceTaxRoundUP>
                                 <ns:ServiceTaxRoundUP_Return>0</ns:ServiceTaxRoundUP_Return>
                              </tem:ParaDiscountCouponsCode>
-                          </tem:ApplyDiscountCoupon>
+                          </tem:ApplyDiscountCoupon_V2>
                        </soapenv:Body>
                     </soapenv:Envelope>'''
         : '''<?xml version="1.0" encoding="utf-8"?>
@@ -1350,7 +1388,7 @@ class ApiImplementer {
                     xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
                        <soapenv:Header/>
                        <soapenv:Body>
-                          <tem:ApplyDiscountCoupon>
+                          <tem:ApplyDiscountCoupon_V2>
                              <tem:ParaComman>
                                 <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
                                 <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
@@ -1358,7 +1396,7 @@ class ApiImplementer {
                                 <ns:DeviceID>$DeviceID</ns:DeviceID>
                                 <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                 <ns:RequestType>$RequestType</ns:RequestType>
-                                <ns:UserId>$UserId</ns:UserId>
+                                <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                 <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                              </tem:ParaComman>
                              <tem:ParaDiscountCouponsCode>
@@ -1366,6 +1404,7 @@ class ApiImplementer {
                                 <ns:ApplicationType>$AppType</ns:ApplicationType>
                                 <ns:CouponCode>$CouponCode</ns:CouponCode>
                                 <ns:EmailID>$EmailID</ns:EmailID>
+                                <ns:Isinsurance>$isInsurance</ns:Isinsurance>
                                 <ns:IsIncludeTax>$IsIncludeTax</ns:IsIncludeTax>
                                 <ns:IsIncludeTax_Return>$RIsIncludeTax</ns:IsIncludeTax_Return>
                                 <ns:JourneyType>$TripType</ns:JourneyType>
@@ -1386,22 +1425,24 @@ class ApiImplementer {
                                 <ns:ServiceTaxRoundUP>$ServiceTaxRoundUP</ns:ServiceTaxRoundUP>
                                 <ns:ServiceTaxRoundUP_Return>$RServiceTaxRoundUP</ns:ServiceTaxRoundUP_Return>
                              </tem:ParaDiscountCouponsCode>
-                          </tem:ApplyDiscountCoupon>
+                          </tem:ApplyDiscountCoupon_V2>
                        </soapenv:Body>
                     </soapenv:Envelope>''';
     final http.Response response = await http.post(
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplyDiscountCoupon'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}ApplyDiscountCoupon_V2'} ',
       },
       body: data,
     );
     logger.d(data);
+    print("My res status ${response.statusCode}");
     if (response.statusCode == 200) {
       XmlDocument document = XmlDocument.parse(response.body);
       return document;
     } else {
+      print("My res status ${response.statusCode}");
       throw Exception('${response.body}');
     }
   }
@@ -1435,7 +1476,7 @@ class ApiImplementer {
                                    <ns:DeviceID>$DeviceID</ns:DeviceID>
                                    <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                    <ns:RequestType>$RequestType</ns:RequestType>
-                                   <ns:UserId>$UserId</ns:UserId>
+                                   <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                    <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                </tem:ParaComman>
                                   <tem:ReferenceNumber>$ReferenceNumber</tem:ReferenceNumber>
@@ -1576,6 +1617,12 @@ class ApiImplementer {
     String? TotalSemiSleepers_R,
     String? TotalSleeperAmt_R,
     String? TotalSleepers_R,
+    String? TotalInsuranceChargeOnword,
+    String? TotalInsuranceCharge_R,
+    String? InsuranceListOnward,
+    String? InsuranceChargeOnward,
+    String? InsuranceList_R,
+    String? InsuranceCharge_R,
   }) async {
     var body = TripType == "0"
         ? '''<?xml version="1.0" encoding="utf-8"?>
@@ -1593,7 +1640,7 @@ class ApiImplementer {
                              				<ns:DeviceID>$DeviceID</ns:DeviceID>
                              				<ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                              				<ns:RequestType>$RequestType</ns:RequestType>
-                             				<ns:UserId>$UserId</ns:UserId>
+                             				<ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                              				<ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                              			</tem:ParaComman>
                              			<tem:ParaOrderMaster>
@@ -1611,6 +1658,7 @@ class ApiImplementer {
                              				<ns:Phone>$MobileNo</ns:Phone>
                              				<ns:Remarks></ns:Remarks>
                              				<ns:Surcharges>$Surcharges</ns:Surcharges>
+                             				<ns:TotalInsuranceCharge>$TotalInsuranceChargeOnword</ns:TotalInsuranceCharge>
                              			</tem:ParaOrderMaster>
                              			<tem:ParaOrderDetails>
                              				<ns:PROP_REG_OrderDetails>
@@ -1631,6 +1679,8 @@ class ApiImplementer {
                              					<ns:FromCityId>$FromCityId</ns:FromCityId>
                              					<ns:FromCityName>$FromCityName</ns:FromCityName>
                              					<ns:ITS_SeatString>$ITS_SeatString</ns:ITS_SeatString>
+                             					<ns:InsuranceCharge>$InsuranceChargeOnward</ns:InsuranceCharge>
+                             					<ns:InsuranceList>$InsuranceListOnward</ns:InsuranceList>
                              					<ns:IsIncludeTax>$IsIncludeTax</ns:IsIncludeTax>
                              					<ns:JourneyDate>$JourneyDate</ns:JourneyDate>
                              					<ns:MainRouteName>$MainRouteName</ns:MainRouteName>
@@ -1685,7 +1735,7 @@ class ApiImplementer {
                                       <ns:DeviceID>$DeviceID</ns:DeviceID>
                                       <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
                                       <ns:RequestType>$RequestType</ns:RequestType>
-                                      <ns:UserId>$UserId</ns:UserId>
+                                      <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
                                       <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
                                   </tem:ParaComman>
                                   <tem:ParaOrderMaster>
@@ -1703,6 +1753,7 @@ class ApiImplementer {
                                       <ns:Phone>$MobileNo</ns:Phone>
                                       <ns:Remarks></ns:Remarks>
                                       <ns:Surcharges>$Surcharges_total_R</ns:Surcharges>
+                                      <ns:TotalInsuranceCharge>$TotalInsuranceCharge_R</ns:TotalInsuranceCharge>
                                   </tem:ParaOrderMaster>
                                   <tem:ParaOrderDetails>
                                 <ns:PROP_REG_OrderDetails>
@@ -1723,6 +1774,8 @@ class ApiImplementer {
                                           <ns:FromCityId>$FromCityId</ns:FromCityId>
                                           <ns:FromCityName>$FromCityName</ns:FromCityName>
                                           <ns:ITS_SeatString>$ITS_SeatString</ns:ITS_SeatString>
+                                          <ns:InsuranceCharge>$InsuranceChargeOnward</ns:InsuranceCharge>
+                                          <ns:InsuranceList>$InsuranceListOnward</ns:InsuranceList>
                                           <ns:IsIncludeTax>$IsIncludeTax</ns:IsIncludeTax>
                                           <ns:JourneyDate>$JourneyDate</ns:JourneyDate>
                                           <ns:MainRouteName>$MainRouteName</ns:MainRouteName>
@@ -1778,6 +1831,8 @@ class ApiImplementer {
                                           <ns:FromCityId>$FromCityId_R</ns:FromCityId>
                                           <ns:FromCityName>$FromCityName_R</ns:FromCityName>
                                           <ns:ITS_SeatString>$ITS_SeatString_R</ns:ITS_SeatString>
+                                          <ns:InsuranceCharge>$InsuranceCharge_R</ns:InsuranceCharge>
+                                          <ns:InsuranceList>$InsuranceList_R</ns:InsuranceList>
                                           <ns:IsIncludeTax>$IsIncludeTax_R</ns:IsIncludeTax>
                                           <ns:JourneyDate>$JourneyDate_R</ns:JourneyDate>
                                           <ns:MainRouteName>$MainRouteName_R</ns:MainRouteName>
@@ -1820,14 +1875,16 @@ class ApiImplementer {
                     </soapenv:Body>
                 </soapenv:Envelope>''';
     logger.d(body);
+
     final http.Response response = await http.post(
       Uri.parse('${ApiUrls.str_URL}'),
       headers: {
         'Content-Type': 'text/xml; charset=utf-8',
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}Insert_Order'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}Insert_Order'}',
       },
       body: body,
     );
+
     if (response.statusCode == 200) {
       XmlDocument document = XmlDocument.parse(response.body);
       return document;
@@ -1839,7 +1896,8 @@ class ApiImplementer {
   static Future<XmlDocument> getBoardingDropDetails_V2ApiImplementer({
     required String ReferenceNumber,
   }) async {
-    var data = '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+    var data =
+        '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
    <soapenv:Header/>
    <soapenv:Body>
       <tem:GetBoardingDropDetails_V2>
@@ -1858,7 +1916,7 @@ class ApiImplementer {
             <!--Optional:-->
             <ns:RequestType>$RequestType</ns:RequestType>
             <!--Optional:-->
-            <ns:UserId>$UserId</ns:UserId>
+            <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
             <!--Optional:-->
             <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
          </tem:ParaComman>
@@ -1867,14 +1925,15 @@ class ApiImplementer {
       </tem:GetBoardingDropDetails_V2>
    </soapenv:Body>
 </soapenv:Envelope>''';
+
     final response = await DioClient.getDioClient()!.post(
       '',
       options: Options(headers: {
-        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetBoardingDropDetails_V2'} ',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetBoardingDropDetails_V2'}',
       }),
       data: data,
     );
-    // logger.d(data);
+    logger.d(data);
     if (response.statusCode == 200) {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       return xmlDocument;
@@ -1886,7 +1945,8 @@ class ApiImplementer {
   static Future<XmlDocument> getGetTicketPrintDataApiImplementer({
     required String OrderId,
   }) async {
-    var data = '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+    var data =
+        '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
    <soapenv:Header/>
    <soapenv:Body>
       <tem:GetTicketPrintData>
@@ -1905,7 +1965,7 @@ class ApiImplementer {
             <!--Optional:-->
             <ns:RequestType>$RequestType</ns:RequestType>
             <!--Optional:-->
-            <ns:UserId>$UserId</ns:UserId>
+            <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
             <!--Optional:-->
             <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
          </tem:ParaComman>
@@ -1914,7 +1974,6 @@ class ApiImplementer {
       </tem:GetTicketPrintData>
    </soapenv:Body>  
 </soapenv:Envelope>''';
-
     logger.d(data);
 
     final response = await DioClient.getDioClient()!.post(
@@ -1929,11 +1988,297 @@ class ApiImplementer {
       XmlDocument xmlDocument = XmlDocument.parse(response.data);
       print("PickupLatitude => statusCode ${response.statusCode}");
       logger.d(response.data);
-
       return xmlDocument;
     } else {
       print("PickupLatitude => StatusCode ${response.statusCode}");
       throw Exception(response.statusMessage.toString());
     }
   }
+
+  /* New api added by krupal Start */
+
+  ///change api because login flow change(31 May 2024)
+  ///New Login Flow
+  /// - User can login with only mobile number
+  /// - User need to verify Otp for login or register both
+  /// - without otp verify user can not register.
+
+  static Future<XmlDocument> getOTPBaseLogin_MobileBase({
+    required String CustMobile,
+  }) async {
+    var a = 0;
+    a++;
+    print('hi: $a');
+    var body =
+        '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:OTPBaseLogin_MobileBase>
+         <tem:ParaComman>
+            <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
+            <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
+            <ns:ApplicationVersionCode>$ApplicationVersionCode</ns:ApplicationVersionCode>
+            <ns:DeviceID>$DeviceID</ns:DeviceID>
+            <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
+            <ns:RequestType>$RequestType</ns:RequestType>
+            <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
+            <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
+         </tem:ParaComman>
+         <!--Optional:-->
+         <tem:CustMobile>$CustMobile</tem:CustMobile>
+      </tem:OTPBaseLogin_MobileBase>
+   </soapenv:Body>
+</soapenv:Envelope>''';
+
+    logger.d(body);
+    final http.Response response = await http.post(
+      Uri.parse(ApiUrls.str_URL),
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}OTPBaseLogin_MobileBase'} ',
+      },
+      body: body,
+    );
+
+    logger.d(body);
+
+    if (response.statusCode == 200) {
+      XmlDocument document = XmlDocument.parse(response.body);
+      return document;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  static Future<XmlDocument> NewUser_GetOTPApiImplimenter({
+    required String CustMobile,
+  }) async {
+    var a = 0;
+    a++;
+    print('hi: $a');
+    var body =
+        '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:NewUser_GetOTP>
+         <tem:ParaComman>
+            <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
+            <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
+            <ns:ApplicationVersionCode>$ApplicationVersionCode</ns:ApplicationVersionCode>
+            <ns:DeviceID>$DeviceID</ns:DeviceID>
+            <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
+            <ns:RequestType>$RequestType</ns:RequestType>
+            <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
+            <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
+         </tem:ParaComman>
+         <tem:CustMobile>$CustMobile</tem:CustMobile>
+      </tem:NewUser_GetOTP>
+   </soapenv:Body>
+</soapenv:Envelope>''';
+
+    logger.d(body);
+    final http.Response response = await http.post(
+      Uri.parse(ApiUrls.str_URL),
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}NewUser_GetOTP'} ',
+      },
+      body: body,
+    );
+
+    logger.d(body);
+
+    if (response.statusCode == 200) {
+      XmlDocument document = XmlDocument.parse(response.body);
+      return document;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  static Future<XmlDocument> VerifyOTPApiImplimenter({
+    required String CustMobile,
+    required String CustVerificationCode,
+  }) async {
+    var a = 0;
+    a++;
+
+    var body =
+        '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:VerifyOTP>
+         <tem:VerifyCall>$VerifyCall</tem:VerifyCall>
+         <tem:CustVerificationCode>$CustVerificationCode</tem:CustVerificationCode>
+         <tem:CustMobile>$CustMobile</tem:CustMobile>
+      </tem:VerifyOTP>
+   </soapenv:Body>
+</soapenv:Envelope>''';
+
+    logger.d(body);
+    final http.Response response = await http.post(
+      Uri.parse(ApiUrls.str_URL),
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}VerifyOTP'} ',
+      },
+      body: body,
+    );
+
+
+    if (response.statusCode == 200) {
+      XmlDocument document = XmlDocument.parse(response.body);
+      return document;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+  static Future<XmlDocument> ApplicationRegistration_MobileBase_V2({
+    required String EmailID,
+    required String Gender,
+    required String MobileNo,
+    required String Name,
+    required String Password,
+  }) async
+  {
+    var body =
+        '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:ApplicationRegistration_MobileBase_V2>
+         <!--Optional:-->
+         <tem:ParaComman>
+            <!--Optional:-->
+            <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
+            <!--Optional:-->
+            <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
+            <!--Optional:-->
+            <ns:ApplicationVersionCode>$ApplicationVersionCode</ns:ApplicationVersionCode>
+            <!--Optional:-->
+            <ns:DeviceID>$DeviceID</ns:DeviceID>
+            <!--Optional:-->
+            <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
+            <!--Optional:-->
+            <ns:RequestType>$RequestType</ns:RequestType>
+            <!--Optional:-->
+            <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
+            <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
+         </tem:ParaComman>
+         
+         <tem:ParaRegistration>
+            <ns:EmailID>$EmailID</ns:EmailID>
+            <!--Optional:-->
+            <ns:Gender>$Gender</ns:Gender>
+            <!--Optional:-->
+            <ns:MobileNo>$MobileNo</ns:MobileNo>
+            <!--Optional:-->
+            <ns:Name>$Name</ns:Name>
+            <!--Optional:-->
+            <ns:Password>$Password</ns:Password>
+            <!--Optional:-->
+            <ns:Phone>$MobileNo</ns:Phone>
+         </tem:ParaRegistration>
+      </tem:ApplicationRegistration_MobileBase_V2>
+   </soapenv:Body>
+</soapenv:Envelope>''';
+    logger.d(body);
+    final http.Response response = await http.post(
+      Uri.parse('${ApiUrls.str_URL}'),
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        'soapaction':
+            '${'${ApiUrls.str_SOAPActURL}ApplicationRegistration_MobileBase_V2'} ',
+      },
+      body: body,
+    );
+    if (response.statusCode == 200) {
+      XmlDocument document = XmlDocument.parse(response.body);
+      return document;
+    } else {
+      throw Exception('${response.body}');
+    }
+  }
+
+  static Future<XmlDocument> Select_OrderWithPaxName(
+      {required String OrderID}) async {
+    var body =
+        '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:Select_OrderWithPaxName>
+         <tem:OrderID>$OrderID</tem:OrderID>
+      </tem:Select_OrderWithPaxName>
+   </soapenv:Body>
+</soapenv:Envelope>''';
+
+    logger.d(body);
+    final http.Response response = await http.post(
+      Uri.parse('${ApiUrls.str_URL}'),
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}Select_OrderWithPaxName'} ',
+      },
+      body: body,
+    );
+    if (response.statusCode == 200) {
+      XmlDocument document = XmlDocument.parse(response.body);
+      return document;
+    } else {
+      log("error My res :-${response.body}");
+      throw Exception('${response.body}');
+    }
+  }
+
+
+  static Future<XmlDocument> GetTicketPrintURLApiImplimenter({
+    required String PNRNO,
+    required String OrderId,
+  }) async {
+    var a = 0;
+    a++;
+    print('hi: $a');
+    var body =
+    '''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/" xmlns:ns="http://schemas.datacontract.org/2004/07/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:GetTicketPrintURL>
+         <tem:ParaComman>
+            <ns:ApplicationName>$ApplicationName</ns:ApplicationName>
+            <ns:ApplicationVersion>$ApplicationVersion</ns:ApplicationVersion>
+            <ns:ApplicationVersionCode>$ApplicationVersionCode</ns:ApplicationVersionCode>
+            <ns:DeviceID>$DeviceID</ns:DeviceID>
+            <ns:DeviceOsVersion>$DeviceOsVersion</ns:DeviceOsVersion>
+            <ns:RequestType>$RequestType</ns:RequestType>
+            <ns:UserId>${NavigatorConstants.USER_ID}</ns:UserId>
+            <ns:VerifyCall>$VerifyCall</ns:VerifyCall>
+         </tem:ParaComman>
+         <tem:PNRNO>$PNRNO</tem:PNRNO>
+         <tem:OrderId>$OrderId</tem:OrderId>
+      </tem:GetTicketPrintURL>
+   </soapenv:Body>
+</soapenv:Envelope>''';
+
+    logger.d(body);
+    final http.Response response = await http.post(
+      Uri.parse(ApiUrls.str_URL),
+      headers: {
+        'Content-Type': 'text/xml; charset=utf-8',
+        'soapaction': '${'${ApiUrls.str_SOAPActURL}GetTicketPrintURL'} ',
+      },
+      body: body,
+    );
+
+    logger.d(body);
+
+    if (response.statusCode == 200) {
+      XmlDocument document = XmlDocument.parse(response.body);
+      return document;
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+
+
 }

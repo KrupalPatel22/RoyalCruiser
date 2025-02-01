@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:royalcruiser/api/api_imlementer.dart';
 import 'package:royalcruiser/constants/common_constance.dart';
@@ -9,10 +8,8 @@ import 'package:royalcruiser/model/source_city_model.dart';
 import 'package:royalcruiser/moduals/screens/dashboard_screen.dart';
 import 'package:royalcruiser/moduals/screens/no_internet_or_error_screen.dart';
 import 'package:royalcruiser/moduals/screens/update_screen.dart';
-import 'package:royalcruiser/moduals/screens/welcome_screen.dart';
 import 'package:royalcruiser/utils/helpers/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:royalcruiser/utils/sp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:xml/xml.dart';
 
@@ -20,7 +17,8 @@ class ApplicationSplashScreen extends StatefulWidget {
   const ApplicationSplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<ApplicationSplashScreen> createState() => _ApplicationSplashScreenState();
+  State<ApplicationSplashScreen> createState() =>
+      _ApplicationSplashScreenState();
 }
 
 class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
@@ -40,27 +38,38 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
       storedeviceinfo().then((value) {
         usertId = _sharedPreferences!.getString(Preferences.CUST_ID) ?? "0";
         userName = _sharedPreferences!.getString(Preferences.CUST_NAME) ?? '';
-        usertEmail = _sharedPreferences!.getString(Preferences.CUST_EMAIL) ?? '';
-        usertPhone = _sharedPreferences!.getString(Preferences.CUST_PHONE) ?? '';
-        userPassword = _sharedPreferences!.getString(Preferences.CUST_PASSWORD) ?? '';
+        usertEmail =
+            _sharedPreferences!.getString(Preferences.CUST_EMAIL) ?? '';
+        usertPhone =
+            _sharedPreferences!.getString(Preferences.CUST_PHONE) ?? '';
+        userPassword =
+            _sharedPreferences!.getString(Preferences.CUST_PASSWORD) ?? '';
       }).then((value) {
+        print("_sharedPreferences_user_id : ${_sharedPreferences!.getString(Preferences.CUST_ID) ?? "0"}");
         NavigatorConstants.USER_ID = usertId!;
         NavigatorConstants.USER_NAME = userName;
         NavigatorConstants.USER_EMAIL = usertEmail;
         NavigatorConstants.USER_PHONE = usertPhone;
         NavigatorConstants.USER_PASSWORD = userPassword;
-      }).then((value) {
+      }).then((value) async {
         applicationExtraSettingsApiCall();
-        getBannerApiCall(context);
+        try{
+         await getBannerApiCall(context);
+        }catch(e){}
         getSourceB2Cv2ApiCall();
       }).then((value) => versionCheckApiCall());
     });
     super.initState();
   }
 
-  void getBannerApiCall(BuildContext context) {
-    ApiImplementer.applicationSplashScreenListApiImplementer(currentDate: DateFormat('yyyy-MM-dd').format(DateTime.now()), height: "1080", width: "2200").then((XmlDocument document) {
-      List<XmlElement> data = document.findAllElements('SplashScreenList').toList();
+  Future<void> getBannerApiCall(BuildContext context) async {
+    await ApiImplementer.applicationSplashScreenListApiImplementer(
+            currentDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+            height: "1080",
+            width: "2200")
+        .then((XmlDocument document) {
+      List<XmlElement> data =
+          document.findAllElements('SplashScreenList').toList();
 
       List<String> _popup = [];
       NavigatorConstants.POP_UP_BANNER_BOOL = '0';
@@ -70,10 +79,12 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
           _popup.add(data[i].getElement('Details')!.text.trim().toString());
         }
       }
-
+      print('POP_UP_BANNER:::getSourceB2Cv2ApiCall===>${json.encode(_popup as List<String>)}');
       NavigatorConstants.POP_UP_BANNER = json.encode(_popup as List<String>);
+
     }).catchError((onError) {
-      Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+      Navigator.of(context)
+          .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
       print('  onError:::getSourceB2Cv2ApiCall===>$onError');
     });
   }
@@ -82,7 +93,8 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
     ApiImplementer.getSourceB2Cv2ApiImplementer().then((XmlDocument document) {
       bool xmlElement = document.findAllElements('NewDataSet').isNotEmpty;
       if (xmlElement) {
-        List<XmlElement> element = document.findAllElements('ITSSources').toList();
+        List<XmlElement> element =
+            document.findAllElements('ITSSources').toList();
         for (int i = 0; i < element.length; i++) {
           ITSSources itsSources = ITSSources(
             CM_CityID: element[i].getElement('CM_CityID')!.text,
@@ -90,57 +102,105 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
           );
           _selectSourceCityList.add(itsSources);
         }
-        _sharedPreferences!.setString(NavigatorConstants.SOURCE_CITY, json.encode(_selectSourceCityList as List<ITSSources>));
+        _sharedPreferences!.setString(NavigatorConstants.SOURCE_CITY,
+            json.encode(_selectSourceCityList as List<ITSSources>));
       }
     }).catchError((onError) {
-      Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+      Navigator.of(context)
+          .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
       print('  onError:::getSourceB2Cv2ApiCall===>$onError');
     });
   }
 
   void versionCheckApiCall() {
-    ApiImplementer.applicationVersionCheckApiImplementer().then((XmlDocument document) async {
-      XmlElement xmlElement = document.findAllElements('ApplicationVersion').first;
-      String IsSurcharge = xmlElement.getElement('IsSurcharge')!.text.toString();
+    ApiImplementer.applicationVersionCheckApiImplementer()
+        .then((XmlDocument document) async {
+      XmlElement xmlElement =
+          document.findAllElements('ApplicationVersion').first;
+
+      String IsSurcharge =
+          xmlElement.getElement('IsSurcharge')!.text.toString();
+
       NavigatorConstants.IS_SEARCH_CHARGE = IsSurcharge;
-      print('================${NavigatorConstants.IS_SEARCH_CHARGE} ');
+
+      print(
+          '================${xmlElement.getElement('InsuranceDeatils')!.text.toString()} ');
 
       if (xmlElement != null) {
-        if ((int.parse(NavigatorConstants.APPLICATION_VERSION_CODE) < int.parse(xmlElement.getElement('VersionCode')!.text)) && xmlElement.getElement('AppDownloadType')!.text == "1") {
-          Navigator.of(context).pushReplacementNamed(UpdateApplicationScreen.routeName, arguments: {
-            NavigatorConstants.APP_UPDATE_TYPE: CommonConstants.OPTIONAL_UPDATE,
-            NavigatorConstants.IS_FORCE_UPDATE: false,
-          });
-        } else if ((int.parse(NavigatorConstants.APPLICATION_VERSION_CODE) < int.parse(xmlElement.getElement('VersionCode')!.text)) && xmlElement.getElement('AppDownloadType')!.text == "2") {
-          Navigator.of(context).pushReplacementNamed(UpdateApplicationScreen.routeName, arguments: {
-            NavigatorConstants.APP_UPDATE_TYPE: CommonConstants.FORCE_UPDATE,
-            NavigatorConstants.IS_FORCE_UPDATE: true,
-          });
+        try {
+          Helper.InsuranceDeatils =
+              xmlElement.getElement('InsuranceDeatils')!.text.toString();
+          Helper.Disclaimer =
+              xmlElement.getElement('Disclaimer')!.text.toString();
+
+          Helper.InsuranceDocs =
+              xmlElement.getElement('InsuranceDocs')!.text.toString();
+
+          Helper.InsuranceHTML =
+              xmlElement.getElement('InsuranceHTML')!.text.toString();
+
+          // Right for show Web-view Ticket or Custom Ticket
+          // if TicketPrintURL = 1 it mean show Web-view Ticket else show Custom Ticket
+          Helper.showCustomTicket =
+              xmlElement.getElement('TicketPrintURL')!.text.toString();
+
+
+        } catch (e) {}
+
+        if ((int.parse(NavigatorConstants.APPLICATION_VERSION_CODE) <
+                int.parse(xmlElement.getElement('VersionCode')!.text)) &&
+            xmlElement.getElement('AppDownloadType')!.text == "1") {
+          Navigator.of(context).pushReplacementNamed(
+              UpdateApplicationScreen.routeName,
+              arguments: {
+                NavigatorConstants.APP_UPDATE_TYPE:
+                    CommonConstants.OPTIONAL_UPDATE,
+                NavigatorConstants.IS_FORCE_UPDATE: false,
+              });
+        }
+        else if ((int.parse(NavigatorConstants.APPLICATION_VERSION_CODE) <
+                int.parse(xmlElement.getElement('VersionCode')!.text)) &&
+            xmlElement.getElement('AppDownloadType')!.text == "2") {
+          Navigator.of(context).pushReplacementNamed(
+              UpdateApplicationScreen.routeName,
+              arguments: {
+                NavigatorConstants.APP_UPDATE_TYPE:
+                    CommonConstants.FORCE_UPDATE,
+                NavigatorConstants.IS_FORCE_UPDATE: true,
+              });
         } else {
-          _sharedPreferences!.setString(Preferences.UPDATE_APP_VERSION_CODE, xmlElement.getElement('VersionCode')!.text.toString());
-          // Navigator.of(context)
-          //     .pushReplacementNamed(DashboardAppScreen.routeName);
+          _sharedPreferences!.setString(Preferences.UPDATE_APP_VERSION_CODE,
+              xmlElement.getElement('VersionCode')!.text.toString());
 
-          print('Check login :- ${NavigatorConstants.USER_NAME}');
+          Navigator.of(context)
+              .pushReplacementNamed(DashboardAppScreen.routeName);
 
-          bool isUserFirstTime = await Sp().getIsUserFirstTime();
-          if (isUserFirstTime) {
-            Get.offAll(() => WelcomeScreen());
-          } else {
-            Get.offAllNamed(DashboardAppScreen.routeName);
-          }
+          // print('Check login :- ${NavigatorConstants.USER_NAME}');
+          // Get.offAll(() => WelcomeScreen());
+
+          //call when user first time open app
+          // bool isUserFirstTime = await Sp().getIsUserFirstTime();
+          // if (isUserFirstTime) {
+          //   Get.offAll(() => WelcomeScreen());
+          // } else {
+          //   Get.offAllNamed(DashboardAppScreen.routeName);
+          // }
         }
       }
     }).catchError((onError) {
-      Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+      Navigator.of(context)
+          .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
       print('  onError:::versionCheckApiCall===>$onError');
     });
   }
 
   void applicationExtraSettingsApiCall() {
-    ApiImplementer.getApplicationExtraSettingsApiImplementer().then((XmlDocument document) {
-      XmlElement xmlElement = document.findAllElements('IB2C_SeatLayoutColor').first;
-      String AVAILABLE_SEAT = xmlElement.getElement('Available')!.text.toString();
+    ApiImplementer.getApplicationExtraSettingsApiImplementer()
+        .then((XmlDocument document) {
+      XmlElement xmlElement =
+          document.findAllElements('IB2C_SeatLayoutColor').first;
+      String AVAILABLE_SEAT =
+          xmlElement.getElement('Available')!.text.toString();
       String BOOKED_SEAT = xmlElement.getElement('Booked')!.text.toString();
       String LADIES_SEAT = xmlElement.getElement('Ladies')!.text.toString();
       String SELECTED_SEAT = xmlElement.getElement('Selected')!.text.toString();
@@ -149,8 +209,10 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
       NavigatorConstants.LADIES_SEAT_COLOR = LADIES_SEAT;
       NavigatorConstants.SELECTED_SEAT_COLOR = SELECTED_SEAT;
     }).catchError((onError) {
-      Navigator.of(context).pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
-      print(':::: onError :: getApplicationExtraSettingsApiImplementer ====> $onError');
+      Navigator.of(context)
+          .pushReplacementNamed(NoInterNetOrErrorScreen.routeName);
+      print(
+          ':::: onError :: getApplicationExtraSettingsApiImplementer ====> $onError');
     });
   }
 
@@ -163,7 +225,7 @@ class _ApplicationSplashScreenState extends State<ApplicationSplashScreen> {
           height: deviceSize.height,
           width: deviceSize.width,
           child: Image(
-            image: AssetImage('assets/images/splash_logo.jpg'),
+            image: AssetImage('assets/images/splash_logo.png'),
             fit: BoxFit.fill,
           ),
         ),

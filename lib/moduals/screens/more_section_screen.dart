@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share/flutter_share.dart';
@@ -15,6 +17,7 @@ import 'package:royalcruiser/moduals/screens/login_screen.dart';
 import 'package:royalcruiser/moduals/screens/my_booking_screen.dart';
 import 'package:royalcruiser/moduals/screens/pnr_enquiry_screen.dart';
 import 'package:royalcruiser/moduals/screens/terms_and_condition_screen.dart';
+import 'package:royalcruiser/moduals/screens/welcome_screen.dart';
 import 'package:royalcruiser/utils/app_dialog.dart';
 import 'package:royalcruiser/utils/ui/ui_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,7 +77,8 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
   List<MenuList> menu = [
     MenuList(title: 'My Booking', ontap: MyBookingAppScreen.routeName),
     MenuList(title: 'PNR Enquiry', ontap: PNREnquiryScreen.routeName),
-    MenuList(title: 'Terms And Condition', ontap: TermsAndConditionScreen.routeName),
+    MenuList(
+        title: 'Terms And Conditions', ontap: TermsAndConditionScreen.routeName),
     MenuList(title: 'About Us', ontap: AboutUsAppScreen.routeName),
     MenuList(title: 'Gallery', ontap: GalleryAppScreen.routeName),
     MenuList(title: 'Feedback', ontap: FeedbackAppScreen.routeName),
@@ -113,7 +117,8 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                           ),
                         ),
                       ),
-                      trailing: const Icon(CupertinoIcons.forward, color: Colors.white),
+                      trailing: const Icon(CupertinoIcons.forward,
+                          color: Colors.white),
                       onTap: () {
                         Navigator.of(context).pushNamed(e.ontap);
                       },
@@ -137,7 +142,8 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                             letterSpacing: 1.0),
                       ),
                     ),
-                    trailing: const Icon(CupertinoIcons.forward, color: Colors.white),
+                    trailing:
+                        const Icon(CupertinoIcons.forward, color: Colors.white),
                     onTap: () {
                       StoreRedirect.redirect(
                           androidAppId: "com.infinityinfoway.royalcruiser",
@@ -162,7 +168,8 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                             letterSpacing: 1.0),
                       ),
                     ),
-                    trailing: const Icon(CupertinoIcons.forward, color: Colors.white),
+                    trailing:
+                        const Icon(CupertinoIcons.forward, color: Colors.white),
                     onTap: () {
                       shareApp();
                     },
@@ -186,8 +193,8 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                                   letterSpacing: 1.0),
                             ),
                           ),
-                          trailing:
-                              const Icon(CupertinoIcons.forward, color: Colors.white),
+                          trailing: const Icon(CupertinoIcons.forward,
+                              color: Colors.white),
                           onTap: () {
                             AppDialogs.showCommonDialog(
                                 context: context,
@@ -205,7 +212,6 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                         ),
                       )
                     : const SizedBox.shrink(),
-
                 Card(
                   elevation: 1.5,
                   margin: const EdgeInsets.symmetric(
@@ -223,14 +229,38 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                             letterSpacing: 1.0),
                       ),
                     ),
-                    trailing: const Icon(CupertinoIcons.forward, color: Colors.white),
+                    trailing:
+                        const Icon(CupertinoIcons.forward, color: Colors.white),
                     onTap: () async {
-                      String url = 'https://api.whatsapp.com/send?phone=+919903400910';
-                      if (await canLaunch(url)) {
-                      await launch(url);
-                      } else {
-                        UiUtils.errorSnackBar(message: 'Could not launch $url').show();
-                      throw 'Could not launch $url';
+
+                      if(Platform.isAndroid){
+
+                        String url =
+                            'https://api.whatsapp.com/send?phone=+919903400910';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          UiUtils.errorSnackBar(message: 'Could not launch $url')
+                              .show();
+                          throw 'Could not launch $url';
+                        }
+
+                      }else{
+
+                        String phoneNumber = '919903400910'; // Correct international format
+                        String url = 'whatsapp://send?phone=$phoneNumber';
+
+                        if (await canLaunch(url)) {
+                          try {
+                            await launch(url);
+                          } catch (e) {
+                            // _showErrorSnackBar(context, 'Could not launch $url: $e');
+                            print('Error: Could not launch $url: $e');
+                          }
+                        } else {
+                          // _showErrorSnackBar(context, 'Could not launch $url');
+                          print('Error: Could not launch $url');
+                        }
                       }
                     },
                   ),
@@ -255,7 +285,7 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
         if (xmlElement.getElement('Status')!.text.toString().compareTo("1") ==
             0) {
           AppDialogs.showErrorDialog(
-            title: '',
+              title: '',
               context: context,
               errorMsg: xmlElement.getElement('Msg')!.text.toString(),
               onOkBtnClickListener: () {
@@ -269,7 +299,7 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
                 .compareTo("0") ==
             0) {
           AppDialogs.showErrorDialog(
-            title: '',
+              title: '',
               context: context,
               errorMsg: xmlElement.getElement('Msg')!.text.toString(),
               onOkBtnClickListener: () {
@@ -295,94 +325,101 @@ class _MoreSectionScreenState extends State<MoreSectionScreen> {
     return PreferredSize(
       preferredSize: const Size.fromHeight(65),
       child: Container(
-    decoration: const BoxDecoration(
-    color: CustomeColor.main_bg,
-    ),
-    child:Obx(
-        () => _isloading.value
-            ? SafeArea(
-            child:Container(
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: CustomeColor.main_bg,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.person_outline,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                      const SizedBox(width: 15),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          isCheckLoginDetails()
-                              ? Text(
-                                  '$usertEmail',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Text(
-                                  'Hi Guest',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
+        decoration: const BoxDecoration(
+          color: CustomeColor.main_bg,
+        ),
+        child: Obx(
+          () => _isloading.value
+              ? SafeArea(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                      color: CustomeColor.main_bg,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.person_outline,
+                              color: Colors.white,
+                              size: 40,
+                            ),
+                            const SizedBox(width: 15),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                isCheckLoginDetails()
+                                    ? Text(
+                                        '$usertEmail',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : const Text(
+                                        'Hi Guest',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                const SizedBox(height: 5),
+                                isCheckLoginDetails()
+                                    ? Text(
+                                        '$usertPhone',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : const SizedBox.shrink()
+                              ],
+                            )
+                          ],
+                        ),
+                        isCheckLoginDetails()
+                            ? IconButton(
+                                onPressed: () {
+                                  getShared().then((value) {
+                                    Get.offAllNamed(
+                                        DashboardAppScreen.routeName);
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.logout,
+                                  size: 25,
+                                  color: Colors.white,
                                 ),
-                          const SizedBox(
-                              height: 5),
-                          isCheckLoginDetails()
-                              ? Text(
-                                  '$usertPhone',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const SizedBox.shrink()
-                        ],
-                      )
-                    ],
+                              )
+                            : IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                      new MaterialPageRoute(
+                                          builder: (
+                                                  (ctx) => WelcomeScreen())
+                                      ));
+                                  // Navigator.of(context)
+                                  //     .pushNamed(LoginScreen.routeName);
+                                },
+                                icon: const Icon(
+                                  Icons.supervised_user_circle,
+                                  size: 25,
+                                  color: Colors.white,
+                                ),
+                              )
+                      ],
+                    ),
                   ),
-                  isCheckLoginDetails()
-                      ? IconButton(
-                          onPressed: () {
-                            getShared().then((value) {
-                              Get.offAllNamed(DashboardAppScreen.routeName);
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.logout,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                        )
-                      : IconButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(LoginScreen.routeName);
-                          },
-                          icon: const Icon(
-                            Icons.supervised_user_circle,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                        )
-                ],
-              ),
-            ),)
-            : const SizedBox.shrink(),
-      ),),
+                )
+              : const SizedBox.shrink(),
+        ),
+      ),
     );
   }
 
